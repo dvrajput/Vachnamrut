@@ -34,7 +34,11 @@
                                 <a class="nav-link{{ request()->is('admin/contact*') ? ' active' : '' }}"
                                     href="{{ route('songs.index') }}">{{ __('Contact Us') }}</a>
                             </li> --}}
-                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.logout') }}"><i
+                                        class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -15,10 +15,16 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1>
-            <a href="{{ route('admin.categories.index') }}"><i class="fas fa-arrow-left"></i></a>
-            &nbsp;&nbsp;Category Detail: {{ $category->{'category_' . app()->getLocale()} }}
-        </h1>
+        {{-- <h1>
+            
+        </h1> --}}
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0"><a href="{{ route('admin.categories.index') }}"><i class="fas fa-arrow-left"></i></a>
+                &nbsp;&nbsp;Category Detail: {{ $category->{'category_' . app()->getLocale()} }}</h3>
+            <a href="{{ route('admin.subCategories.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create
+                Sub Category</a>
+        </div>
 
         <table id="categorySongTable" class="display text-center" style="width:100%">
             <thead>

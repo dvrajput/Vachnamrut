@@ -1,16 +1,13 @@
 @extends('admin.layouts.app')
 @section('title', 'Create Playlist')
 @section('content')
-    <h1 class="mt-4 mb-4">Add New Playlist</h1>
+    <h3 class="mt-4 mb-4">Add New Playlist</h3>
     <form action="{{ route('admin.playlists.store') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="playlist_name">Title (English)</label>
-            <input type="text" class="form-control @error('playlist_name') is-invalid @enderror" id="playlist_name"
-                name="playlist_name" value="PAD 1" required>
-            @error('playlist_name')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="text" class="form-control id="playlist_name" name="playlist_name" placeholder="Enter Playlist Name"
+                required>
         </div>
 
         <div class="form-group">

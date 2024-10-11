@@ -1,55 +1,48 @@
 @extends('admin.layouts.app')
-@section('title', 'Edit Song')
+@section('title', 'Edit Playlist')
 @section('content')
-    <h1 class="mt-4 mb-4">Edit Song</h1>
-    <form action="{{ route('admin.songs.update', $song->song_code) }}" method="POST">
+    <h3 class="mt-4 mb-4">Edit Playlist</h3>
+    <form action="{{ route('admin.playlists.update', $playlist->playlist_code) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="form-group">
-            <label for="title_en">Title (English)</label>
-            <input type="text" class="form-control @error('title_en') is-invalid @enderror" id="title_en" name="title_en"
-                value="{{ old('title_en', $song->title_en) }}" required>
-            @error('title_en')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <label for="playlist_name">Title (English)</label>
+            <input type="text" class="form-control id="playlist_name" name="playlist_name" placeholder="Enter Playlist Name"
+                value="{{ old('title_en', $playlist->playlist_name) }}" required>
         </div>
-        <div class="form-group">
-            <label for="lyrics_en">Lyrics (English)</label>
-            <textarea class="form-control @error('lyrics_en') is-invalid @enderror" id="lyrics_en" name="lyrics_en" rows="5"
-                required>{{ old('lyrics_en', $song->lyrics_en) }}</textarea>
-            @error('lyrics_en')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="form-group">
-            <label for="title_gu">Title (Gujarati)</label>
-            <input type="text" class="form-control" id="title_gu" name="title_gu"
-                value="{{ old('title_gu', $song->title_gu) }}">
-        </div>
-        <div class="form-group">
-            <label for="lyrics_gu">Lyrics (Gujarati)</label>
-            <textarea class="form-control" id="lyrics_gu" name="lyrics_gu" rows="5">{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
-        </div>
-        
-        <div class="form-group">
-            <label for="category_code">Category</label>
-            <select class="form-control select2" id="category_code" name="category_code[]" multiple="multiple"
-                data-placeholder="Select Categories">
-                @foreach ($categories as $category)
-                    <option value="{{ $category->category_code }}"
-                        {{ in_array($category->category_code, $song->categories->pluck('category_code')->toArray()) ? 'selected' : '' }}>
-                        {{ $category->category_en }} ({{ $category->category_gu }})
+
+        {{-- <div class="form-group">
+            <label for="song_code">Song</label>
+            <select class="form-control select2" id="song_code" name="song_code[]" multiple="multiple"
+                data-placeholder="Select Songs">
+                @foreach ($songs as $song)
+                    <option value="{{ $song->song_code }}">
+                        {{ $song->title_en }}
                     </option>
                 @endforeach
             </select>
-            @error('category_code')
+            @error('song_code')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div> --}}
+
+        <div class="form-group">
+            <label for="song_code">Song</label>
+            <select class="form-control select2" id="song_code" name="song_code[]" data-placeholder="Select Songs">
+                @foreach ($allSongs as $song)
+                    <option value="{{ $song->song_code }}"
+                        {{ $songs->contains('song_code', $song->song_code) ? 'selected' : '' }}>
+                        {{ $song->title_en }} ({{ $song->title_gu }})
+                    </option>
+                @endforeach
+            </select>
+            @error('song_code')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-
         <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('admin.songs.index') }}" class="btn btn-secondary ml-2">Cancel</a>
+        <a href="{{ route('admin.playlists.index') }}" class="btn btn-secondary ml-2">Cancel</a>
     </form>
 @endsection
 
@@ -57,7 +50,7 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2({
-                placeholder: 'Select Categories',
+                placeholder: 'Select Sub Categories',
                 allowClear: true
             });
         });

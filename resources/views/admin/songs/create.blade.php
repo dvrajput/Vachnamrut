@@ -6,27 +6,25 @@
         @csrf
         <div class="form-group">
             <label for="title_en">Title (English)</label>
-            <input type="text" class="form-control @error('title_en') is-invalid @enderror" id="title_en" name="title_en"
-                value="{{ old('title_en') }}" required>
-            @error('title_en')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="text" class="form-control" id="title_en" name="title_en" placeholder="Enter English Title" required>
         </div>
         <div class="form-group">
             <label for="lyrics_en">Lyrics (English)</label>
             <textarea class="form-control @error('lyrics_en') is-invalid @enderror" id="lyrics_en" name="lyrics_en" rows="5"
-                required>{{ old('lyrics_en') }}</textarea>
+                placeholder="Enter English Lyrics" required></textarea>
             @error('lyrics_en')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-group">
             <label for="title_gu">Title (Gujarati)</label>
-            <input type="text" class="form-control" id="title_gu" name="title_gu" value="{{ old('title_gu') }}">
+            <input type="text" class="form-control" id="title_gu" name="title_gu" placeholder="Enter Gujarati Title"
+                required>
         </div>
         <div class="form-group">
             <label for="lyrics_gu">Lyrics (Gujarati)</label>
-            <textarea class="form-control" id="lyrics_gu" name="lyrics_gu" rows="5">{{ old('lyrics_gu') }}</textarea>
+            <textarea class="form-control" id="lyrics_gu" name="lyrics_gu" rows="5" placeholder="Enter Gujarati Lyrics"
+                required></textarea>
         </div>
         <div class="form-group">
             <label for="sub_category_code">Sub Category</label>

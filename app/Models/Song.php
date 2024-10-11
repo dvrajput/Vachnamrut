@@ -26,8 +26,12 @@ class Song extends Model
     // {
     //     return $this->belongsToMany(Category::class, 'song_category_rels');
     // }
+    // public function subCategories()
+    // {
+    //     return $this->belongsToMany(SubCategory::class, 'song_sub_cate_rels');
+    // }
     public function subCategories()
     {
-        return $this->belongsToMany(SubCategory::class, 'song_sub_cate_rels');
+        return $this->belongsToMany(SubCategory::class, 'song_sub_cate_rels', 'song_code', 'sub_category_code');
     }
 }

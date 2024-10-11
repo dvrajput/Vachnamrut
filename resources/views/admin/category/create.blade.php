@@ -6,16 +6,14 @@
         @csrf
         <div class="form-group">
             <label for="category_en">Title (English)</label>
-            <input type="text" class="form-control @error('category_en') is-invalid @enderror" id="category_en"
-                name="category_en"  value="qwer" required>
-            @error('category_en')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="text" class="form-control id="category_en" name="category_en" placeholder="Enter English Title"
+                required>
         </div>
 
         <div class="form-group">
             <label for="category_gu">Title (Gujarati)</label>
-            <input type="text" class="form-control" id="category_gu" value="wqwe" name="category_gu" value="{{ old('category_gu') }}">
+            <input type="text" class="form-control" id="category_gu" name="category_gu" placeholder="Enter English Title"
+                required>
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>

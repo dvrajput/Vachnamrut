@@ -13,6 +13,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SongsController extends Controller
 {
@@ -130,10 +131,17 @@ class SongsController extends Controller
         $song = Song::where('song_code', $song_code)->firstOrFail();
         // dump($song->toArray());
         // $song = Song::findOrFail($song_code);
-        $subCategories = SubCategory::all();
+
+        $subCategories = SubCategory::select('sub_categories.*')
+            ->join('song_sub_cate_rels', 'sub_categories.sub_category_code', '=', 'song_sub_cate_rels.sub_category_code')
+            ->where('song_sub_cate_rels.song_code', $song_code)
+            ->get();
+
+        // $subCategories = SubCategory::all();
+        $allSubCategories = SubCategory::all();
         // dd($subCategories->toArray());
         // Pass the song data to the edit view
-        return view('admin.songs.edit', compact('song', 'subCategories'));
+        return view('admin.songs.edit', compact('song', 'allSubCategories', 'subCategories'));
     }
 
     /**
@@ -150,7 +158,8 @@ class SongsController extends Controller
             'sub_category_code.*' => 'exists:sub_categories,sub_category_code', // Each category must exist in the categories table
         ]);
 
-        $song = Song::findOrFail($song_code);
+        // $song = Song::findOrFail($song_code);
+        $song = Song::where('song_code', $song_code)->firstOrFail();
 
         $song->update([
             'title_en' => $request->title_en,
@@ -159,7 +168,30 @@ class SongsController extends Controller
             'lyrics_gu' => $request->lyrics_gu,
         ]);
 
-        $song->subCategories()->sync($request->sub_category_code);
+        // Get current subcategories associated with the song
+        $currentSubCategories = DB::table('song_sub_cate_rels')
+            ->where('song_code', $song_code)
+            ->pluck('sub_category_code')
+            ->toArray();
+
+        // Determine which subcategories to add and which to remove
+        $subCategoriesToAdd = array_diff($request->sub_category_code, $currentSubCategories);
+        $subCategoriesToRemove = array_diff($currentSubCategories, $request->sub_category_code);
+
+        // Add new subcategories
+        foreach ($subCategoriesToAdd as $subCategoryCode) {
+            DB::table('song_sub_cate_rels')->insert([
+                'song_code' => $song->song_code,
+                'sub_category_code' => $subCategoryCode,
+            ]);
+        }
+
+        // Remove unselected subcategories
+        foreach ($subCategoriesToRemove as $subCategoryCode) {
+            DB::table('song_sub_cate_rels')->where('song_code', $song->song_code)
+                ->where('sub_category_code', $subCategoryCode)
+                ->delete();
+        }
         // return redirect()->route('songs.index')->with('success', 'Song updated successfully!');
         return redirect()->route('admin.songs.index')->with('success', 'Song updated successfully!');
     }

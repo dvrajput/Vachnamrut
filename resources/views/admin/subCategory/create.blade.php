@@ -4,7 +4,6 @@
     <h1 class="mt-4 mb-4">Add New Sub Category</h1>
     <form action="{{ route('admin.subCategories.store') }}" method="POST">
         @csrf
-
         <div class="form-group">
             <label for="category_code">Category</label>
             <select class="form-control select2" id="category_code" name="category_code[]" multiple="multiple"
@@ -15,23 +14,18 @@
                     </option>
                 @endforeach
             </select>
-            @error('category_code')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
         </div>
 
         <div class="form-group">
             <label for="category_en">Sub Category (English)</label>
-            <input type="text" class="form-control @error('category_en') is-invalid @enderror" id="sub_category_en"
-                name="sub_category_en"  value="sub cate english" required>
-            @error('sub_category_en')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="text" class="form-control id="sub_category_en" name="sub_category_en"
+                placeholder="Enter English Sub Category" required>
         </div>
 
         <div class="form-group">
             <label for="category_gu">Sub Category (Gujarati)</label>
-            <input type="text" class="form-control" id="sub_category_gu" value="sub cate guj" name="sub_category_gu" value="{{ old('category_gu') }}">
+            <input type="text" class="form-control" id="sub_category_gu" placeholder="Enter Gujarati Sub Category"
+                name="sub_category_gu">
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>

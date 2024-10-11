@@ -31,13 +31,14 @@
             <label for="lyrics_gu">Lyrics (Gujarati)</label>
             <textarea class="form-control" id="lyrics_gu" name="lyrics_gu" rows="5">{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
         </div>
-        
+
         <div class="form-group">
             <label for="sub_category_code">Category</label>
             <select class="form-control select2" id="sub_category_code" name="sub_category_code[]" multiple="multiple"
                 data-placeholder="Select Categories">
-                @foreach ($subCategories as $category)
-                    <option value="{{ $category->sub_category_code }}">
+                @foreach ($allSubCategories as $category)
+                    <option value="{{ $category->sub_category_code }}"
+                        {{ $subCategories->contains('sub_category_code', $category->sub_category_code) ? 'selected' : '' }}>
                         {{ $category->sub_category_en }} ({{ $category->sub_category_gu }})
                     </option>
                 @endforeach
