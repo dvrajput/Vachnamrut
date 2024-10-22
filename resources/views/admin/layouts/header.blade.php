@@ -2,7 +2,7 @@
     <div class="row justify-content-between d-flex align-items-center">
         <div class="col-auto">
             <a class="navbar-brand" href="{{ route('admin.songs.index') }}">
-                Kirtanavali
+                {{__('Kirtanavali')}}
             </a>
         </div>
         <div class="col-auto">
@@ -12,19 +12,19 @@
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/songs*') ? ' active' : '' }}"
-                                    href="{{ route('admin.songs.index') }}">Songs</a>
+                                    href="{{ route('admin.songs.index') }}">{{ __('Songs') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/categories*') ? ' active' : '' }}"
-                                    href="{{ route('admin.categories.index') }}">Category</a>
+                                    href="{{ route('admin.categories.index') }}">{{ __('Category') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/subCategories*') ? ' active' : '' }}"
-                                    href="{{ route('admin.subCategories.index') }}">Sub Category</a>
+                                    href="{{ route('admin.subCategories.index') }}">{{ __('Sub Category') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/playlists*') ? ' active' : '' }}"
-                                    href="{{ route('admin.playlists.index') }}">Playlist</a>
+                                    href="{{ route('admin.playlists.index') }}">{{ __('Playlist') }}</a>
                             </li>
                             {{-- <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/about*') ? ' active' : '' }}"
@@ -38,6 +38,20 @@
                                 <a class="nav-link" href="{{ route('admin.logout') }}"><i
                                         class="fas fa-sign-out-alt"></i>
                                 </a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ app()->getLocale() === 'gu' ? __('Gujarati') : __('English') }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="languageDropdown">
+                                    <a class="dropdown-item"
+                                        href="{{ route('locale', 'en') }}">{{ __('English') }}</a>
+                                    <a class="dropdown-item"
+                                        href="{{ route('locale', 'gu') }}">{{ __('Gujarati') }}</a>
+                                </div>
                             </li>
                         </ul>
                     </div>

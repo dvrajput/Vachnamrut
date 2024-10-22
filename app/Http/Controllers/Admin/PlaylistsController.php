@@ -43,7 +43,8 @@ class PlaylistsController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            'playlist_name' => 'required|string|max:255'
+            'playlist_en' => 'required|string|max:255',
+            'playlist_gu' => 'required|string|max:255'
         ]);
 
         //get playlist prefix from configuraton table
@@ -66,7 +67,8 @@ class PlaylistsController extends Controller
 
         $playlist = Playlist::create([
             'playlist_code' => $newPlaylistCode,
-            'playlist_name' => $request->playlist_name
+            'playlist_en' => $request->playlist_en,
+            'playlist_gu' => $request->playlist_gu
         ]);
 
         foreach ($request->song_code as $songCode) {
@@ -125,7 +127,8 @@ class PlaylistsController extends Controller
     public function update(Request $request, string $playlist_code)
     {
         $request->validate([
-            'playlist_name' => 'required|string|max:255',
+            'playlist_en' => 'required|string|max:255',
+            'playlist_gu' => 'required|string|max:255',
             'song_code' => 'required|array', // Ensure songs are passed as an array
             'song_code.*' => 'exists:songs,song_code', // Each song must exist in the songs table
         ]);
@@ -135,7 +138,8 @@ class PlaylistsController extends Controller
 
         // Update playlist details
         $playlist->update([
-            'playlist_name' => $request->playlist_name,
+            'playlist_en' => $request->playlist_en,
+            'playlist_gu' => $request->playlist_gu,
         ]);
 
         // Get current songs associated with the playlist
@@ -169,8 +173,19 @@ class PlaylistsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $playlist_code)
     {
-        //
+        // Find the song by playlist_code
+        $playList = Playlist::where('playlist_code', $playlist_code)->firstOrFail();
+
+        // Delete the associated subcategories
+        SongPlaylistRel::where('playlist_code', $playlist_code)
+            ->delete();
+
+        // Delete the song
+        $playList->delete();
+
+        // Redirect with a success message
+        return redirect()->back()->with('success', 'Playlist deleted successfully');
     }
 }

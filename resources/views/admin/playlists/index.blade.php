@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'View Playlist')
+@section('title', __('Playlist'))
 @section('style')
     <style>
         .display {
@@ -16,17 +16,19 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Playlist List</h3>
-            <a href="{{ route('admin.playlists.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Playlist</a>
+            <h3 class="mb-0">{{ __('Playlist List') }}</h3>
+            <a href="{{ route('admin.playlists.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i>
+                {{ __('Create Playlist') }}</a>
         </div>
 
         <!-- DevExtreme DataGrid container -->
         <table id="playlistsTable" class="display text-center" style="width:100%">
             <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Action</th>
+                    <th>{{ __('Code') }}</th>
+                    <th>{{ __('English Playlist') }}</th>
+                    <th>{{ __('Gujarati Playlist') }}</th>
+                    <th>{{ __('Action') }}</th>
                 </tr>
             </thead>
         </table>
@@ -45,10 +47,13 @@
                         name: 'playlist_code'
                     },
                     {
-                        data: 'playlist_name',
-                        name: 'playlist_name'
+                        data: 'playlist_en',
+                        name: 'playlist_en'
                     },
-                   
+                    {
+                        data: 'playlist_gu',
+                        name: 'playlist_gu'
+                    },
                     {
                         data: 'action',
                         name: 'action',
@@ -62,7 +67,7 @@
                                 <a href="/admin/playlists/${row.playlist_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ url('admin/playlists') }}/${row.playlist_code}" method="POST" style="display:inline;">
+                                <form action="{{ route('admin.playlists.destroy', '') }}/${row.playlist_code}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure?')">

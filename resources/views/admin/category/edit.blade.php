@@ -1,16 +1,16 @@
 @extends('admin.layouts.app')
-@section('title', 'Edit Category')
+@section('title', __('Edit Category'))
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="mt-4 mb-4">Edit Category</h1>
+        <h3 class="mt-4 mb-4">{{ __('Edit Category') }}</h3>
         <form action="{{ route('admin.categories.update', $category->category_code) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-group row">
                 <!-- Title (English) -->
                 <div class="col-md-6 col-12 mb-3">
-                    <label for="category_en" class="col-form-label">Title (English)</label>
+                    <label for="category_en" class="col-form-label">{{ __('English Category') }}</label>
                     <input type="text" class="form-control @error('category_en') is-invalid @enderror" id="category_en"
                         name="category_en" value="{{ old('category_en', $category->category_en) }}" required>
                     @error('category_en')
@@ -20,7 +20,7 @@
 
                 <!-- Title (Gujarati) -->
                 <div class="col-md-6 col-12 mb-3">
-                    <label for="category_gu" class="col-form-label">Title (Gujarati)</label>
+                    <label for="category_gu" class="col-form-label">{{ __('English Category') }}</label>
                     <input type="text" class="form-control" id="category_gu" name="category_gu"
                         value="{{ old('category_gu', $category->category_gu) }}">
                 </div>
@@ -28,8 +28,8 @@
 
             <div class="form-group row">
                 <div class="col-md-6 col-12">
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary ml-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                    <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary ml-2">{{ __('Cancel') }}</a>
                 </div>
             </div>
         </form>
@@ -39,7 +39,7 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            
+
         });
     </script>
 @endsection

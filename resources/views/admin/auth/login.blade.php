@@ -63,13 +63,13 @@
                                             </div>
                                         </div>
 
-                                        {{-- <div class="col-sm-6">
+                                        <div class="col-sm-6">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="inlineFormCheck">
+                                                <input class="form-check-input" type="checkbox" id="inlineFormCheck" name="remember">
                                                 <label class="form-check-label" for="inlineFormCheck">Remember
                                                     me</label>
                                             </div>
-                                        </div> --}}
+                                        </div>
 
                                         {{-- <div class="col-sm-6">
                                             <a href="#" class="float-end text-primary">Forgot Password?</a>

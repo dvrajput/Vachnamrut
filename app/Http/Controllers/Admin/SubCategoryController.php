@@ -11,6 +11,7 @@ use App\Models\SongSubCateRel;
 use App\Models\SubCategory;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SubCategoryController extends Controller
 {
@@ -198,7 +199,10 @@ class SubCategoryController extends Controller
     {
         $category = SubCategory::where('sub_category_code', $sub_category_code)->firstOrFail();
 
-        $category->songs()->detach();
+        // $category->songs()->detach();
+
+        SubCategory::where('sub_category_code', $sub_category_code)
+            ->delete();
 
         // Delete the categories
         $category->delete();

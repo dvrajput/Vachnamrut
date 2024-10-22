@@ -67,17 +67,16 @@ class SongsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'title_en' => 'required|string|max:255',
             'lyrics_en' => 'required|string',
             'title_gu' => 'nullable|string|max:255',
             'lyrics_gu' => 'nullable|string',
-            'sub_category_code' => 'required|array',
+            'sub_category_code' => 'nullable|array',
             'sub_category_code.*' => 'exists:sub_categories,sub_category_code',
         ]);
 
-        //get song prefix from configuraton table
+        // Get song prefix from the configuration table
         $config = Configuration::where('key', 'song_prefix')->value('value');
 
         // Find the last song with the same prefix
@@ -91,10 +90,11 @@ class SongsController extends Controller
             $lastNumber = intval(substr($lastSong->song_code, strlen($config)));
             $newSongCode = $config . ($lastNumber + 1);
         } else {
-            // No song exists with this prefix, start with the prefix followed by 1
+            // No song exists with this prefix; start with the prefix followed by 1
             $newSongCode = $config . '1';
         }
 
+        // Create the new song record
         $song = Song::create([
             'song_code' => $newSongCode,
             'title_en' => $request->title_en,
@@ -103,11 +103,14 @@ class SongsController extends Controller
             'lyrics_gu' => $request->lyrics_gu,
         ]);
 
-        foreach ($request->sub_category_code as $subCategoryCode) {
-            SongSubCateRel::create([
-                'song_code' => $song->song_code,
-                'sub_category_code' => $subCategoryCode,
-            ]);
+        // Handle subcategories if provided
+        if ($request->filled('sub_category_code')) {
+            foreach ($request->sub_category_code as $subCategoryCode) {
+                SongSubCateRel::create([
+                    'song_code' => $song->song_code,
+                    'sub_category_code' => $subCategoryCode,
+                ]);
+            }
         }
 
         return redirect()->route('admin.songs.index')->with('success', 'Song added successfully!');
@@ -154,13 +157,14 @@ class SongsController extends Controller
             'lyrics_en' => 'required|string',
             'title_gu' => 'nullable|string|max:255',
             'lyrics_gu' => 'nullable|string',
-            'sub_category_code' => 'required|array', // Ensure categories are passed as an array
+            'sub_category_code' => 'nullable|array', // Ensure categories are passed as an array
             'sub_category_code.*' => 'exists:sub_categories,sub_category_code', // Each category must exist in the categories table
         ]);
 
-        // $song = Song::findOrFail($song_code);
+        // Find the song by song_code
         $song = Song::where('song_code', $song_code)->firstOrFail();
 
+        // Update song details
         $song->update([
             'title_en' => $request->title_en,
             'lyrics_en' => $request->lyrics_en,
@@ -174,37 +178,46 @@ class SongsController extends Controller
             ->pluck('sub_category_code')
             ->toArray();
 
-        // Determine which subcategories to add and which to remove
-        $subCategoriesToAdd = array_diff($request->sub_category_code, $currentSubCategories);
-        $subCategoriesToRemove = array_diff($currentSubCategories, $request->sub_category_code);
+        // Check if sub_category_code is present in the request
+        if ($request->has('sub_category_code')) {
+            $subCategoriesToAdd = array_diff($request->sub_category_code, $currentSubCategories);
+            $subCategoriesToRemove = array_diff($currentSubCategories, $request->sub_category_code);
 
-        // Add new subcategories
-        foreach ($subCategoriesToAdd as $subCategoryCode) {
-            DB::table('song_sub_cate_rels')->insert([
-                'song_code' => $song->song_code,
-                'sub_category_code' => $subCategoryCode,
-            ]);
+            // Add new subcategories
+            foreach ($subCategoriesToAdd as $subCategoryCode) {
+                DB::table('song_sub_cate_rels')->insert([
+                    'song_code' => $song->song_code,
+                    'sub_category_code' => $subCategoryCode,
+                ]);
+            }
+
+            // Remove unselected subcategories
+            foreach ($subCategoriesToRemove as $subCategoryCode) {
+                DB::table('song_sub_cate_rels')->where('song_code', $song->song_code)
+                    ->where('sub_category_code', $subCategoryCode)
+                    ->delete();
+            }
+        } else {
+            // If sub_category_code is null, remove all subcategories
+            DB::table('song_sub_cate_rels')->where('song_code', $song->song_code)->delete();
         }
 
-        // Remove unselected subcategories
-        foreach ($subCategoriesToRemove as $subCategoryCode) {
-            DB::table('song_sub_cate_rels')->where('song_code', $song->song_code)
-                ->where('sub_category_code', $subCategoryCode)
-                ->delete();
-        }
-        // return redirect()->route('songs.index')->with('success', 'Song updated successfully!');
         return redirect()->route('admin.songs.index')->with('success', 'Song updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $song_code)
     {
-        $song = Song::findOrFail($song_code);
+        // Find the song by song_code
+        $song = Song::where('song_code', $song_code)->firstOrFail();
 
-        // Delete related entries in the song_category_rels table
-        $song->categories()->detach();
+        // Delete the associated subcategories
+        DB::table('song_sub_cate_rels')
+            ->where('song_code', $song_code)
+            ->delete();
 
         // Delete the song
         $song->delete();

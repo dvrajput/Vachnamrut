@@ -25,24 +25,20 @@ class SongsController extends Controller
 
     public function show(string $songCode)
     {
-        // $song = Song::findOrFail($id);
+        // Retrieve the main song
         $song = Song::where('song_code', $songCode)->firstOrFail();
 
-        // dump($song->toArray());
-
+        // Retrieve the playlists for the song
         $playlists = SongPlaylistRel::where('song_code', $songCode)->get();
-
-        // dump($playlists->toArray());
         $playlistCodes = $playlists->pluck('playlist_code');
 
+        // Get all songs in those playlists
         $songsInPlaylists = Song::whereIn('song_code', function ($query) use ($playlistCodes) {
             $query->select('song_code')
                 ->from('song_playlist_rels')
                 ->whereIn('playlist_code', $playlistCodes);
         })->get();
 
-        // dump($song->toArray());
-        // dump($songsInPlaylists->toArray());
-        return view('user.songs.show', compact('song','songsInPlaylists'));
+        return view('user.songs.show', compact('song', 'songsInPlaylists'));
     }
 }

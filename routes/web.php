@@ -16,8 +16,15 @@ Route::name('user.')->group(function () {
 Route::get('/language/{locale}', function ($locale) {
     session()->put('locale', $locale);
     // dump($locale);
+
+    if (auth()->check()) {
+        $user = auth()->user();
+        $user->language = $locale;
+        $user->save();
+    }
+
     return redirect()->back();
 })->name('locale');
 
-
-require __DIR__.'/admin.php';
+// admin panel route
+require __DIR__ . '/admin.php';

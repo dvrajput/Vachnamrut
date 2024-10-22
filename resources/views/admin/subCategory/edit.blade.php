@@ -1,16 +1,16 @@
 @extends('admin.layouts.app')
-@section('title', 'Edit Sub Category')
+@section('title', __('Edit Sub Category'))
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="mt-4 mb-4">Edit Category</h1>
+        <h3 class="mt-4 mb-4">{{__('Edit Sub Category')}}</h3>
         <form action="{{ route('admin.subCategories.update', $subCategory->sub_category_code) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-group row">
                 <!-- Title (English) -->
                 <div class="col-md-6 col-12 mb-3">
-                    <label for="sub_category_en" class="col-form-label">Title (English)</label>
+                    <label for="sub_category_en" class="col-form-label">{{__('English Title')}}</label>
                     <input type="text" class="form-control @error('sub_category_en') is-invalid @enderror" id="sub_category_en"
                         name="sub_category_en" value="{{ old('sub_category_en', $subCategory->sub_category_en) }}" required>
                     @error('sub_category_en')
@@ -20,7 +20,7 @@
 
                 <!-- Title (Gujarati) -->
                 <div class="col-md-6 col-12 mb-3">
-                    <label for="sub_category_gu" class="col-form-label">Title (Gujarati)</label>
+                    <label for="sub_category_gu" class="col-form-label">{{__('Gujarati Title')}}</label>
                     <input type="text" class="form-control" id="sub_category_gu" name="sub_category_gu"
                         value="{{ old('sub_category_gu', $subCategory->sub_category_gu) }}">
                 </div>
@@ -28,32 +28,32 @@
 
             <div class="form-group row">
                 <div class="col-md-6 col-12">
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{ route('admin.subCategories.index') }}" class="btn btn-secondary ml-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
+                    <a href="{{ route('admin.subCategories.index') }}" class="btn btn-secondary ml-2">{{__('Cancel')}}</a>
                 </div>
             </div>
         </form>
 
 
 
-        <h3 class="mt-4">Associated Songs ({{ $subCategory->sub_category_en }})</h3>
+        <h3 class="mt-4">{{__('Associated Songs')}} ({{ $subCategory->{'sub_category_' . app()->getLocale()} }})</h3>
         <table id="associatedSongsTable" class="table">
             <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Title (English)</th>
-                    <th>Action</th>
+                    <th>{{__('Code')}}</th>
+                    <th>{{__('English Title')}}</th>
+                    <th>{{__('Action')}}</th>
                 </tr>
             </thead>
         </table>
 
-        <h3 class="mt-4">Remaining Songs ({{ $subCategory->sub_category_en }})</h3>
+        <h3 class="mt-4">{{__('Remaining Songs')}} ({{ $subCategory->{'sub_category_' . app()->getLocale()} }})</h3>
         <table id="remainingSongsTable" class="table">
             <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Title (English)</th>
-                    <th>Action</th>
+                    <th>{{__('Code')}}</th>
+                    <th>{{__('English Title')}}</th>
+                    <th>{{__('Action')}}</th>
                 </tr>
             </thead>
         </table>

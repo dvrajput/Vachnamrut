@@ -3,6 +3,36 @@
 
 @section('style')
     <style>
+        .container-fluid {
+            padding: 20px;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nav-tabs {
+            margin-bottom: 20px;
+        }
+
+        .nav-link {
+            color: #007bff;
+        }
+
+        .nav-link.active {
+            background-color: #d7861b;
+            color: white;
+        }
+
+        .tab-content {
+            background-color: white;
+            border: 1px solid #d7861b;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
         .display {
             text-align: center;
         }
@@ -11,54 +41,64 @@
             padding: 0.5em 1em;
         }
 
-        .nav-tabs .nav-link.active {
-            background-color: #007bff;
-            color: #fff;
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-link {
+                text-align: center;
+            }
         }
     </style>
 @endsection
 
 @section('content')
     <div class="container-fluid">
-        <!-- Header -->
-        {{-- <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3><a href="{{ route('user.songs.index') }}"><i
-                        class="fas fa-arrow-left"></i></a>&nbsp;&nbsp;{{ $song->title_en }}</h3>
-        </div> --}}
+        <h3>
+            <a href="{{ route('user.songs.index') }}" style="color: black;"><i class="fas fa-arrow-left"></i></a>
+        </h3>
 
-        <!-- Tab navigation for songs in playlist (PAD 1, PAD 2, ...) -->
         <ul class="nav nav-tabs" id="songTab" role="tablist">
-            <h3><a href="{{ route('user.songs.index') }}"><i class="fas fa-arrow-left"></i></a>&nbsp;&nbsp;</h3>
             @foreach ($songsInPlaylists as $index => $playlistSong)
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ $playlistSong->song_code == $song->song_code ? 'active' : '' }}"
-                        id="tab-{{ $playlistSong->song_code }}" data-toggle="tab"
-                        href="#content-{{ $playlistSong->song_code }}" role="tab"
-                        aria-controls="content-{{ $playlistSong->song_code }}"
+                        id="tab-{{ $playlistSong->song_code }}" 
+                        href="{{ url('songs/' . $playlistSong->song_code) }}" 
+                        role="tab" 
+                        aria-controls="content-{{ $playlistSong->song_code }}" 
                         aria-selected="{{ $playlistSong->song_code == $song->song_code ? 'true' : 'false' }}">
-                        {{-- {{ __('Pad ') .''. ($index + 1) }} --}}
                         {{ __('Pad') }} {{ $index + 1 }}
                     </a>
                 </li>
             @endforeach
         </ul>
 
-        <!-- Tab content for song details -->
         <div class="tab-content" id="songTabContent">
             @foreach ($songsInPlaylists as $playlistSong)
                 <div class="tab-pane fade {{ $playlistSong->song_code == $song->song_code ? 'show active' : '' }}"
                     id="content-{{ $playlistSong->song_code }}" role="tabpanel"
                     aria-labelledby="tab-{{ $playlistSong->song_code }}">
-                    {{-- <br> --}}
+
                     <div class="d-flex justify-content-between mb-3 mt-2">
                         <h3>{{ $playlistSong->{'title_' . app()->getLocale()} }}</h3>
                     </div>
 
                     <center>
-                        <p>{!! nl2br($song->{'lyrics_' . app()->getLocale()}) !!}</p>
+                        <p>{!! nl2br($playlistSong->{'lyrics_' . app()->getLocale()}) !!}</p>
                     </center>
                 </div>
             @endforeach
+
+            @if ($songsInPlaylists->isEmpty())
+                <div class="tab-pane fade show active" id="noPad" role="tabpanel" aria-labelledby="tab-noPad">
+                    <h3>{{ __('Pad Not Added') }}</h3>
+                    <center>
+                        <p>{!! nl2br($song->{'lyrics_' . app()->getLocale()}) !!}</p>
+                        <p>{{ __('This song has not been added to any pad.') }}</p>
+                    </center>
+                </div>
+            @endif
         </div>
     </div>
 @endsection
@@ -66,11 +106,7 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            // Initialize the tabs
-            $('#songTab a').on('click', function(e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
+            // No need for tab switching logic since we're redirecting
         });
     </script>
 @endsection

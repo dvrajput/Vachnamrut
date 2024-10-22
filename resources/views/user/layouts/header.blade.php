@@ -24,10 +24,8 @@
                 <div class="dropdown-menu" aria-labelledby="categoryDropdown">
                     @foreach ($categories as $category)
                         <div class="dropdown-submenu">
-                            {{-- <a class="dropdown-item" href="{{ route('user.categories.show', $category->category_code) }}">
-                                                {{ $category->{'category_' . app()->getLocale()} }}
-                                            </a> --}}
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item"
+                                href="{{ route('user.categories.show', $category->category_code) }}">
                                 {{ $category->{'category_' . app()->getLocale()} }}
                             </a>
                             @php
@@ -71,3 +69,68 @@
         </ul>
     </div>
 </nav>
+
+@section('style')
+    <style>
+        .dropdown-menu {
+            border-radius: 0;
+            /* Remove border-radius for a sharper look */
+            opacity: 0;
+            /* Start hidden */
+            transition: opacity 0.3s ease;
+            /* Fade in animation */
+            visibility: hidden;
+            /* Prevent clicks when hidden */
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu:hover .dropdown-menu {
+            opacity: 1;
+            /* Fade in */
+            visibility: visible;
+            /* Make visible for clicks */
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            /* Show menu */
+            visibility: visible;
+            /* Make visible for clicks */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .dropdown-menu {
+                position: static;
+                /* Make dropdowns full width on mobile */
+            }
+
+            .dropdown-menu .dropdown-item {
+                width: 100%;
+                /* Full width items */
+            }
+        }
+    </style>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            // Handle click event to toggle the dropdown
+            $('#categoryDropdown').on('click', function(e) {
+                e.preventDefault();
+                $(this).next('.dropdown-menu').toggleClass('show');
+            });
+
+            // Close the dropdown if clicked outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#categoryDropdown').length) {
+                    $('.dropdown-menu').removeClass('show');
+                }
+            });
+        });
+    </script>
+@endsection

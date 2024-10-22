@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('playlists', function (Blueprint $table) {
-            $table->id();
-            $table->string('playlist_code')->unique();
-            $table->string('playlist_en');
-            $table->string('playlist_gu');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('language')->default('en');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('playlists');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

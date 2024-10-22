@@ -21,7 +21,13 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($request->only('email', 'password'), $remember)) {
+            $user = Auth::user();
+            app()->setLocale($user->language); // Assuming 'language' field exists
+            session()->put('locale', $user->language);
+
             return redirect()->route('admin.songs.index');
 
             // $user=Auth::user();
@@ -39,6 +45,9 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Optionally remove the locale from the session if you want to reset it
+        // $request->session()->forget('locale');
 
         return redirect()->route('admin.login');
     }

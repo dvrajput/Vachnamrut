@@ -18,6 +18,10 @@ class LocaleMiddleware
     {
         if (session()->has('locale')) {
             App::setLocale(session()->get('locale'));
+        } elseif (auth()->check()) {
+            App::setLocale(auth()->user()->language); // Fallback to user's preference
+        } else {
+            App::setLocale(config('app.fallback_locale')); // Default locale
         }
 
         return $next($request);

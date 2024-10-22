@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'View Sub Category')
+@section('title', __('Sub Category'))
 @section('style')
     <style>
         .display {
@@ -17,19 +17,19 @@
     <div class="container-fluid">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Sub Category List</h3>
-            <a href="{{ route('admin.subCategories.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create
-                Sub Category</a>
+            <h3 class="mb-0">{{ __('Sub Category List') }}</h3>
+            <a href="{{ route('admin.subCategories.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i>
+                {{ __('Create Sub Category') }}</a>
         </div>
 
         <!-- DevExtreme DataGrid container -->
         <table id="userTable" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Sub Category En</th>
-                    <th>Sub Category Gu</th>
-                    <th>Action</th>
+                    <th>{{ __('Code') }}</th>
+                    <th>{{ __('English Sub Category') }}</th>
+                    <th>{{ __('Sub Category') }}</th>
+                    <th>{{ __('Action') }}</th>
                 </tr>
             </thead>
         </table>

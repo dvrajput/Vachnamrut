@@ -1,19 +1,24 @@
 @extends('admin.layouts.app')
-@section('title', 'Create Playlist')
+@section('title', __('Create Playlist'))
 @section('content')
-    <h3 class="mt-4 mb-4">Add New Playlist</h3>
+    <h3 class="mt-4 mb-4">{{ __('Add New Playlist') }}</h3>
     <form action="{{ route('admin.playlists.store') }}" method="POST">
         @csrf
         <div class="form-group">
-            <label for="playlist_name">Title (English)</label>
-            <input type="text" class="form-control id="playlist_name" name="playlist_name" placeholder="Enter Playlist Name"
-                required>
+            <label for="playlist_en">{{ __('English Playlist') }}</label>
+            <input type="text" class="form-control id="playlist_en" name="playlist_en"
+                placeholder="{{ __('Enter English Playlist') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="playlist_gu">{{ __('Gujarati Playlist') }}</label>
+            <input type="text" class="form-control id="playlist_gu" name="playlist_gu"
+                placeholder="{{ __('Enter Gujarati Playlist') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="song_code">Song</label>
+            <label for="song_code">{{ __('Songs') }}</label>
             <select class="form-control select2" id="song_code" name="song_code[]" multiple="multiple"
-                data-placeholder="Select Songs">
+                data-placeholder="{{ __('Select Songs') }}">
                 @foreach ($songs as $song)
                     <option value="{{ $song->song_code }}">
                         {{ $song->title_en }}
@@ -25,8 +30,8 @@
             @enderror
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{{ route('admin.playlists.index') }}" class="btn btn-secondary ml-2">Cancel</a>
+        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
+        <a href="{{ route('admin.playlists.index') }}" class="btn btn-secondary ml-2">{{ __('Cancel') }}</a>
     </form>
 @endsection
 @section('script')
