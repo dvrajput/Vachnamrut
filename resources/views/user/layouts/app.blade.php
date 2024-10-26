@@ -59,8 +59,6 @@
 </head>
 
 <body>
-    {{-- @include('user.layouts.header') --}}
-
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{{ route('user.songs.index') }}">
@@ -72,10 +70,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link{{ request()->is('songs*') ? ' active' : '' }}"
                             href="{{ route('user.songs.index') }}">{{ __('Songs') }}</a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle{{ request()->is('categories*') ? ' active' : '' }}" href="#"
                             id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true"

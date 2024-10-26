@@ -88,17 +88,19 @@
                 columns: [{
                         data: 'title_en',
                         name: 'title_en',
+                        orderable:false,
                         render: function(data, type, row) {
-                            return `<a href="{{ url('songs') }}/${row.song_code}" style="color: black; text-decoration: none;">${data}</a>`;
+                            return `<a href="{{ url('songs') }}/${row.song_code}" style="color: black; text-decoration: none; display: block; height: 100%;">${data}</a>`;
                         }
                     },
                     {
                         data: 'title_gu',
                         name: 'title_gu',
+                        orderable:false,
                         render: function(data, type, row) {
-                            return `<a href="{{ url('songs') }}/${row.song_code}" style="color: black; text-decoration: none;">${data}</a>`;
+                            return `<a href="{{ url('songs') }}/${row.song_code}" style="color: black; text-decoration: none; display: block; height: 100%;">${data}</a>`;
                         }
-                    },
+                    }
                 ],
                 dom: 'Bfrtip',
                 buttons: [

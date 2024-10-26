@@ -41,14 +41,16 @@
             @if (session('success'))
                 toastr.success("{{ session('success') }}", "Success", {
                     positionClass: "toast-top-right",
-                    timeOut: 5000
+                    timeOut: 5000,
+                    closeButton: true // Enable close button
                 });
             @endif
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     toastr.error("{{ $error }}", "Error", {
                         positionClass: "toast-top-right",
-                        timeOut: 5000
+                        timeOut: 5000,
+                        closeButton: true // Enable close button
                     });
                 @endforeach
             @endif

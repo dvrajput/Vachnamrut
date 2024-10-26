@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'View Song')
+@section('title', __('Show') . ' - ' . $category->{'category_' . app()->getLocale()})
 
 @section('style')
     <style>
@@ -45,11 +45,13 @@
                 ajax: '{{ route('admin.categories.show', ':id') }}'.replace(':id', categoryId),
                 columns: [{
                         data: 'sub_category_code',
-                        name: 'sub_category_code'
+                        name: 'sub_category_code',
+                        orderable:false,
                     },
                     {
                         data: 'sub_category_en',
-                        name: 'sub_category_en'
+                        name: 'sub_category_en',
+                        orderable:false,
                     },
                     {
                         data: 'action',

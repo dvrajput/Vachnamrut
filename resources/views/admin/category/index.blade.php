@@ -49,11 +49,13 @@
                     },
                     {
                         data: 'category_en',
-                        name: 'category_en'
+                        name: 'category_en',
+                        orderable:false,
                     },
                     {
                         data: 'category_gu',
-                        name: 'category_gu'
+                        name: 'category_gu',
+                        orderable:false,
                     },
                     {
                         data: 'action',

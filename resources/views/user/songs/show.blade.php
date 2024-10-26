@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title', 'View Song')
+@section('title', __('Songs') . ' - ' . $song->{'title_' . app()->getLocale()})
 
 @section('style')
     <style>
@@ -55,18 +55,16 @@
 
 @section('content')
     <div class="container-fluid">
-        <h3>
-            <a href="{{ route('user.songs.index') }}" style="color: black;"><i class="fas fa-arrow-left"></i></a>
-        </h3>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>{{ $song->{'title_' . app()->getLocale()} }}</h3>
+        </div>
 
         <ul class="nav nav-tabs" id="songTab" role="tablist">
             @foreach ($songsInPlaylists as $index => $playlistSong)
                 <li class="nav-item" role="presentation">
                     <a class="nav-link {{ $playlistSong->song_code == $song->song_code ? 'active' : '' }}"
-                        id="tab-{{ $playlistSong->song_code }}" 
-                        href="{{ url('songs/' . $playlistSong->song_code) }}" 
-                        role="tab" 
-                        aria-controls="content-{{ $playlistSong->song_code }}" 
+                        id="tab-{{ $playlistSong->song_code }}" href="{{ url('songs/' . $playlistSong->song_code) }}"
+                        role="tab" aria-controls="content-{{ $playlistSong->song_code }}"
                         aria-selected="{{ $playlistSong->song_code == $song->song_code ? 'true' : 'false' }}">
                         {{ __('Pad') }} {{ $index + 1 }}
                     </a>
@@ -92,10 +90,10 @@
 
             @if ($songsInPlaylists->isEmpty())
                 <div class="tab-pane fade show active" id="noPad" role="tabpanel" aria-labelledby="tab-noPad">
-                    <h3>{{ __('Pad Not Added') }}</h3>
+                    {{-- <h3>{{ __('Pad Not Added') }}</h3> --}}
                     <center>
                         <p>{!! nl2br($song->{'lyrics_' . app()->getLocale()}) !!}</p>
-                        <p>{{ __('This song has not been added to any pad.') }}</p>
+                        {{-- <p>{{ __('This song has not been added to any pad.') }}</p> --}}
                     </center>
                 </div>
             @endif

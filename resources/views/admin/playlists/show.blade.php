@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'View Song')
+@section('title', __('Show') . ' - ' . $category->{'playlist_' . app()->getLocale()})
 
 @section('style')
     <style>
@@ -20,8 +20,8 @@
         </h1> --}}
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0"><a href="{{ route('admin.categories.index') }}"><i class="fas fa-arrow-left"></i></a>
-                &nbsp;&nbsp;{{ __('Category Detail') }} : {{ $category->{'playlist_' . app()->getLocale()} }}</h3>
+            <h3 class="mb-0"><a href="{{ route('admin.playlists.index') }}"><i class="fas fa-arrow-left"></i></a>
+                &nbsp;&nbsp;{{ __('Playlist Detail') }} : {{ $category->{'playlist_' . app()->getLocale()} }}</h3>
             <a href="{{ route('admin.subCategories.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i>
                 {{ __('Create Sub Category') }}</a>
         </div>
@@ -49,11 +49,13 @@
                 ajax: '{{ route('admin.playlists.show', ':id') }}'.replace(':id', categoryId),
                 columns: [{
                         data: 'song_code',
-                        name: 'song_code'
+                        name: 'song_code',
+                        orderable:false,
                     },
                     {
                         data: 'title_en',
-                        name: 'title_en'
+                        name: 'title_en',
+                        orderable:false,
                     },
                     {
                         data: 'action',

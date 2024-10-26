@@ -120,10 +120,11 @@ class SubCategoryController extends Controller
 
     public function fetchAssociatedSongs(Request $request, string $sub_category_code)
     {
-        // dd($sub_category_code);
-        $data = SongSubCateRel::where('sub_category_code', $sub_category_code)
-            ->join('songs', 'songs.song_code', '=', 'song_sub_cate_rels.song_code')
-            ->select('songs.song_code', 'songs.title_en');
+        $data = Song::whereIn('song_code', function ($query) use ($sub_category_code) {
+            $query->select('song_code')
+                ->from('song_sub_cate_rels')
+                ->where('sub_category_code', $sub_category_code);
+        })->select('song_code', 'title_en', 'title_gu');
         // dd($sub_category_code);
         return DataTables::of($data)->make(true);
     }
@@ -134,7 +135,7 @@ class SubCategoryController extends Controller
             $query->select('song_code')
                 ->from('song_sub_cate_rels')
                 ->where('sub_category_code', $sub_category_code);
-        })->select('song_code', 'title_en');
+        })->select('song_code', 'title_en', 'title_gu');
 
         return DataTables::of($data)->make(true);
     }

@@ -44,15 +44,18 @@
                 ajax: '{{ route('admin.playlists.index') }}',
                 columns: [{
                         data: 'playlist_code',
-                        name: 'playlist_code'
+                        name: 'playlist_code',
+                        orderable:false,
                     },
                     {
                         data: 'playlist_en',
-                        name: 'playlist_en'
+                        name: 'playlist_en',
+                        orderable:false,
                     },
                     {
                         data: 'playlist_gu',
-                        name: 'playlist_gu'
+                        name: 'playlist_gu',
+                        orderable:false,
                     },
                     {
                         data: 'action',

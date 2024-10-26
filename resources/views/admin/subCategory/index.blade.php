@@ -45,15 +45,18 @@
                 ajax: '{{ route('admin.subCategories.index') }}',
                 columns: [{
                         data: 'sub_category_code',
-                        name: 'sub_category_code'
+                        name: 'sub_category_code',
+                        orderable:false,
                     },
                     {
                         data: 'sub_category_en',
-                        name: 'sub_category_en'
+                        name: 'sub_category_en',
+                        orderable:false,
                     },
                     {
                         data: 'sub_category_gu',
-                        name: 'sub_category_gu'
+                        name: 'sub_category_gu',
+                        orderable:false,
                     },
                     {
                         data: 'action',

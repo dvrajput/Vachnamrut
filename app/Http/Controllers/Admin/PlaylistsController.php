@@ -33,7 +33,11 @@ class PlaylistsController extends Controller
     public function create()
     {
         $songs = Song::select('song_code', 'title_en')->get();
-        return view('admin.playlists.create', compact('songs'));
+
+        // Fetch songs already associated with playlists (if any)
+        $existingSongs = SongPlaylistRel::pluck('song_code')->toArray();
+
+        return view('admin.playlists.create', compact('songs', 'existingSongs'));
     }
 
     /**
@@ -41,13 +45,14 @@ class PlaylistsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'playlist_en' => 'required|string|max:255',
-            'playlist_gu' => 'required|string|max:255'
+            'playlist_gu' => 'required|string|max:255',
+            'song_code' => 'required|array|min:2', // Ensure at least 2 songs are selected
+            'song_code.*' => 'required|string', // Each selected song must be a string
         ]);
 
-        //get playlist prefix from configuraton table
+        // Get playlist prefix from configuration table
         $config = Configuration::where('key', 'playlist_prefix')->value('value');
 
         // Find the last playlist with the same prefix
@@ -187,5 +192,23 @@ class PlaylistsController extends Controller
 
         // Redirect with a success message
         return redirect()->back()->with('success', 'Playlist deleted successfully');
+    }
+
+    public function search(Request $request)
+    {
+        // dd($request->all());
+        try {
+            $query = $request->get('q');
+            // dd($query);
+            $songs = Song::where('title_en', 'LIKE', "%{$query}%")
+                ->orWhere('title_gu', 'LIKE', "%{$query}%")
+                ->orWhere('song_code', 'LIKE', $query)
+                ->select('song_code', 'title_en', 'title_gu')
+                ->get();
+            // dd($songs);
+            return response()->json($songs);
+        } catch (\Exception $e) {
+            return response()->json([], 404); // Return empty if there's an error
+        }
     }
 }

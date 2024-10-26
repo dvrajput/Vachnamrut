@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title', 'View Song')
+@section('title', __('Category') . ' - ' . $subCategory->{'sub_category_' . app()->getLocale()})
 
 @section('style')
     <style>
@@ -63,6 +63,7 @@
                     {
                         data: 'title_en',
                         name: 'title_en',
+                        orderable:false,
                         render: function(data, type, row) {
                             return `<a href="{{ url('songs') }}/${row.song_code}" style="color: black; text-decoration: none;">${data}</a>`;
                         }
@@ -70,6 +71,7 @@
                     {
                         data: 'title_gu',
                         name: 'title_gu',
+                        orderable:false,
                         render: function(data, type, row) {
                             return `<a href="{{ url('songs') }}/${row.song_code}" style="color: black; text-decoration: none;">${data}</a>`;
                         }

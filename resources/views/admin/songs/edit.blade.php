@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Edit Song')
+@section('title', __('Edit') . ' - ' . $song->{'title_' . app()->getLocale()})
 @section('content')
     <h3 class="mt-4 mb-4">{{ __('Edit Song') }}</h3>
     <form action="{{ route('admin.songs.update', $song->song_code) }}" method="POST">

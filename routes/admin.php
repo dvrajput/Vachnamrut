@@ -28,6 +28,8 @@ Route::prefix('admin/')->name('admin.')->group(function () {
         Route::resource('categories', AdminCategoriesController::class);
 
         Route::resource('playlists', AdminPlaylistsController::class);
+        Route::get('search', [AdminPlaylistsController::class, 'search'])->name('songSearch');
+
 
         Route::resource('subCategories', AdminSubCategoryController::class);
         Route::get('subCategories/{id}/associated-songs', [AdminSubCategoryController::class, 'fetchAssociatedSongs'])->name('subCategories.associated_songs');

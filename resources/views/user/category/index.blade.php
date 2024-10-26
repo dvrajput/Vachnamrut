@@ -45,6 +45,7 @@
                 columns: [{
                         data: 'sub_category_en',
                         name: 'sub_category_en',
+                        orderable:false,
                         render: function(data, type, row) {
                             return `<a href="{{ url('categories') }}/${row.sub_category_code}" style="color: black; text-decoration: none;">${data}</a>`;
                         }
@@ -52,6 +53,7 @@
                     {
                         data: 'sub_category_gu',
                         name: 'sub_category_gu',
+                        orderable:false,
                         render: function(data, type, row) {
                             return `<a href="{{ url('categories') }}/${row.sub_category_code}" style="color: black; text-decoration: none;">${data}</a>`;
                         }

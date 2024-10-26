@@ -46,23 +46,28 @@
                 ajax: '{{ route('admin.songs.index') }}',
                 columns: [{
                         data: 'song_code',
-                        name: 'song_code'
+                        name: 'song_code',
+                        orderable:false,
                     },
                     {
                         data: 'title_en',
-                        name: 'title_en'
+                        name: 'title_en',
+                        orderable:false,
                     },
                     {
                         data: 'lyrics_en',
-                        name: 'lyrics_en'
+                        name: 'lyrics_en',
+                        orderable:false,
                     },
                     {
                         data: 'title_gu',
-                        name: 'title_gu'
+                        name: 'title_gu',
+                        orderable:false,
                     },
                     {
                         data: 'lyrics_gu',
-                        name: 'lyrics_gu'
+                        name: 'lyrics_gu',
+                        orderable:false,
                     },
                     {
                         data: 'action',

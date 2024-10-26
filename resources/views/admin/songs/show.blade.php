@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'View Song')
+@section('title', __('Show') . ' - ' . $song->{'title_' . app()->getLocale()})
 @section('style')
     <style>
         .display {

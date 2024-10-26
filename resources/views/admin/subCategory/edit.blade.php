@@ -42,6 +42,7 @@
                 <tr>
                     <th>{{__('Code')}}</th>
                     <th>{{__('English Title')}}</th>
+                    <th>{{__('Gujarati Title')}}</th>
                     <th>{{__('Action')}}</th>
                 </tr>
             </thead>
@@ -53,6 +54,7 @@
                 <tr>
                     <th>{{__('Code')}}</th>
                     <th>{{__('English Title')}}</th>
+                    <th>{{__('Gujarati Title')}}</th>
                     <th>{{__('Action')}}</th>
                 </tr>
             </thead>
@@ -70,11 +72,18 @@
                 ajax: '{{ route('admin.subCategories.associated_songs', $subCategory->sub_category_code) }}',
                 columns: [{
                         data: 'song_code',
-                        name:'song_code'
+                        name:'song_code',
+                        orderable:false,
                     },
                     {
                         data: 'title_en',
-                        name: 'title_en'
+                        name: 'title_en',
+                        orderable:false,
+                    },
+                    {
+                        data: 'title_gu',
+                        name: 'title_gu',
+                        orderable:false,
                     },
                     {
                         data: 'song_code',
@@ -109,6 +118,10 @@
                     {
                         data: 'title_en',
                         name: 'title_en'
+                    },
+                    {
+                        data: 'title_gu',
+                        name: 'title_gu'
                     },
                     {
                         data: 'song_code',
