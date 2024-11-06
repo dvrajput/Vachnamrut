@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title', 'View Song')
+@section('title', 'Kirtanavali')
 
 @section('style')
     <style>

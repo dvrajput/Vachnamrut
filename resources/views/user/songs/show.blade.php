@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title', __('Songs') . ' - ' . $song->{'title_' . app()->getLocale()})
+@section('title', __('Kirtan') . ' - ' . $song->{'title_' . app()->getLocale()})
 
 @section('style')
     <style>
