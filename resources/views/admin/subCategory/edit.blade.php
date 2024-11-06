@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', __('Edit Sub Category'))
+@section('title', __('Edit') . ' - ' . $subCategory->{'sub_category_' . app()->getLocale()})
 
 @section('content')
     <div class="container-fluid">
