@@ -18,6 +18,7 @@ class ConfigSeeder extends Seeder
             ['key' => 'category_prefix', 'value' => 'CAT'],
             ['key' => 'playlist_prefix', 'value' => 'PLAY'],
             ['key' => 'sub_category_prefix', 'value' => 'SCAT'],
+            ['key' => 'show_export', 'value' => '1'],
         ];
 
         // Loop through each configuration item and create or update it by key
