@@ -26,6 +26,10 @@
                                 <a class="nav-link{{ request()->is('admin/playlists*') ? ' active' : '' }}"
                                     href="{{ route('admin.playlists.index') }}">{{ __('Playlist') }}</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link{{ request()->is('admin/exports*') ? ' active' : '' }}"
+                                    href="{{ route('admin.exports.index') }}">{{ __('Export') }}</a>
+                            </li>
                             {{-- <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/about*') ? ' active' : '' }}"
                                     href="{{ route('songs.index') }}">{{ __('About Us') }}</a>

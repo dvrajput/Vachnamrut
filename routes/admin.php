@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoriesController as AdminCategoriesController
 use App\Http\Controllers\Admin\PlaylistsController as AdminPlaylistsController;
 use App\Http\Controllers\Admin\SongsController as AdminSongController;
 use App\Http\Controllers\Admin\SubCategoryController as AdminSubCategoryController;
+use App\Http\Controllers\Admin\ExportController as AdminExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -29,6 +30,10 @@ Route::prefix('admin/')->name('admin.')->group(function () {
 
         Route::resource('playlists', AdminPlaylistsController::class);
         Route::get('search', [AdminPlaylistsController::class, 'search'])->name('songSearch');
+
+        // Route::resource('', AdminExportController::class);
+        Route::get('exports/index', [AdminExportController::class, 'index'])->name('exports.index');
+        Route::get('exports', [AdminExportController::class, 'export'])->name('exports');
 
 
         Route::resource('subCategories', AdminSubCategoryController::class);
