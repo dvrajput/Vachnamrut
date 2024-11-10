@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PlaylistsController as AdminPlaylistsController;
 use App\Http\Controllers\Admin\SongsController as AdminSongController;
 use App\Http\Controllers\Admin\SubCategoryController as AdminSubCategoryController;
 use App\Http\Controllers\Admin\ExportController as AdminExportController;
+use App\Http\Controllers\Admin\ConfigController as AdminConfigController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -35,6 +36,7 @@ Route::prefix('admin/')->name('admin.')->group(function () {
         Route::get('exports/index', [AdminExportController::class, 'index'])->name('exports.index');
         Route::get('exports', [AdminExportController::class, 'export'])->name('exports');
 
+        Route::resource('config', AdminConfigController::class);
 
         Route::resource('subCategories', AdminSubCategoryController::class);
         Route::get('subCategories/{id}/associated-songs', [AdminSubCategoryController::class, 'fetchAssociatedSongs'])->name('subCategories.associated_songs');

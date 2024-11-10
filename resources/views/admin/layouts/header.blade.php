@@ -1,8 +1,12 @@
+@php
+    $config = App\Models\Configuration::where('key', 'show_export')->first();
+    $exportShow = $config->value;
+@endphp
 <header class="bg-light p-3 mb-3">
     <div class="row justify-content-between d-flex align-items-center">
         <div class="col-auto">
             <a class="navbar-brand" href="{{ route('admin.songs.index') }}">
-                {{__('Kirtanavali')}}
+                {{ __('Kirtanavali') }}
             </a>
         </div>
         <div class="col-auto">
@@ -26,10 +30,12 @@
                                 <a class="nav-link{{ request()->is('admin/playlists*') ? ' active' : '' }}"
                                     href="{{ route('admin.playlists.index') }}">{{ __('Playlist') }}</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link{{ request()->is('admin/exports*') ? ' active' : '' }}"
-                                    href="{{ route('admin.exports.index') }}">{{ __('Export') }}</a>
-                            </li>
+                            @if ($exportShow == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link{{ request()->is('admin/exports*') ? ' active' : '' }}"
+                                        href="{{ route('admin.exports.index') }}">{{ __('Export') }}</a>
+                                </li>
+                            @endif
                             {{-- <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/about*') ? ' active' : '' }}"
                                     href="{{ route('songs.index') }}">{{ __('About Us') }}</a>

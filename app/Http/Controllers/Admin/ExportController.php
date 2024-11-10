@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SongsExport;
+use App\Models\Configuration;
 use App\Models\Playlist;
 use Illuminate\Support\Facades\DB;
 use App\Models\Song;
@@ -15,6 +16,11 @@ class ExportController extends Controller
 {
     public function index()
     {
+        $config = Configuration::where('key', 'show_export')->first();
+        $exportShow = $config->value;
+        if ($exportShow != '1') {
+            return redirect()->back()->with('success', 'Page Not Found!');
+        }
         $subCategories = SubCategory::all();
         $playlists = Playlist::all();
         return view('admin.exports.index', compact('subCategories', 'playlists'));
