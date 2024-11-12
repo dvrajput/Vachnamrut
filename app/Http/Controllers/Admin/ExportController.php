@@ -46,14 +46,18 @@ class ExportController extends Controller
             ->leftJoin('categories', 'cate_sub_cate_rels.category_code', '=', 'categories.category_code')
 
             ->select(
+                'songs.song_code',
                 'songs.title_gu',
                 'songs.title_en',
                 'songs.lyrics_gu',
                 'songs.lyrics_en',
+                'sub_categories.sub_category_code',
                 'sub_categories.sub_category_en',  // The name of the subcategory in English
                 'sub_categories.sub_category_gu',  // The name of the subcategory in Gujarati
+                'playlists.playlist_code',
                 'playlists.playlist_en',
                 'playlists.playlist_gu',
+                'categories.category_code',
                 'categories.category_en',
                 'categories.category_gu'
                 // 'playlists.playlist_en as playlist_name'  // Assuming playlists have a 'name' field
