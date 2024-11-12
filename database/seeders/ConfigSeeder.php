@@ -19,6 +19,10 @@ class ConfigSeeder extends Seeder
             ['key' => 'playlist_prefix', 'value' => 'PLAY'],
             ['key' => 'sub_category_prefix', 'value' => 'SCAT'],
             ['key' => 'show_export', 'value' => '1'],
+            ['key' => 'song_delete', 'value' => '1'],
+            ['key' => 'category_delete', 'value' => '1'],
+            ['key' => 'sub_category_delete', 'value' => '1'],
+            ['key' => 'playlist_delete', 'value' => '1'],
         ];
 
         // Loop through each configuration item and create or update it by key

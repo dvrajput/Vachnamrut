@@ -39,6 +39,8 @@
 
 @section('script')
     <script>
+        const deleteBtn = @json($deleteBtn);
+
         $(document).ready(function() {
             $('#songsTable').DataTable({
                 processing: true,
@@ -47,27 +49,27 @@
                 columns: [{
                         data: 'song_code',
                         name: 'song_code',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'title_en',
                         name: 'title_en',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'lyrics_en',
                         name: 'lyrics_en',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'title_gu',
                         name: 'title_gu',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'lyrics_gu',
                         name: 'lyrics_gu',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'action',
@@ -75,13 +77,18 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `
-                                <a href="{{ url('admin/songs') }}/${row.song_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="/admin/songs/${row.song_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                            let actionHtml = `
+                            <a href="{{ url('admin/songs') }}/${row.song_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="/admin/songs/${row.song_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        `;
+
+                            // Conditionally add the delete button if deleteBtn is 1
+                            if (deleteBtn === '1') {
+                                actionHtml += `
                                 <form action="{{ url('admin/songs') }}/${row.song_code}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -90,9 +97,11 @@
                                     </button>
                                 </form>
                             `;
+                            }
+
+                            return actionHtml;
                         }
                     }
-
                 ],
                 columnDefs: [{
                         targets: 2, // index of the lyrics_en column

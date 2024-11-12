@@ -50,7 +50,10 @@ class SongsController extends Controller
                 // })
                 ->make(true);
         }
-        return view('admin.songs.index');
+        $config = Configuration::where('key', 'song_delete')->first();
+        $deleteBtn = $config->value;
+
+        return view('admin.songs.index', compact('deleteBtn'));
     }
 
     /**

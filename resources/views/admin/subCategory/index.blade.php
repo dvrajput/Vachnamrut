@@ -38,6 +38,8 @@
 @endsection
 @section('script')
     <script>
+        const deleteBtn = @json($deleteBtn);
+
         $(document).ready(function() {
             $('#userTable').DataTable({
                 processing: true,
@@ -46,17 +48,17 @@
                 columns: [{
                         data: 'sub_category_code',
                         name: 'sub_category_code',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'sub_category_en',
                         name: 'sub_category_en',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'sub_category_gu',
                         name: 'sub_category_gu',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'action',
@@ -64,24 +66,31 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `
+                            let actionHtml = `
                             <a href="/admin/subCategories/${row.sub_category_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
                                 <i class="fas fa-eye"></i>
                             </a>
                             <a href="/admin/subCategories/${row.sub_category_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('admin.subCategories.destroy', '') }}/${row.sub_category_code}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure?')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
                         `;
+
+                            // Conditionally add the delete button if deleteBtn is 1
+                            if (deleteBtn === '1') {
+                                actionHtml += `
+                                <form action="{{ route('admin.subCategories.destroy', '') }}/${row.sub_category_code}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            `;
+                            }
+
+                            return actionHtml;
                         }
                     }
-
                 ],
                 dom: 'Bfrtip',
                 buttons: [

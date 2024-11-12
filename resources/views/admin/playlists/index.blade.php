@@ -37,6 +37,8 @@
 
 @section('script')
     <script>
+        const deleteBtn = @json($deleteBtn);
+
         $(document).ready(function() {
             $('#playlistsTable').DataTable({
                 processing: true,
@@ -45,17 +47,17 @@
                 columns: [{
                         data: 'playlist_code',
                         name: 'playlist_code',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'playlist_en',
                         name: 'playlist_en',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'playlist_gu',
                         name: 'playlist_gu',
-                        orderable:false,
+                        orderable: false,
                     },
                     {
                         data: 'action',
@@ -63,13 +65,18 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `
-                                <a href="{{ url('admin/playlists') }}/${row.playlist_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="/admin/playlists/${row.playlist_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                            let actionHtml = `
+                            <a href="{{ url('admin/playlists') }}/${row.playlist_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="/admin/playlists/${row.playlist_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        `;
+
+                            // Conditionally add the delete button if deleteBtn is 1
+                            if (deleteBtn === '1') {
+                                actionHtml += `
                                 <form action="{{ route('admin.playlists.destroy', '') }}/${row.playlist_code}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -78,9 +85,11 @@
                                     </button>
                                 </form>
                             `;
+                            }
+
+                            return actionHtml;
                         }
                     }
-
                 ],
                 dom: 'Bfrtip',
                 buttons: [

@@ -24,7 +24,9 @@ class PlaylistsController extends Controller
             return DataTables::of($data)
                 ->make(true);
         }
-        return view('admin.playlists.index');
+        $config = Configuration::where('key', 'playlist_delete')->first();
+        $deleteBtn = $config->value;
+        return view('admin.playlists.index',compact('deleteBtn'));
     }
 
     /**

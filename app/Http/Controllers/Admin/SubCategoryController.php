@@ -26,7 +26,9 @@ class SubCategoryController extends Controller
             return DataTables::of($data)
                 ->make(true);
         }
-        return view('admin.subCategory.index');
+        $config = Configuration::where('key', 'sub_category_delete')->first();
+        $deleteBtn = $config->value;
+        return view('admin.subCategory.index', compact('deleteBtn'));
     }
 
     /**
