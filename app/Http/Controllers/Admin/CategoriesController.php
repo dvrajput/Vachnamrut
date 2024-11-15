@@ -43,9 +43,12 @@ class CategoriesController extends Controller
                 ->make(true);
         }
         $config = Configuration::where('key', 'category_delete')->first();
-        $deleteBtn = $config->value;
-        // return redirect()->route('');
-        return view('admin.category.index',compact('deleteBtn'));
+        $deleteBtn = $config->value ?? 0;
+        
+        $config = Configuration::where('key', 'category_create')->first();
+        $createBtnShow = $config->value ?? 0;
+
+        return view('admin.category.index',compact('deleteBtn','createBtnShow'));
     }
 
     /**
