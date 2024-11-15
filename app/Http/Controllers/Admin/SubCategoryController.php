@@ -27,8 +27,12 @@ class SubCategoryController extends Controller
                 ->make(true);
         }
         $config = Configuration::where('key', 'sub_category_delete')->first();
-        $deleteBtn = $config->value;
-        return view('admin.subCategory.index', compact('deleteBtn'));
+        $deleteBtn = $config->value ?? 0;
+
+        $config = Configuration::where('key', 'sub_category_create')->first();
+        $createBtnShow = $config->value ?? 0;
+
+        return view('admin.subCategory.index', compact('deleteBtn','createBtnShow'));
     }
 
     /**

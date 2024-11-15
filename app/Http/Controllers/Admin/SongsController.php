@@ -51,9 +51,12 @@ class SongsController extends Controller
                 ->make(true);
         }
         $config = Configuration::where('key', 'song_delete')->first();
-        $deleteBtn = $config->value;
+        $deleteBtn = $config->value ?? 0;
 
-        return view('admin.songs.index', compact('deleteBtn'));
+        $config = Configuration::where('key', 'song_create')->first();
+        $createBtnShow = $config->value ?? 0;
+
+        return view('admin.songs.index', compact('deleteBtn','createBtnShow'));
     }
 
     /**

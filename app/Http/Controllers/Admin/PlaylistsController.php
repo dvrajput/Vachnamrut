@@ -25,8 +25,12 @@ class PlaylistsController extends Controller
                 ->make(true);
         }
         $config = Configuration::where('key', 'playlist_delete')->first();
-        $deleteBtn = $config->value;
-        return view('admin.playlists.index',compact('deleteBtn'));
+        $deleteBtn = $config->value ?? 0;
+
+        $config = Configuration::where('key', 'playlist_create')->first();
+        $createBtnShow = $config->value ?? 0;
+
+        return view('admin.playlists.index',compact('deleteBtn','createBtnShow'));
     }
 
     /**

@@ -17,8 +17,10 @@
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0">{{ __('Song List') }}</h3>
+            @if($createBtnShow =='1')
             <a href="{{ route('admin.songs.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i>
                 {{ __('Create Song') }}</a>
+                @endif
         </div>
 
         <!-- DevExtreme DataGrid container -->
