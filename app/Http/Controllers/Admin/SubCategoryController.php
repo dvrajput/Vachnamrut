@@ -37,7 +37,24 @@ class SubCategoryController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.subCategory.create', compact('categories'));
+                //get category prefix from configuraton table
+                $config = Configuration::where('key', 'sub_category_prefix')->value('value');
+                // dd($config);
+                // Find the last category with the same prefix
+                $lastSubCategory = SubCategory::where('sub_category_code', 'LIKE', "$config%")
+                    ->orderBy('id', 'desc')
+                    ->first();
+        
+                // Determine the new category code
+                if ($lastSubCategory) {
+                    // Extract the numeric part and increment it
+                    $lastNumber = intval(substr($lastSubCategory->sub_category_code, strlen($config)));
+                    $newSubCategoryCode = $config . ($lastNumber + 1);
+                } else {
+                    // No category exists with this prefix, start with the prefix followed by 1
+                    $newSubCategoryCode = $config . '1';
+                }
+        return view('admin.subCategory.create', compact('categories','newSubCategoryCode'));
     }
 
     /**
@@ -46,32 +63,17 @@ class SubCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'sub_category_code'=> 'required|string',
             'sub_category_en' => 'required|string',
             'sub_category_gu' => 'required|string',
             'category_code' => 'required|array',
             'category_code.*' => 'exists:categories,category_code',
         ]);
 
-        //get category prefix from configuraton table
-        $config = Configuration::where('key', 'sub_category_prefix')->value('value');
-        // dd($config);
-        // Find the last category with the same prefix
-        $lastSubCategory = SubCategory::where('sub_category_code', 'LIKE', "$config%")
-            ->orderBy('sub_category_code', 'desc')
-            ->first();
-
-        // Determine the new category code
-        if ($lastSubCategory) {
-            // Extract the numeric part and increment it
-            $lastNumber = intval(substr($lastSubCategory->sub_category_code, strlen($config)));
-            $newSubCategoryCode = $config . ($lastNumber + 1);
-        } else {
-            // No category exists with this prefix, start with the prefix followed by 1
-            $newSubCategoryCode = $config . '1';
-        }
+        
 
         $subCate = SubCategory::create([
-            'sub_category_code' => $newSubCategoryCode,
+            'sub_category_code' => $request->sub_category_code,
             'sub_category_en' => $request->sub_category_en,
             'sub_category_gu' => $request->sub_category_gu
         ]);

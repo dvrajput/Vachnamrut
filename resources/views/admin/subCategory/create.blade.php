@@ -5,6 +5,12 @@
     <form action="{{ route('admin.subCategories.store') }}" method="POST">
         @csrf
         <div class="form-group">
+            <label for="category_en">{{ __('Sub Category Code') }}</label>
+            <input type="text" class="form-control id="sub_category_code" name="sub_category_code"
+                value="{{$newSubCategoryCode}}" required readonly>
+        </div>
+
+        <div class="form-group">
             <label for="category_code">{{ __('Category') }}</label>
             <select class="form-control select2" id="category_code" name="category_code[]" multiple="multiple"
                 data-placeholder="{{ __('Select Categories') }}">
