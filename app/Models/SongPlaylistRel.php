@@ -11,6 +11,8 @@ class SongPlaylistRel extends Model
 
     public $timestamps = false;
 
+    protected $primary = 'id';
+
     protected $fillable = [
         'song_code',
         'playlist_code',

@@ -32,12 +32,19 @@ class SongsController extends Controller
         $playlists = SongPlaylistRel::where('song_code', $songCode)->get();
         $playlistCodes = $playlists->pluck('playlist_code');
 
-        // Get all songs in those playlists
-        $songsInPlaylists = Song::whereIn('song_code', function ($query) use ($playlistCodes) {
+        // Get all songs in those playlists, ordered by song_playlist_rels.id in ascending order
+        $songsInPlaylists = Song::whereIn('songs.song_code', function ($query) use ($playlistCodes) {
             $query->select('song_code')
                 ->from('song_playlist_rels')
                 ->whereIn('playlist_code', $playlistCodes);
-        })->get();
+        })
+            // Join song_playlist_rels to access the id column for ordering
+            ->join('song_playlist_rels', 'songs.song_code', '=', 'song_playlist_rels.song_code')
+            ->orderBy('song_playlist_rels.id', 'asc') // Order by song_playlist_rels.id in ascending order
+            ->get();
+
+        // Debugging the retrieved songs (optional)
+        // dd($songsInPlaylists->toArray());
 
         return view('user.songs.show', compact('song', 'songsInPlaylists'));
     }

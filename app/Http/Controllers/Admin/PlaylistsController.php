@@ -30,21 +30,41 @@ class PlaylistsController extends Controller
         $config = Configuration::where('key', 'playlist_create')->first();
         $createBtnShow = $config->value ?? 0;
 
-        return view('admin.playlists.index',compact('deleteBtn','createBtnShow'));
+        return view('admin.playlists.index', compact('deleteBtn', 'createBtnShow'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $songs = Song::select('song_code', 'title_en')->get();
+        if ($request->ajax()) {
+            $search = $request->get('q', ''); // Get the search query if provided
 
-        // Fetch songs already associated with playlists (if any)
-        $existingSongs = SongPlaylistRel::pluck('song_code')->toArray();
+            // Check if the 'song_playlist_rels' table is empty
+            $existingSongs = SongPlaylistRel::pluck('song_code')->toArray();
 
-        return view('admin.playlists.create', compact('songs', 'existingSongs'));
+            // If there are no songs in 'song_playlist_rels', fetch all songs
+            if (empty($existingSongs)) {
+                $songs = Song::select('song_code', 'title_en')
+                    ->where('title_en', 'like', '%' . $search . '%') // Optional: search songs by title
+                    ->limit(10) // Limit results to 10 (you can adjust this based on your preference)
+                    ->get();
+            } else {
+                // If there are songs in 'song_playlist_rels', fetch only the songs not in that table
+                $songs = Song::select('song_code', 'title_en')
+                    ->whereNotIn('song_code', $existingSongs)
+                    ->where('title_en', 'like', '%' . $search . '%') // Optional: search songs by title
+                    ->limit(10) // Limit results to 10 (you can adjust this based on your preference)
+                    ->get();
+            }
+
+            return response()->json($songs);
+        }
+
+        return view('admin.playlists.create');
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -63,7 +83,7 @@ class PlaylistsController extends Controller
 
         // Find the last playlist with the same prefix
         $lastPlaylist = Playlist::where('playlist_code', 'LIKE', "$config%")
-            ->orderBy('playlist_code', 'desc')
+            ->orderBy('id', 'desc')
             ->first();
 
         // Determine the new playlist code
@@ -82,12 +102,17 @@ class PlaylistsController extends Controller
             'playlist_gu' => $request->playlist_gu
         ]);
 
+        // dd($request->song_code);
+        $songsData = [];
+        // dd($songsData);
         foreach ($request->song_code as $songCode) {
-            SongPlaylistRel::create([
+            $songsData[] = [
                 'song_code' => $songCode,
                 'playlist_code' => $playlist->playlist_code,
-            ]);
+            ];
         }
+
+        SongPlaylistRel::insert($songsData);
 
         return redirect()->route('admin.playlists.index')->with('success', 'Playlist added successfully!');
     }
@@ -102,7 +127,8 @@ class PlaylistsController extends Controller
         if ($request->ajax()) {
             $data = SongPlaylistRel::where('playlist_code', $play_code)
                 ->join('songs', 'songs.song_code', '=', 'song_playlist_rels.song_code')
-                ->select('songs.song_code', 'songs.title_en', 'songs.title_gu') // Adjust fields as needed
+                ->select('songs.song_code', 'songs.title_en', 'songs.title_gu') // Adju
+                ->orderBy('song_playlist_rels.id', 'asc')
                 ->get();
 
             return DataTables::of($data)
@@ -198,23 +224,5 @@ class PlaylistsController extends Controller
 
         // Redirect with a success message
         return redirect()->back()->with('success', 'Playlist deleted successfully');
-    }
-
-    public function search(Request $request)
-    {
-        // dd($request->all());
-        try {
-            $query = $request->get('q');
-            // dd($query);
-            $songs = Song::where('title_en', 'LIKE', "%{$query}%")
-                ->orWhere('title_gu', 'LIKE', "%{$query}%")
-                ->orWhere('song_code', 'LIKE', $query)
-                ->select('song_code', 'title_en', 'title_gu')
-                ->get();
-            // dd($songs);
-            return response()->json($songs);
-        } catch (\Exception $e) {
-            return response()->json([], 404); // Return empty if there's an error
-        }
     }
 }

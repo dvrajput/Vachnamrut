@@ -71,9 +71,7 @@
                             <a href="{{ url('admin/playlists') }}/${row.playlist_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="/admin/playlists/${row.playlist_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
+                            
                         `;
 
                             // Conditionally add the delete button if deleteBtn is 1
@@ -88,7 +86,9 @@
                                 </form>
                             `;
                             }
-
+                            // <a href="/admin/playlists/${row.playlist_code}/edit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit">
+                            //     <i class="fas fa-edit"></i>
+                            // </a>
                             return actionHtml;
                         }
                     }

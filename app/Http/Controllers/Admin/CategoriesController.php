@@ -74,7 +74,7 @@ class CategoriesController extends Controller
         // dd($config);
         // Find the last category with the same prefix
         $lastCategory = Category::where('category_code', 'LIKE', "$config%")
-            ->orderBy('category_code', 'desc')
+            ->orderBy('id', 'desc')
             ->first();
 
         // Determine the new category code

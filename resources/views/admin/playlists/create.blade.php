@@ -20,6 +20,7 @@
             <label for="song_code">{{ __('Songs') }}</label>
             <select class="form-control select2" id="song_code" name="song_code[]" multiple="multiple"
                 data-placeholder="{{ __('Select Songs') }}">
+                <!-- Songs will be loaded via AJAX -->
             </select>
             @error('song_code')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -34,41 +35,30 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            // Initialize select2
-            $('.select2').select2({
+            // Initialize select2 with AJAX support
+            $('#song_code').select2({
                 placeholder: 'Select Songs',
                 allowClear: true,
                 ajax: {
-                    url: '{{ route('admin.songSearch') }}',
+                    url: '{{ route('admin.playlists.create') }}', // The route for fetching songs
                     dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
+                    delay: 250, // Delay in milliseconds between typing and sending the request
+                    data: function (params) {
                         return {
-                            q: params.term // Search term
+                            q: params.term // Send the search term as query parameter
                         };
                     },
-                    processResults: function(data) {
+                    processResults: function (data) {
                         return {
-                            results: data.map(function(song) {
+                            results: data.map(function (song) {
                                 return {
                                     id: song.song_code,
-                                    text: song.title_en,
-                                    is_used: '{{ json_encode($existingSongs) }}'.includes(song
-                                        .song_code)
+                                    text: song.title_en + '('+song.song_code+')'
                                 };
                             })
                         };
                     },
                     cache: true
-                },
-                minimumInputLength: 1 // Minimum characters to start search
-            });
-
-            // Highlight already used songs in grey
-            $('.select2').on('select2:select', function(e) {
-                var data = e.params.data;
-                if (data.is_used) {
-                    $(this).find('option[value="' + data.id + '"]').css('color', 'grey');
                 }
             });
         });
