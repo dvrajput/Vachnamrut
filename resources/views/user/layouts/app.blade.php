@@ -16,44 +16,91 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
+            /* Your existing styles plus these modifications */
+            body {
+                  background-color: #f8f9fa;
+            }
 
-        .navbar {
-            background-color: #d7861b;
-        }
+            .navbar {
+                  background-color: #d7861b;
+            }
 
-        .navbar-brand,
-        .navbar-nav .nav-link {
-            color: white !important;
-        }
+            .navbar-brand,
+            .navbar-nav .nav-link {
+                  color: white !important;
+            }
 
-        .dropdown-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
+            .dropdown-item:hover {
+                  background-color: rgba(255, 255, 255, 0.1);
+            }
 
-        .dropdown-submenu {
-            position: relative;
-        }
+            .dropdown-submenu {
+                  position: relative;
+            }
 
-        .dropdown-submenu>.dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -6px;
-            margin-left: -1px;
-            display: none;
-            z-index: 1000;
-        }
+            /* Desktop behavior */
+            @media (min-width: 992px) {
+                  .dropdown-submenu>.dropdown-menu {
+                        top: 0;
+                        left: 100%;
+                        margin-top: -6px;
+                        margin-left: -1px;
+                        display: none;
+                        z-index: 1000;
+                  }
 
-        .dropdown-submenu:hover>.dropdown-menu {
-            display: block;
-        }
+                  .dropdown-submenu:hover>.dropdown-menu {
+                        display: block;
+                  }
+            }
 
-        .toast-container {
-            z-index: 9999; /* Ensure toast notifications appear above other content */
-        }
-    </style>
+            /* Mobile behavior */
+            @media (max-width: 991px) {
+                  .dropdown-submenu>.dropdown-menu {
+                        left: 0;
+                        top: 100%;
+                        margin-top: 0;
+                        margin-left: 15px;
+                        border: none;
+                        background-color: transparent;
+                        display: none;
+                  }
+
+                  .dropdown-menu {
+                        border: none;
+                        background-color: transparent;
+                  }
+
+                  .dropdown-item {
+                        color: white !important;
+                        padding: 8px 15px;
+                        position: relative;
+                  }
+
+                  .dropdown-submenu .dropdown-item {
+                        padding-left: 25px;
+                  }
+
+                  /* Add arrow indicator for items with submenu */
+                  .has-submenu::after {
+                        content: '›';
+                        position: absolute;
+                        right: 10px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        transition: transform 0.2s;
+                  }
+
+                  /* Rotate arrow when submenu is open */
+                  .has-submenu.show::after {
+                        transform: translateY(-50%) rotate(90deg);
+                  }
+
+                  .show>.dropdown-menu {
+                        display: block;
+                  }
+            }
+      </style>
     
     @yield('style')
 </head>
@@ -158,6 +205,42 @@
             @endif
         });
     </script>
+          <script>
+            $(document).ready(function() {
+                  // Check if we're on mobile
+                  function isMobile() {
+                        return window.innerWidth < 992;
+                  }
+
+                  // Add arrow indicator to items with submenu
+                  $('.dropdown-submenu > .dropdown-item').addClass('has-submenu');
+
+                  // Handle mobile clicks
+                  if(isMobile()) {
+                        $('.dropdown-submenu > .dropdown-item').click(function(e) {
+                              e.preventDefault();
+                              e.stopPropagation();
+
+                              // Toggle the clicked submenu
+                              $(this).next('.dropdown-menu').slideToggle();
+                              $(this).toggleClass('show');
+
+                              // Close other open submenus
+                              $('.dropdown-submenu > .dropdown-item').not(this).next('.dropdown-menu').slideUp();
+                              $('.dropdown-submenu > .dropdown-item').not(this).removeClass('show');
+                        });
+                  }
+
+                  // Handle window resize
+                  $(window).resize(function() {
+                        if(!isMobile()) {
+                              // Reset mobile-specific styles when returning to desktop
+                              $('.dropdown-menu').removeAttr('style');
+                              $('.has-submenu').removeClass('show');
+                        }
+                  });
+            });
+      </script>
 
     @yield('script')
 </body>
