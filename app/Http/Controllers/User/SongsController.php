@@ -11,17 +11,18 @@ use Yajra\DataTables\DataTables;
 
 class SongsController extends Controller
 {
-    public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = Song::query(); // Customize your query as needed
-
-            return DataTables::of($data)
-
-                ->make(true);
-        }
-        return view('user.songs.index');
-    }
+      public function index(Request $request)
+      {
+            if ($request->ajax()) {
+                  return DataTables::of(Song::select('*'))
+                        ->filterColumn('title_'.app()->getLocale(), function($query, $keyword) {
+                              $sql = "CONCAT(title_en,' ',title_gu,' ',lyrics_en,' ',lyrics_gu) like ?";
+                              $query->whereRaw($sql, ["%{$keyword}%"]);
+                        })
+                        ->make(true);
+            }
+            return view('user.songs.index');
+      }
 
     public function show(string $songCode)
     {
