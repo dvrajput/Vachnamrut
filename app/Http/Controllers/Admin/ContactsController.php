@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Configuration;
 use App\Models\Contact;
 use App\Models\Song;
 use Illuminate\Http\Request;
@@ -12,6 +13,12 @@ class ContactsController extends Controller
 {
     public function index(Request $request)
     {
+        $config = Configuration::where('key', 'show_contact')->first();
+        $contactShow = $config->value;
+        if ($contactShow != '1') {
+            return redirect()->route('admin.songs.index')->with('success', 'Page Not Found!');
+        }
+
         if ($request->ajax()) {
             $data = Contact::orderBy('id', 'desc'); // Customize your query as needed
 

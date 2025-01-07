@@ -1,6 +1,7 @@
 @php
     $config = App\Models\Configuration::where('key', 'show_export')->first();
     $exportShow = $config->value;
+    $contactShow = App\Models\Configuration::where('key', 'show_contact')->first()->value;
 @endphp
 <header class="bg-light p-3 mb-3">
     <div class="row justify-content-between d-flex align-items-center">
@@ -30,10 +31,12 @@
                                 <a class="nav-link{{ request()->is('admin/playlists*') ? ' active' : '' }}"
                                     href="{{ route('admin.playlists.index') }}">{{ __('Playlist') }}</a>
                             </li>
+                            @if ($contactShow == '1')
                             <li class="nav-item">
                                 <a class="nav-link{{ request()->is('admin/contacts*') ? ' active' : '' }}"
                                     href="{{ route('admin.contacts.index') }}">{{ __('Contacts') }}</a>
                             </li>
+                            @endif
                             @if ($exportShow == '1')
                                 <li class="nav-item">
                                     <a class="nav-link{{ request()->is('admin/exports*') ? ' active' : '' }}"

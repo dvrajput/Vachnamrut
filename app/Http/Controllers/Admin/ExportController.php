@@ -19,7 +19,7 @@ class ExportController extends Controller
         $config = Configuration::where('key', 'show_export')->first();
         $exportShow = $config->value;
         if ($exportShow != '1') {
-            return redirect()->back()->with('success', 'Page Not Found!');
+            return redirect()->route('admin.songs.index')->with('success', 'Page Not Found!');
         }
         $subCategories = SubCategory::all();
         $playlists = Playlist::all();
