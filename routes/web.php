@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\User\SongsController as UserSongController;
 use App\Http\Controllers\User\CategoriesController as UserCategoriesController;
+use App\Http\Controllers\User\ContactController as UserContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -12,6 +13,7 @@ Route::get('/', function () {
 Route::name('user.')->group(function () {
     Route::resource('songs', UserSongController::class);
     Route::resource('categories', UserCategoriesController::class);
+    Route::resource('contact', UserContactController::class);
 });
 Route::get('/language/{locale}', function ($locale) {
     session()->put('locale', $locale);

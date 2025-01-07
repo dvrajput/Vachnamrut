@@ -50,7 +50,7 @@
                                             <div class="input-group">
                                                 <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
                                                 <input type="text" name="email" class="form-control"
-                                                    placeholder="Enter Email">
+                                                    placeholder="Enter Email" autofocus>
                                             </div>
                                         </div>
 

@@ -16,92 +16,92 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
 
     <style>
-            /* Your existing styles plus these modifications */
-            body {
-                  background-color: #f8f9fa;
+        /* Your existing styles plus these modifications */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #d7861b;
+        }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        /* Desktop behavior */
+        @media (min-width: 992px) {
+            .dropdown-submenu>.dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+                display: none;
+                z-index: 1000;
             }
 
-            .navbar {
-                  background-color: #d7861b;
+            .dropdown-submenu:hover>.dropdown-menu {
+                display: block;
+            }
+        }
+
+        /* Mobile behavior */
+        @media (max-width: 991px) {
+            .dropdown-submenu>.dropdown-menu {
+                left: 0;
+                top: 100%;
+                margin-top: 0;
+                margin-left: 15px;
+                border: none;
+                background-color: transparent;
+                display: none;
             }
 
-            .navbar-brand,
-            .navbar-nav .nav-link {
-                  color: white !important;
+            .dropdown-menu {
+                border: none;
+                background-color: transparent;
             }
 
-            .dropdown-item:hover {
-                  background-color: rgba(255, 255, 255, 0.1);
+            .dropdown-item {
+                color: white !important;
+                padding: 8px 15px;
+                position: relative;
             }
 
-            .dropdown-submenu {
-                  position: relative;
+            .dropdown-submenu .dropdown-item {
+                padding-left: 25px;
             }
 
-            /* Desktop behavior */
-            @media (min-width: 992px) {
-                  .dropdown-submenu>.dropdown-menu {
-                        top: 0;
-                        left: 100%;
-                        margin-top: -6px;
-                        margin-left: -1px;
-                        display: none;
-                        z-index: 1000;
-                  }
-
-                  .dropdown-submenu:hover>.dropdown-menu {
-                        display: block;
-                  }
+            /* Add arrow indicator for items with submenu */
+            .has-submenu::after {
+                content: '›';
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                transition: transform 0.2s;
             }
 
-            /* Mobile behavior */
-            @media (max-width: 991px) {
-                  .dropdown-submenu>.dropdown-menu {
-                        left: 0;
-                        top: 100%;
-                        margin-top: 0;
-                        margin-left: 15px;
-                        border: none;
-                        background-color: transparent;
-                        display: none;
-                  }
-
-                  .dropdown-menu {
-                        border: none;
-                        background-color: transparent;
-                  }
-
-                  .dropdown-item {
-                        color: white !important;
-                        padding: 8px 15px;
-                        position: relative;
-                  }
-
-                  .dropdown-submenu .dropdown-item {
-                        padding-left: 25px;
-                  }
-
-                  /* Add arrow indicator for items with submenu */
-                  .has-submenu::after {
-                        content: '›';
-                        position: absolute;
-                        right: 10px;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        transition: transform 0.2s;
-                  }
-
-                  /* Rotate arrow when submenu is open */
-                  .has-submenu.show::after {
-                        transform: translateY(-50%) rotate(90deg);
-                  }
-
-                  .show>.dropdown-menu {
-                        display: block;
-                  }
+            /* Rotate arrow when submenu is open */
+            .has-submenu.show::after {
+                transform: translateY(-50%) rotate(90deg);
             }
-      </style>
-    
+
+            .show>.dropdown-menu {
+                display: block;
+            }
+        }
+    </style>
+
     @yield('style')
 </head>
 
@@ -122,9 +122,9 @@
                             href="{{ route('user.songs.index') }}">{{ __('Songs') }}</a>
                     </li> --}}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle{{ request()->is('categories*') ? ' active' : '' }}" href="#"
-                            id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                        <a class="nav-link dropdown-toggle{{ request()->is('categories*') ? ' active' : '' }}"
+                            href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
                             {{ __('Category') }}
                         </a>
                         @php
@@ -138,7 +138,12 @@
                                     </a>
                                     @php
                                         $subcategories = DB::table('cate_sub_cate_rels')
-                                            ->join('sub_categories', 'sub_categories.sub_category_code', '=', 'cate_sub_cate_rels.sub_category_code')
+                                            ->join(
+                                                'sub_categories',
+                                                'sub_categories.sub_category_code',
+                                                '=',
+                                                'cate_sub_cate_rels.sub_category_code',
+                                            )
                                             ->where('cate_sub_cate_rels.category_code', $category->category_code)
                                             ->select('sub_categories.*')
                                             ->get();
@@ -157,6 +162,11 @@
                             @endforeach
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link{{ request()->is('contact*') ? ' active' : '' }}"
+                            href="{{ route('user.contact.create') }}">{{ __('Contact') }}</a>
+                    </li>
+
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -176,14 +186,17 @@
 
     @yield('content')
 
-    <!-- Load JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Load jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Load Bootstrap and other scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <!-- Load Toastr -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
@@ -205,42 +218,42 @@
             @endif
         });
     </script>
-          <script>
-            $(document).ready(function() {
-                  // Check if we're on mobile
-                  function isMobile() {
-                        return window.innerWidth < 992;
-                  }
+    <script>
+        $(document).ready(function() {
+            // Check if we're on mobile
+            function isMobile() {
+                return window.innerWidth < 992;
+            }
 
-                  // Add arrow indicator to items with submenu
-                  $('.dropdown-submenu > .dropdown-item').addClass('has-submenu');
+            // Add arrow indicator to items with submenu
+            $('.dropdown-submenu > .dropdown-item').addClass('has-submenu');
 
-                  // Handle mobile clicks
-                  if(isMobile()) {
-                        $('.dropdown-submenu > .dropdown-item').click(function(e) {
-                              e.preventDefault();
-                              e.stopPropagation();
+            // Handle mobile clicks
+            if (isMobile()) {
+                $('.dropdown-submenu > .dropdown-item').click(function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                              // Toggle the clicked submenu
-                              $(this).next('.dropdown-menu').slideToggle();
-                              $(this).toggleClass('show');
+                    // Toggle the clicked submenu
+                    $(this).next('.dropdown-menu').slideToggle();
+                    $(this).toggleClass('show');
 
-                              // Close other open submenus
-                              $('.dropdown-submenu > .dropdown-item').not(this).next('.dropdown-menu').slideUp();
-                              $('.dropdown-submenu > .dropdown-item').not(this).removeClass('show');
-                        });
-                  }
+                    // Close other open submenus
+                    $('.dropdown-submenu > .dropdown-item').not(this).next('.dropdown-menu').slideUp();
+                    $('.dropdown-submenu > .dropdown-item').not(this).removeClass('show');
+                });
+            }
 
-                  // Handle window resize
-                  $(window).resize(function() {
-                        if(!isMobile()) {
-                              // Reset mobile-specific styles when returning to desktop
-                              $('.dropdown-menu').removeAttr('style');
-                              $('.has-submenu').removeClass('show');
-                        }
-                  });
+            // Handle window resize
+            $(window).resize(function() {
+                if (!isMobile()) {
+                    // Reset mobile-specific styles when returning to desktop
+                    $('.dropdown-menu').removeAttr('style');
+                    $('.has-submenu').removeClass('show');
+                }
             });
-      </script>
+        });
+    </script>
 
     @yield('script')
 </body>

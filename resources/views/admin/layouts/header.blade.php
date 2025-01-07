@@ -30,6 +30,10 @@
                                 <a class="nav-link{{ request()->is('admin/playlists*') ? ' active' : '' }}"
                                     href="{{ route('admin.playlists.index') }}">{{ __('Playlist') }}</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link{{ request()->is('admin/contacts*') ? ' active' : '' }}"
+                                    href="{{ route('admin.contacts.index') }}">{{ __('Contacts') }}</a>
+                            </li>
                             @if ($exportShow == '1')
                                 <li class="nav-item">
                                     <a class="nav-link{{ request()->is('admin/exports*') ? ' active' : '' }}"
