@@ -18,8 +18,8 @@
         </div>
         <div class="form-group">
             <label for="song_code">{{ __('Song') }}</label>
-            <input type="text" class="form-control id="song_code" name="song_code" placeholder="{{ __('Song') }}"
-                value="{{ $songs->song_code }} ({{ $songs->title_en }})" required readonly>
+            <input type="text" class="form-control id="song_code" name="song_code" placeholder="{{ __('No Song') }}"
+                value="@if($songs!=null){{ $songs->song_code . ($songs->title_en) }}@endif" required readonly>
         </div>
         <div class="form-group">
             <label for="message">{{ __('Message') }}</label>
