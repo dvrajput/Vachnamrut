@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\User\SongsController as UserSongController;
 use App\Http\Controllers\User\CategoriesController as UserCategoriesController;
 use App\Http\Controllers\User\ContactController as UserContactController;
@@ -27,6 +28,13 @@ Route::get('/language/{locale}', function ($locale) {
 
     return redirect()->back();
 })->name('locale');
+
+//API
+Route::prefix('api/')->group(function () {
+    Route::get('get_songs', [ApiController::class, 'getSongs']);
+    Route::get('get_sub_category', [ApiController::class, 'getSubCategory']);
+    Route::get('get_category', [ApiController::class, 'getCategory']);
+});
 
 // admin panel route
 require __DIR__ . '/admin.php';

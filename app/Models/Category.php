@@ -15,6 +15,10 @@ class Category extends Model
         'category_gu',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
     // public function songs()
     // {
     //     return $this->belongsToMany(Song::class, 'song_category_rels');
