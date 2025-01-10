@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Admin Home')
+@section('title', __('Contact'))
 @section('style')
     <style>
         .display {

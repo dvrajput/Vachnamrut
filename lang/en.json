@@ -9,6 +9,8 @@
     "English": "English",
     "Gujarati": "Gujarati",
     "Kirtanavali": "Kirtanavali",
+    "Kirtan": "Kirtan",
+    "Search Kirtan...":"Search Kirtan...",
     "Code": "Code",
     "Action": "Action",
     "Sub Category": "Sub Category",
@@ -52,5 +54,11 @@
     "Select Songs":"Select Songs",
     "Enter English Playlist":"Enter English Playlist",
     "Enter Gujarati Playlist":"Enter Gujarati Playlist",
-    "Playlist Detail":"Playlist Detail"
+    "Playlist Detail":"Playlist Detail",
+    "Contact":"Contact",
+    "Feedback":"Feedback",
+    "Name":"Name",
+    "Email":"Email",
+    "Select Kirtan (optional)":"Select Kirtan (optional)",
+    "Message/Suggestion":"Message/Suggestion"
 }

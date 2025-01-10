@@ -9,6 +9,8 @@
     "English": "અંગ્રેજી",
     "Gujarati": "ગુજરાતી",
     "Kirtanavali": "કીર્તનાવલી",
+    "Kirtan": "કીર્તન",
+    "Search Kirtan...":"કીર્તન શોધો...",
     "Code": "કોડ",
     "Action": "ક્રિયા",
     "Sub Category": "પેટા શ્રેણી",
@@ -52,5 +54,11 @@
     "Select Songs":"ગીતો પસંદ કરો",
     "Enter English Playlist":"અંગ્રેજી પ્લેલિસ્ટ દાખલ કરો",
     "Enter Gujarati Playlist":"ગુજરાતી પ્લેલિસ્ટ દાખલ કરો",
-    "Playlist Detail":"પ્લેલિસ્ટ વિગત"
+    "Playlist Detail":"પ્લેલિસ્ટ વિગત",
+    "Contact":"સંપર્ક કરો",
+    "Feedback":"પ્રતિસાદ",
+    "Name":"નામ",
+    "Email":"ઈ-મેઈલ",
+    "Select Kirtan (optional)":"કીર્તન (વૈકલ્પિક)",
+    "Message/Suggestion":"સંદેશ/સૂચન"
 }

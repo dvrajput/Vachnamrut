@@ -2,169 +2,193 @@
 @section('title', __('Kirtan') . ' - ' . $song->{'title_' . app()->getLocale()})
 
 @section('style')
-  <style>
+<style>
     :root {
-      --primary-color: #d7861b;
-      --text-color: #333;
-      --border-radius: 8px;
-      --spacing: 1rem;
+        --primary-color: #d7861b;
+        --text-color: #333;
+        --bg-color: #f8f9fa;
+        --card-bg: #ffffff;
+        --border-color: #ddd;
+        --tab-hover: #f5f5f5;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+        --text-color: #f8f9fa;
+        --bg-color: #212529;
+        --card-bg: #2c3034;
+        --border-color: #495057;
+        --tab-hover: #343a40;
+        --shadow-color: rgba(0, 0, 0, 0.3);
     }
 
     .container-fluid {
-      padding: var(--spacing);
-      max-width: 1200px;
-      margin: 0 auto;
+        padding: var(--spacing);
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: var(--bg-color);
     }
 
     .song-title {
-      padding-top: 4rem;
-      font-size: 2rem;
-      color: var(--text-color);
-      margin: 1.5rem 0;
-      text-align: center;
-      font-weight: 600;
+        padding-top: 4rem;
+        font-size: 2rem;
+        color: var(--text-color);
+        margin: 1.5rem 0;
+        text-align: center;
+        font-weight: 600;
     }
 
     #songTab {
-      padding: 15px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      border: none;
-      margin-bottom: 1.5rem;
-      justify-content: center;
+        padding: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        border: none;
+        margin-bottom: 1.5rem;
+        justify-content: center;
     }
 
     .nav-item {
-      flex: 0 1 auto;
+        flex: 0 1 auto;
     }
 
     #padBtn {
-      padding: 12px 24px;
-      border-radius: 8px;
-      color: var(--text-color);
-      transition: all 0.3s ease;
-      border: 1px solid #ddd;
-      margin: 4px;
-      font-size: 16px;
-      text-align: center;
-      min-width: 120px;
-      display: block;
-      position: relative;
-      overflow: hidden;
+        padding: 12px 24px;
+        border-radius: 8px;
+        color: var(--text-color);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-color);
+        margin: 4px;
+        font-size: 16px;
+        text-align: center;
+        min-width: 120px;
+        display: block;
+        position: relative;
+        overflow: hidden;
+        background-color: var(--card-bg);
     }
 
     #padBtn:hover {
-      background-color: #f5f5f5;
-      color: black;
-      /* border-color: var(--primary-color); */
-      /* transform: translateY(-2px); */
+        background-color: var(--tab-hover);
+        color: var(--text-color);
     }
 
-    #padBtn:active {
-      /* background-color: var(--primary-color); */
-      color: white;
-      border-color: #ffffff;
-      font-weight: 500;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    #padBtn.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
     }
 
     .tab-content {
-      background-color: white;
-      border-radius: var(--border-radius);
-      padding: 2rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px var(--shadow-color);
     }
 
     .song-content {
-      max-width: 800px;
-      margin: 0 auto;
-      font-size: 16px;
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: 16px;
+        color: var(--text-color);
     }
 
     .lyrics {
-      white-space: pre-line;
-      text-align: center;
-      padding: 16px;
-      font-size: 24px;
-      line-height: normal;
+        white-space: pre-line;
+        text-align: center;
+        padding: 16px;
+        font-size: 24px;
+        line-height: normal;
+        color: var(--text-color);
     }
 
     .lyrics br {
-      line-height: 8px; /* This controls space between lines */
-      display: block;
-      content: "";
+        line-height: 8px;
+        display: block;
+        content: "";
     }
 
     .lyrics p {
-      margin: 0;
-      padding: 0;
-      line-height: 20px; /* This controls the height of text lines */
+        margin: 0;
+        padding: 0;
+        line-height: 20px;
+        color: var(--text-color);
     }
 
     @media (max-width: 768px) {
-      .container-fluid {
-        padding: 8px;
-      }
-
-      .song-title {
-        padding-top: 12px;
-        font-size: 24px;
-        margin: 10px 0;
-        line-height: 33px;
-      }
-
-      .lyrics {
-        line-height: 28px;
-      }
-
-      #songTab {
-        gap: 4px;
-        flex-direction: row;
-        width: 100%;
-        display: flex;
-        /* flex-wrap: nowrap; */
-        gap: 2px;
-        padding: 8px;
-        /* overflow-x: auto; */
-      }
-
-      .nav-item {
-        flex: 0 0 calc(25% - 4px);
-        /* min-width: 100px; */
+        .container-fluid {
+            padding: 8px;
         }
 
-      #padBtn {
-        padding: 6px 4px;
-        font-size: 14px;
-        width: 100%;
-        min-width: auto;
-      }
+        .song-title {
+            padding-top: 12px;
+            font-size: 24px;
+            margin: 10px 0;
+            line-height: 33px;
+        }
 
-      #padBtn:hover {
-        color: #808080;
-      }
+        .lyrics {
+            line-height: 28px;
+        }
 
-      .tab-content {
-        padding: 16px;
-      }
+        #songTab {
+            gap: 4px;
+            flex-direction: row;
+            width: 100%;
+            display: flex;
+            gap: 2px;
+            padding: 8px;
+        }
 
-      .song-content {
-        font-size: 14px;
-      }
+        .nav-item {
+            flex: 0 0 calc(25% - 4px);
+        }
+
+        #padBtn {
+            padding: 6px 4px;
+            font-size: 14px;
+            width: 100%;
+            min-width: auto;
+        }
+
+        #padBtn:hover {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .tab-content {
+            padding: 16px;
+        }
+
+        .song-content {
+            font-size: 14px;
+        }
     }
 
     @media (max-width: 480px) {
         #songTab {
-        flex-direction: row;
-        width: 100%;
-      }
+            flex-direction: row;
+            width: 100%;
+        }
 
-      .nav-item {
-        width: 30%;
-      }
+        .nav-item {
+            width: 30%;
+        }
     }
-  </style>
+
+    /* Additional Dark Mode Specific Styles */
+    [data-theme="dark"] .nav-link {
+        color: var(--text-color);
+    }
+
+    [data-theme="dark"] .nav-link:hover {
+        border-color: var(--primary-color);
+    }
+
+    [data-theme="dark"] .tab-content {
+        border: 1px solid var(--border-color);
+    }
+</style>
 @endsection
 
 @section('content')

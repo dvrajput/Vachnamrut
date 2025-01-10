@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', __('Edit Contacts'))
+@section('title', 'Admin - ' . __('Contact'))
 @section('content')
     <h3 class="mt-4 mb-4">{{ __('Edit Contact') }}</h3>
     <form action="{{ route('admin.contacts.update', $contact->id) }}" method="POST">
