@@ -58,7 +58,7 @@ class ContactsController extends Controller
             'status' => $request->status
         ]);
 
-        return redirect()->route('admin.contacts.index')->with('success', 'Song updated successfully!');
+        return redirect()->route('admin.contacts.index')->with('success', 'Query updated successfully!');
     }
 
     public function destroy(string $id)
@@ -69,6 +69,6 @@ class ContactsController extends Controller
         $contact->delete();
 
         // Redirect with a success message
-        return redirect()->back()->with('success', 'Contact deleted successfully');
+        return redirect()->back()->with('success', 'Query deleted successfully');
     }
 }
