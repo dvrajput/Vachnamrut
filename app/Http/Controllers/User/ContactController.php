@@ -44,4 +44,10 @@ class ContactController extends Controller
 
         return redirect()->route('user.contact.create')->with('success', 'Thanks for suggesting!');
     }
+
+    public function edit(Request $request, $song_code)
+    {
+        $song = Song::select('id','song_code','title_en','lyrics_en','title_gu','lyrics_gu')->where('song_code', $song_code)->first();
+        return view('user.contact.edit', compact('song'));
+    }
 }

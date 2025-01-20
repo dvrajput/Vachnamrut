@@ -1,5 +1,5 @@
 @extends('user.layouts.app')
-@section('title', __('Create Category'))
+@section('title', __('Contact'))
 
 @section('content')
 <div class="container py-5">
