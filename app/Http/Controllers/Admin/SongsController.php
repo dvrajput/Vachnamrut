@@ -30,7 +30,7 @@ class SongsController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Song::orderBy('id', 'desc'); // Customize your query as needed
+            $data = Song::orderBy('id', 'asc'); // Customize your query as needed
 
             return DataTables::of($data)
                 // ->addColumn('action', function ($row) {
