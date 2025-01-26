@@ -123,6 +123,17 @@
             opacity: 0.6;
         }
 
+        /* Fix for readonly input in contact form */
+        .kirtan-select .form-control {
+            border-left: 1px solid var(--border-color) !important;
+            border-radius: 0.375rem;
+        }
+
+        .kirtan-select .form-control:focus {
+            border-color: var(--border-color) !important;
+            box-shadow: none;
+        }
+
         /* Input Group Text */
         .uf-ct-03-input-group-text {
             background-color: transparent;
