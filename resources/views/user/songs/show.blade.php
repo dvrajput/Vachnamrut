@@ -98,6 +98,7 @@
             text-align: center;
             padding: 16px;
             font-size: 24px;
+            line-height: 1.6; /* Base line height */
             line-height: normal;
             color: var(--text-color);
         }
@@ -105,13 +106,14 @@
         .lyrics br {
             line-height: 8px;
             display: block;
+            margin-bottom: 12px; /* Add space between paragraphs */
             content: "";
         }
 
         .lyrics p {
             margin: 0;
             padding: 0;
-            line-height: 20px;
+            line-height: inherit; /* Inherit from parent */
             color: var(--text-color);
         }
 
@@ -216,7 +218,6 @@
 
                     <div class="song-content">
                         <!-- <h2 class="song-title">{{ $playlistSong->{'title_' . app()->getLocale()} }}</h2> -->
-                        <a href="{{ route('user.contact.edit', $playlistSong->song_code) }}"><i class="fas fa-regular fa-flag"></i></a>
                         <div class="lyrics">
                             {!! nl2br($playlistSong->{'lyrics_' . app()->getLocale()}) !!}
                         </div>
@@ -224,6 +225,8 @@
                 </div>
             @endforeach
 
+            <a href="{{ route('user.contact.edit', $song->song_code) }}"><i class="fas fa-regular fa-flag"></i></a>
+            
             @if ($songsInPlaylists->isEmpty())
                 <div class="tab-pane fade show active" id="noPad" role="tabpanel" aria-labelledby="tab-noPad">
                     <div class="song-content">
@@ -235,6 +238,110 @@
             @endif
         </div>
     </div>
+@endsection
+
+@section('script')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to setup font size controls
+    function setupFontSizeControls(toggleId, controlsId, increaseId, decreaseId) {
+        const fontSizeToggle = document.getElementById(toggleId);
+        const fontSizeControls = document.getElementById(controlsId);
+        const increaseFontBtn = document.getElementById(increaseId);
+        const decreaseFontBtn = document.getElementById(decreaseId);
+        
+        if (!fontSizeToggle) return; // Exit if elements don't exist
+
+        const lyrics = document.querySelector('.lyrics');
+        const songTitle = document.querySelector('.song-title');
+        
+        // Get saved font sizes from localStorage or use defaults
+        let currentLyricsFontSize = parseInt(localStorage.getItem('lyricsFontSize')) || 24;
+        let currentTitleFontSize = parseInt(localStorage.getItem('titleFontSize')) || 32;
+        const minFontSize = 16;
+        const maxFontSize = 40;
+        const stepSize = 2;
+
+        // Function to calculate line height based on font size
+        function calculateLineHeight(fontSize) {
+            // Adjust these values to get your desired spacing
+            if (fontSize <= 20) return 1;
+            if (fontSize <= 28) return 1.2;
+            if (fontSize <= 34) return 1.4;
+            return 1.6; // For largest font sizes
+        }
+
+        // Apply saved font sizes on page load
+        function applyFontSizes() {
+            lyrics.style.fontSize = currentLyricsFontSize + 'px';
+            songTitle.style.fontSize = currentTitleFontSize + 'px';
+            
+            // Apply appropriate line height
+            const lineHeight = calculateLineHeight(currentLyricsFontSize);
+            lyrics.style.lineHeight = lineHeight;
+            
+            // Adjust spacing between paragraphs based on font size
+            const brSpacing = Math.max(12, currentLyricsFontSize * 0.5) + 'px';
+            const style = document.createElement('style');
+            style.textContent = `.lyrics br { margin-bottom: ${brSpacing}; }`;
+            document.head.appendChild(style);
+        }
+
+        // Apply sizes on load
+        applyFontSizes();
+
+        // Function to save font sizes
+        function saveFontSizes() {
+            localStorage.setItem('lyricsFontSize', currentLyricsFontSize);
+            localStorage.setItem('titleFontSize', currentTitleFontSize);
+        }
+
+        // Toggle popup
+        fontSizeToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fontSizeControls.classList.toggle('d-none');
+        });
+
+        // Increase font size
+        increaseFontBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (currentLyricsFontSize < maxFontSize) {
+                currentLyricsFontSize += stepSize;
+                currentTitleFontSize += stepSize;
+                applyFontSizes();
+                saveFontSizes();
+            }
+        });
+
+        // Decrease font size
+        decreaseFontBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (currentLyricsFontSize > minFontSize) {
+                currentLyricsFontSize -= stepSize;
+                currentTitleFontSize -= stepSize;
+                applyFontSizes();
+                saveFontSizes();
+            }
+        });
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!fontSizeControls.contains(e.target) && !fontSizeToggle.contains(e.target)) {
+                fontSizeControls.classList.add('d-none');
+            }
+        });
+    }
+
+    // Setup controls for both mobile and desktop
+    setupFontSizeControls('fontSizeToggleMobile', 'fontSizeControlsMobile', 'increaseFontSizeMobile', 'decreaseFontSizeMobile');
+    setupFontSizeControls('fontSizeToggleDesktop', 'fontSizeControlsDesktop', 'increaseFontSizeDesktop', 'decreaseFontSizeDesktop');
+
+    // Your existing context menu prevention
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+});
+</script>
 @endsection
 
 @section('script')
