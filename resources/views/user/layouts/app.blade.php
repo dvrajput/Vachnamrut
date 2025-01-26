@@ -160,6 +160,61 @@ body {
     height: 24px;
 }
 
+/* Desktop dropdown hover styles */
+@media (min-width: 992px) {
+    .dropdown-submenu {
+        position: relative !important;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+    }
+
+    .dropdown-submenu > .dropdown-menu {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        margin-top: 0;
+        margin-left: 0;
+        border-radius: 5px;
+    }
+
+    /* Show main dropdown on category hover */
+    .nav-item.dropdown:hover > .dropdown-menu {
+        display: block !important;
+    }
+
+    /* Show submenu on parent hover */
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+    }
+
+    /* Main items styling */
+    .dropdown-menu .dropdown-item {
+        text-align: center;
+        padding: 8px 20px;
+        white-space: nowrap;
+        position: relative;
+    }
+
+    /* Right arrow for items with submenu */
+    .dropdown-submenu > .dropdown-item::after {
+        content: "›";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Remove any transforms or transitions that might interfere */
+    .dropdown-submenu .dropdown-menu,
+    .dropdown-menu {
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
 /* Mobile Styles */
 @media (max-width: 991px) {
     .container {
