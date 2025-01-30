@@ -255,7 +255,7 @@ table.dataTable thead td {
                 render: function(data, type, row) {
                     const theme = document.documentElement.getAttribute('data-theme');
                     const textColor = theme === 'dark' ? '#f8f9fa' : '#212529';
-                    return `<a href="{{ url('songs') }}/${row.song_code}" style="color: ${textColor} !important;">${data}</a>`;
+                    return `<a href="{{ url('kirtans') }}/${row.song_code}" style="color: ${textColor} !important;">${data}</a>`;
                 }
             }],
             language: {

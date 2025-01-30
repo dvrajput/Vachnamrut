@@ -253,7 +253,7 @@ table.dataTable thead th, table.dataTable thead td {
             serverSide: true,
             pageLength: 20,
             ajax: {
-                url: '{{ route('user.songs.index') }}',
+                url: '{{ route('user.kirtans.index') }}',
                 data: function(d) {
                     d.searchBoth = d.search.value;
                 }
@@ -265,7 +265,7 @@ table.dataTable thead th, table.dataTable thead td {
                 render: function(data, type, row) {
                     const theme = document.documentElement.getAttribute('data-theme');
                     const textColor = theme === 'dark' ? '#f8f9fa' : '#212529';
-                    return `<a href="{{ url('songs') }}/${row.song_code}" class="kirtan-link" style="color: ${textColor} !important;">${data}</a>`;
+                    return `<a href="{{ url('kirtans') }}/${row.song_code}" class="kirtan-link" style="color: ${textColor} !important;">${data}</a>`;
                 }
             }],
             language: {

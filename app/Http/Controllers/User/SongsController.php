@@ -11,18 +11,36 @@ use Yajra\DataTables\DataTables;
 
 class SongsController extends Controller
 {
-      public function index(Request $request)
-      {
-            if ($request->ajax()) {
-                  return DataTables::of(Song::select('*'))
-                        ->filterColumn('title_'.app()->getLocale(), function($query, $keyword) {
-                              $sql = "CONCAT(title_en,' ',title_gu,' ',lyrics_en,' ',lyrics_gu) like ?";
-                              $query->whereRaw($sql, ["%{$keyword}%"]);
-                        })
-                        ->make(true);
-            }
-            return view('user.songs.index');
-      }
+    public function index(Request $request)
+{
+    if ($request->ajax()) {
+        $query = Song::query();
+
+        // Apply the search only for the full phrase (Vandu Sahajanand)
+        $query->where(function($q) use ($request) {
+            $keyword = $request->input('search.value');
+            $searchPhrase = '%' . $keyword . '%';
+
+            $q->where('title_en', 'LIKE', $searchPhrase)
+              ->orWhere('title_gu', 'LIKE', $searchPhrase)
+              ->orWhere('lyrics_en', 'LIKE', $searchPhrase)
+              ->orWhere('lyrics_gu', 'LIKE', $searchPhrase);
+        });
+
+        // Order by title or any other field as you need
+        $query->orderBy('title_' . app()->getLocale(), 'asc'); 
+
+        return DataTables::of($query)
+            ->filterColumn('title_' . app()->getLocale(), function ($query, $keyword) {
+                // Match exact phrase in the columns
+                $sql = "title_en LIKE ? OR title_gu LIKE ? OR lyrics_en LIKE ? OR lyrics_gu LIKE ?";
+                $query->whereRaw($sql, ["%{$keyword}%", "%{$keyword}%", "%{$keyword}%", "%{$keyword}%"]);
+            })
+            ->make(true);
+    }
+    return view('user.songs.index');
+}
+
 
     public function show(string $songCode)
     {
