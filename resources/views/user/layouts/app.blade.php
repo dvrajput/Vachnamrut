@@ -502,7 +502,7 @@ body {
 <body>
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="{{ route('user.songs.index') }}">
+        <a class="navbar-brand" href="{{ route('user.kirtans.index') }}">
             {{ __('Kirtanavali') }}
         </a>
         <!-- In top mobile controls -->

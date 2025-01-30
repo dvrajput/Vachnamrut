@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // return view('welcome');
-    return redirect()->route('user.songs.index');
+    return redirect()->route('user.kirtans.index');
 });
 
 Route::name('user.')->group(function () {
-    Route::resource('songs', UserSongController::class);
+    Route::resource('kirtans', UserSongController::class);
     Route::resource('categories', UserCategoriesController::class);
     Route::resource('contact', UserContactController::class);
 });
@@ -34,6 +34,10 @@ Route::prefix('api/')->group(function () {
     Route::get('get_songs', [ApiController::class, 'getSongs']);
     Route::get('get_sub_category', [ApiController::class, 'getSubCategory']);
     Route::get('get_category', [ApiController::class, 'getCategory']);
+});
+
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });
 
 // admin panel route

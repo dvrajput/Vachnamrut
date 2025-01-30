@@ -37,6 +37,7 @@ class CategoriesController extends Controller
                         ->join('songs', 'songs.song_code', '=', 'song_sub_cate_rels.song_code')
                         ->select('songs.song_code', 'songs.title_en', 'songs.title_gu', 'songs.lyrics_en', 'songs.lyrics_gu');
 
+                        $query->orderBy('title_' . app()->getLocale(), 'asc');
                   return DataTables::of($query)
                         ->filterColumn('title_'.app()->getLocale(), function($query, $keyword) {
                               $sql = "CONCAT(songs.title_en,' ',songs.title_gu,' ',songs.lyrics_en,' ',songs.lyrics_gu) like ?";
