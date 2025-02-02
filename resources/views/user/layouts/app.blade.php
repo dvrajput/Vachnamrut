@@ -522,7 +522,7 @@ body {
             <a class="dropdown-item" href="{{ route('locale', 'gu') }}">{{ __('Gujarati') }}</a>
         </div>
     </div>
-    @if(request()->is('songs/*'))
+    @if(request()->is('kirtans/*'))
     <div class="position-relative me-2">
         <button id="fontSizeToggleMobile" class="nav-link">
         <span class="translate-icon"><img src="{{ asset('format_size_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg') }}" alt="format size"></span>
@@ -607,7 +607,7 @@ body {
                         <i class="fa-solid fa-sun light-icon d-none"></i>
                     </button>
                 </li>
-                @if(request()->is('songs/*'))
+                @if(request()->is('kirtans/*'))
                 <li class="nav-item d-none d-lg-block position-relative">
                     <button id="fontSizeToggleDesktop" class="nav-link">
                     <span class="translate-icon"><img src="{{ asset('format_size_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg') }}" alt="format size"></span>
