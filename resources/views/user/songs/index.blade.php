@@ -42,7 +42,8 @@
     td {
         padding: 12px;
         border: 1px solid var(--border-color);
-        font-size: 20px;
+        font-size: 23px;
+        font-weight: 500;
         color: var(--text-color);
     }
 
@@ -71,7 +72,8 @@
 
     .dataTables_wrapper .dataTables_filter input {
         width: 400px;
-        padding: 8px 16px;
+        padding: 10px 16px;
+        padding-top: 14px;
         border: 2px solid var(--border-color);
         border-radius: 20px;
         outline: none;
