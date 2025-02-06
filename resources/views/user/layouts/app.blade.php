@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=g_translate" />
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@100..800&family=Rasa:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet">
 
 <style>
     :root {
@@ -55,6 +57,12 @@ body {
     padding-top: 56px;
     background-color: var(--bg-color);
     color: var(--text-color);
+    font-family: 'Anek Gujarati', sans-serif;
+}
+
+.title{
+    font-family: 'Shrikhand', sans-serif;
+    font-size: 1.8rem;
 }
 
 /* Navbar Styles */
@@ -79,6 +87,7 @@ body {
     align-items: center;
     margin: 0;
     padding: 0 15px;
+    font-size: 19px;
 }
 
 /* Card and Form Styles */
@@ -146,7 +155,7 @@ body {
 
 #themeToggle i {
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
 
 /* Material Icons */
@@ -154,11 +163,6 @@ body {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-/* Translate Icon */
-.translate-icon img {
-    width: 24px;
-    height: 24px;
-}
 
 /* Desktop dropdown hover styles */
 @media (min-width: 992px) {
@@ -216,16 +220,55 @@ body {
 }
 
 /* Mobile Styles */
-@media (max-width: 991px) {
+@media (max-width: 768px) {
     .container {
         padding-left: 0;
         padding-right: 0;
     }
 
+    /* Navbar brand adjustments */
     .navbar-brand {
-        padding-left: 15px;
+        font-size: 1.4rem;
+        max-width: 40%;
+        padding-left: 20px;
+        margin-right: 0;
     }
 
+    /* Top controls container */
+    .d-flex.align-items-center.d-lg-none {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px;
+        margin-right: 15px;
+        flex: 0 0 auto;
+        max-width: 60%;
+    }
+
+    /* Individual control buttons */
+    #themeToggle,
+    #languageDropdownMobile,
+    #fontSizeToggleMobile,
+    .navbar-toggler {
+        padding: 4px !important;
+        margin: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Icons within controls */
+    .material-symbols-outlined,
+    .translate-icon img,
+    .fa-moon,
+    .fa-sun {
+        font-size: 22px;
+    }
+
+    .translate-icon {
+        padding:0px !important;
+    }
+
+    /* Navbar collapse */
     .navbar-collapse {
         position: fixed;
         top: 56px;
@@ -245,8 +288,7 @@ body {
         padding-left: 15px;
     }
 
-    /* Mobile Navigation Links */
-    /* Main category link */
+    /* Navigation links */
     .nav-link.dropdown-toggle {
         width: 100%;
         padding: 12px 15px !important;
@@ -267,42 +309,46 @@ body {
     }
 
     .nav-link.dropdown-toggle[aria-expanded="true"]::after {
-        transform: rotate(90deg); /* Rotate to point down when expanded */
+        transform: rotate(90deg);
     }
 
-    /* Submenu Styles */
-    /* Main category item */
+    /* Category dropdown arrows */
     .dropdown-submenu > .dropdown-item {
-        width: 100%;
-        padding: 12px 15px !important;
-        font-size: 15px !important; /* Bigger font for main categories */
         position: relative;
-        margin: 5px 0; /* Slightly reduced margin between groups */
-    }
-
-    /* Subcategory items (Brahmanand Swami) */
-    .dropdown-submenu .dropdown-menu .dropdown-item {
-        font-size: 16px !important; /* Smaller font for subcategories */
-        padding: 8px 15px 8px 25px !important; /* Less padding for subcategories */
-        opacity: 0.9;
     }
 
     .dropdown-submenu > .dropdown-item::after {
         position: absolute;
-        right: 15px; /* Position from right */
+        right: 15px;
         content: "›";
         border: none;
         font-size: 1.3em;
         line-height: 1;
-        transform: rotate(180deg); /* Rotate to point right */
+        transform: rotate(180deg);
         transition: transform 0.3s ease;
     }
 
+    /* Arrow rotation when menu is open */
     .dropdown-submenu > .dropdown-item.show::after {
-        transform: rotate(90deg); /* Rotate to point down when expanded */
+        transform: rotate(90deg);
     }
 
-    /* Language dropdown specific styles */
+    /* Submenu styles */
+    .dropdown-submenu > .dropdown-item {
+        width: 100%;
+        padding: 12px 15px !important;
+        font-size: 18px !important;
+        position: relative;
+        margin: 5px 0;
+    }
+
+    .dropdown-submenu .dropdown-menu .dropdown-item {
+        font-size: 18px !important;
+        padding: 8px 15px 8px 25px !important;
+        opacity: 0.9;
+    }
+
+    /* Language dropdown */
     .nav-item.dropdown .dropdown-menu {
         min-width: auto;
         width: auto;
@@ -312,8 +358,10 @@ body {
 
     /* Submenu container */
     .dropdown-submenu .dropdown-menu {
+        margin-left: 0;
         padding-left: 15px;
-        margin: 5px 0; /* Slightly reduced margin between groups */
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 5px 0;
     }
 
     /* Backdrop */
@@ -332,14 +380,13 @@ body {
         display: block;
     }
 
-    /* Navbar Toggler */
+    /* Navbar toggler */
     .navbar-toggler {
         padding: 3px !important;
         font-size: 22px;
         line-height: 1;
         background-color: transparent;
         border: 0 !important;
-        margin-right: 15px;
     }
 
     .navbar-toggler:focus,
@@ -348,23 +395,14 @@ body {
         box-shadow: none !important;
     }
 
-    /* Remove dropdown arrow from translate icons */
-#languageDropdownMobile.dropdown-toggle::after,
-#languageDropdown.dropdown-toggle::after {
-    content: none !important;
-    display: none !important;
-}
-
-/* Remove bootstrap default arrow */
-.nav-link.dropdown-toggle[id^="language"]::after {
-    display: none !important;
-}
-
-    /* Mobile Controls */
-    .d-flex.align-items-center.d-lg-none {
-        margin-right: 15px;
+    /* Remove dropdown arrows */
+    #languageDropdownMobile.dropdown-toggle::after,
+    #languageDropdown.dropdown-toggle::after,
+    .nav-link.dropdown-toggle[id^="language"]::after {
+        display: none !important;
     }
 
+    /* Navigation items */
     .navbar-nav {
         width: 100%;
         padding: 0;
@@ -379,73 +417,22 @@ body {
         padding: 12px 15px !important;
     }
 
-    /* Adjust dropdown toggle styling */
-    .nav-link.dropdown-toggle,
-    .dropdown-submenu > .dropdown-item {
-        width: 100%;
-        padding: 12px 15px !important;
-        font-size: 18px !important; /* Smaller font for main categories */
-        position: relative;
-    }
-
-    /* Subcategory specific styles */
-    .dropdown-submenu .dropdown-menu .dropdown-item {
-        font-size: 20px; /* Smaller font size */
-        padding: 10px 15px 10px 30px !important; /* More left padding */
-        opacity: 0.9; /* Slightly dimmed to show hierarchy */
-    }
-
-    /* Submenu container spacing */
-    .dropdown-submenu .dropdown-menu {
-        margin-left: 0;
-        padding-left: 15px; /* Indentation for submenu */
-        border-left: 1px solid rgba(255, 255, 255, 0.1); /* Subtle line to show hierarchy */
-        margin: 5px 0; /* Spacing between category groups */
-    }
-
-    /* Arrow styles for main category */
-    .nav-link.dropdown-toggle::after {
-        position: absolute;
-        right: 15px;
-        content: "›";
-        border: none;
-        font-size: 1.3em;
-        line-height: 1;
-        transform: rotate(180deg);
-        transition: transform 0.3s ease;
-    }
-
-    /* Arrow styles for subcategories */
-    .dropdown-submenu > .dropdown-item::after {
-        position: absolute;
-        right: 15px;
-        content: "›";
-        border: none;
-        font-size: 1.3em;
-        line-height: 1;
-        transform: rotate(180deg);
-        transition: transform 0.3s ease;
-    }
-
-    /* Arrow rotation when menu is open */
-    .nav-link.dropdown-toggle[aria-expanded="true"]::after,
-    .dropdown-submenu > .dropdown-item.show::after {
-        transform: rotate(90deg);
-    }
-    /* Adjust dropdown menus */
+    /* Dropdown menus */
     .dropdown-menu {
         width: 100%;
         padding: 0 !important;
+        background-color: transparent;
+        border: none;
     }
 
-    /* Contact link full width */
+    /* Contact link */
     .navbar-nav .nav-item .nav-link {
         width: 100%;
         padding: 12px 15px !important;
         font-size: 19px;
     }
 
-    /* Ensure items use full width */
+    /* Collapse items */
     .navbar-collapse .nav-link,
     .navbar-collapse .dropdown-item {
         width: 100%;
@@ -502,7 +489,7 @@ body {
 <body>
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="{{ route('user.kirtans.index') }}">
+        <a class="navbar-brand title" href="{{ route('user.kirtans.index') }}">
             {{ __('Kirtanavali') }}
         </a>
         <!-- In top mobile controls -->

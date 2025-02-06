@@ -126,7 +126,7 @@
                 padding-top: 12px;
                 font-size: 24px;
                 margin: 10px 0;
-                line-height: 33px;
+                line-height: 50px;
             }
 
             .lyrics {
