@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SubCategoryController as AdminSubCategoryControll
 use App\Http\Controllers\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Admin\ConfigController as AdminConfigController;
 use App\Http\Controllers\Admin\ContactsController as AdminContactsController;
+use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -46,5 +47,7 @@ Route::prefix('admin/')->name('admin.')->group(function () {
         Route::get('subCategories/{id}/remaining-songs', [AdminSubCategoryController::class, 'fetchRemainingSongs'])->name('subCategories.remaining_songs');
         Route::post('song_category_rel', [AdminSubCategoryController::class, 'addSongToCategory'])->name('subCategories.addSong');
         Route::delete('song_category_rel/{song_code}', [AdminSubCategoryController::class, 'removeSongFromCategory'])->name('subCategories.removeSong');
+
+        Route::resource('users', AdminUsersController::class);
     });
 });
