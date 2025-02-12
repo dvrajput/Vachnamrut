@@ -76,6 +76,14 @@ class ExportController extends Controller
         $songs = $query->get();
 
 
-        return Excel::download(new SongsExport($songs), 'songs.xlsx');
+        $subcategoryName = '';
+        if (!empty($selectedSubcategories)) {
+                $subcategoryName = SubCategory::whereIn('sub_category_code', $selectedSubcategories)
+                        ->pluck('sub_category_en')
+                        ->join('-');
+        }
+        $date = now()->format('d-m-Y');
+        $filename = ($subcategoryName ? $subcategoryName . '-' : '') . $date . '.xlsx';
+        return Excel::download(new SongsExport($songs), $filename);
     }
 }
