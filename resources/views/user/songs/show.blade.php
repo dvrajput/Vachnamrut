@@ -201,7 +201,7 @@
             @foreach ($songsInPlaylists as $index => $playlistSong)
                 <li class="nav-item" role="presentation">
                     <a id="padBtn" class="nav-link {{ $playlistSong->song_code == $song->song_code ? 'active' : '' }}"
-                        id="tab-{{ $playlistSong->song_code }}" href="{{ url('songs/' . $playlistSong->song_code) }}"
+                        id="tab-{{ $playlistSong->song_code }}" href="{{ url('kirtans/' . $playlistSong->song_code) }}"
                         role="tab" aria-controls="content-{{ $playlistSong->song_code }}"
                         aria-selected="{{ $playlistSong->song_code == $song->song_code ? 'true' : 'false' }}">
                         {{ __('Pad') }} {{ $index + 1 }}
