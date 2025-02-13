@@ -530,47 +530,52 @@ body {
 </div>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle{{ request()->is('categories*') ? ' active' : '' }}"
-                        href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        {{ __('Category') }}
+                @php
+    $categories = DB::table('categories')->get();
+@endphp
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle{{ request()->is('categories*') ? ' active' : '' }}"
+        href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        {{ __('Category') }}
+    </a>
+    <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+        @foreach ($categories as $category)
+            @php
+                $subcategories = DB::table('cate_sub_cate_rels')
+                    ->join('sub_categories', 'sub_categories.sub_category_code', '=', 'cate_sub_cate_rels.sub_category_code')
+                    ->where('cate_sub_cate_rels.category_code', $category->category_code)
+                    ->select('sub_categories.*')
+                    ->get();
+            @endphp
+
+            @if ($subcategories->count() == 1)
+                {{-- Show the subcategory directly if there's only one --}}
+                <a class="dropdown-item"
+                    href="{{ route('user.categories.show', $subcategories[0]->sub_category_code) }}">
+                    {{ $subcategories[0]->{'sub_category_' . app()->getLocale()} }}
+                </a>
+            @elseif ($subcategories->count() > 1)
+                {{-- Show category as dropdown if it has multiple subcategories --}}
+                <div class="dropdown-submenu">
+                    <a class="dropdown-item dropdown-toggle" href="#">
+                        {{ $category->{'category_' . app()->getLocale()} }}
                     </a>
-                    @php
-                        $categories = DB::table('categories')->get();
-                    @endphp
-                    <div class="dropdown-menu" aria-labelledby="categoryDropdown">
-                        @foreach ($categories as $category)
-                            <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="#">
-                                    {{ $category->{'category_' . app()->getLocale()} }}
-                                </a>
-                                @php
-                                    $subcategories = DB::table('cate_sub_cate_rels')
-                                        ->join(
-                                            'sub_categories',
-                                            'sub_categories.sub_category_code',
-                                            '=',
-                                            'cate_sub_cate_rels.sub_category_code',
-                                        )
-                                        ->where('cate_sub_cate_rels.category_code', $category->category_code)
-                                        ->select('sub_categories.*')
-                                        ->get();
-                                @endphp
-                                @if ($subcategories->count() > 0)
-                                    <div class="dropdown-menu">
-                                        @foreach ($subcategories as $subcategory)
-                                            <a class="dropdown-item"
-                                                href="{{ route('user.categories.show', $subcategory->sub_category_code) }}">
-                                                {{ $subcategory->{'sub_category_' . app()->getLocale()} }}
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
+                    <div class="dropdown-menu">
+                        @foreach ($subcategories as $subcategory)
+                            <a class="dropdown-item"
+                                href="{{ route('user.categories.show', $subcategory->sub_category_code) }}">
+                                {{ $subcategory->{'sub_category_' . app()->getLocale()} }}
+                            </a>
                         @endforeach
                     </div>
-                </li>
+                </div>
+            @endif
+        @endforeach
+    </div>
+</li>
+
             </ul>
             <!-- In navbar-nav (desktop controls) -->
             <ul class="navbar-nav">
