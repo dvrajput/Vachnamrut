@@ -196,15 +196,16 @@ body {
 
     /* Main items styling */
     .dropdown-menu .dropdown-item {
-        text-align: center;
+        text-align: left;
         padding: 8px 20px;
         white-space: nowrap;
         position: relative;
+        font-size:19px;
     }
 
     /* Right arrow for items with submenu */
     .dropdown-submenu > .dropdown-item::after {
-        content: "›";
+        /* content: "›"; */
         position: absolute;
         right: 10px;
         top: 50%;
@@ -337,13 +338,13 @@ body {
     .dropdown-submenu > .dropdown-item {
         width: 100%;
         padding: 12px 15px !important;
-        font-size: 18px !important;
+        font-size: 19px !important;
         position: relative;
         margin: 5px 0;
     }
 
     .dropdown-submenu .dropdown-menu .dropdown-item {
-        font-size: 18px !important;
+        font-size: 19px !important;
         padding: 8px 15px 8px 25px !important;
         opacity: 0.9;
     }
@@ -438,6 +439,7 @@ body {
         width: 100%;
         display: block;
         padding: 12px 15px !important;
+        font-size:19px;
     }
 }
 
