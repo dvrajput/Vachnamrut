@@ -209,8 +209,9 @@
                 </li>
             @endforeach
         </ul>
-
+        
         <div class="tab-content" id="songTabContent">
+            <a href="{{ route('user.contact.edit', $song->song_code) }}"><i class="fas fa-regular fa-flag"></i></a>
             @foreach ($songsInPlaylists as $playlistSong)
                 <div class="tab-pane fade {{ $playlistSong->song_code == $song->song_code ? 'show active' : '' }}"
                     id="content-{{ $playlistSong->song_code }}" role="tabpanel"
@@ -225,7 +226,6 @@
                 </div>
             @endforeach
 
-            <a href="{{ route('user.contact.edit', $song->song_code) }}"><i class="fas fa-regular fa-flag"></i></a>
             
             @if ($songsInPlaylists->isEmpty())
                 <div class="tab-pane fade show active" id="noPad" role="tabpanel" aria-labelledby="tab-noPad">
