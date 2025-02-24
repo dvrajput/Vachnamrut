@@ -7,9 +7,15 @@ use App\Models\Contact;
 use App\Models\Song;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
+    public function index(){
+        return view('user.contact.create');
+    }
+
     public function create(Request $request)
     {
         if ($request->ajax()) {
@@ -41,6 +47,22 @@ class ContactController extends Controller
             'message' => $request->message,
             'song_code' => $request->song_code
         ]);
+
+        $url = "https://api.telegram.org/bot8033660943:AAEyvbadTsoO_NCDwgcDfcW3jgm2h9bM9rE/sendMessage";
+// dd($url);
+
+$kirtan=Song::where('song_code',$request->song_code)->first();
+$name=$kirtan->title_gu ?? $kirtan->title_en;
+        $v= Http::post($url, [
+            'chat_id' => -1002252561130,
+            'text' => "kirtan id :{$request->song_code}\n".
+            "kirtan name: {$name}\n".
+            "name: {$request->name}\n".
+            "email: {$request->email}\n".
+            "message: {$request->message}",
+            'parse_mode' => 'HTML'
+        ]);
+        Log::info($v->body());
 
         return redirect()->route('user.contact.create')->with('success', 'Thanks for suggesting!');
     }
