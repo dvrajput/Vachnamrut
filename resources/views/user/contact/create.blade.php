@@ -244,17 +244,22 @@
                         };
                     },
                     processResults: function(data) {
-                        // console.log(data);
-
-                        return {
-                            results: data.map(function(song) {
-                                return {
-                                    id: song.song_code,
-                                    text: song.title_en + '(' + song.song_code + ')'
-                                };
-                            })
-                        };
-                    },
+                        // Get current locale
+                        var locale = '{{ app()->getLocale() }}';
+                        
+                        // Check if data is an array
+                        if (!Array.isArray(data)) {
+                            return { results: [] };
+                        }
+                        
+                        var results = data.map(function(song) {
+                            return {
+                                id: song.song_code,
+                                text: locale === 'gu' && song.title_gu ? song.title_gu : song.title_en
+                            };
+                        });
+                        return { results: results };
+                    },  
                     cache: true
                 }
             });

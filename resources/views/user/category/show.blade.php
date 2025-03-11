@@ -3,322 +3,239 @@
 
 @section('style')
 <style>
+    /* Global variables for theme support */
     :root {
         --primary-color: #d7861b;
-        --bg-color: #f8f9fa;
+        --bg-color: #f5f5f5;
         --card-bg: #ffffff;
-        --text-color: #212529;
+        --text-color: #333333;
         --border-color: #d7861b;
-        --shadow-color: rgba(0, 0, 0, 0.1);
-        --link-color: #212529;
+        --shadow-color: rgba(0, 0, 0, 0.08);
+        --link-color: #333333;
+        --hover-bg: rgba(215, 134, 27, 0.1);
     }
 
+    /* Dark theme variables */
     [data-theme="dark"] {
         --bg-color: #212529;
         --card-bg: #2c3034;
         --text-color: #f8f9fa;
-        --border-color: #d7861b;
         --shadow-color: rgba(0, 0, 0, 0.3);
         --link-color: #f8f9fa;
+        --hover-bg: rgba(215, 134, 27, 0.2);
     }
 
-    .container-fluid {
-        padding: 20px;
+    /* Navbar-specific overrides to prevent shrinking */
+    .navbar .nav-link i {
+        font-size: 1.25rem !important;
+    }
+    
+    .navbar .dropdown-toggle::after {
+        display: inline-block !important;
+    }
+
+    /* Song container styles */
+    .song-container {
+        max-width: 70%;
+        margin: 0 auto;
+        background-color: var(--card-bg);
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px var(--shadow-color);
+        min-height: calc(100vh - 60px);
+        position: relative;
+    }
+    
+    .search-container {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: var(--card-bg);
+        padding-bottom: 20px;
+        padding-top: 15px;
+        width: 100%;
         display: flex;
         justify-content: center;
+    }
+    
+    .search-box {
+        width: 70%;
+        padding: 15px;
+        border: 2px solid var(--border-color);
+        border-radius: 25px;
+        font-size: 16px;
+        outline: none;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+    }
+    
+    .search-box:focus {
+        box-shadow: 0 0 8px rgba(215, 134, 27, 0.4);
+    }
+
+    .song-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        height: calc(100vh - 180px);
+        overflow-y: auto;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        scrollbar-width: none; /* Firefox */
+        background-color: var(--card-bg);
+    }
+    
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .song-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .song-list li {
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 25px;
+        transition: background-color 0.2s ease;
+        text-align: center;
+        background-color: var(--card-bg);
+    }
+
+    .song-list li a {
+        text-decoration: none;
+        font-weight: 500;
+        color: var(--text-color);
+        display: block;
+    }
+
+    .song-list li:hover {
+        background: var(--hover-bg);
+    }
+
+    body {
         background-color: var(--bg-color);
     }
 
-    .table-container {
-        border: none;
-        border-radius: 5px;
-        padding: 20px;
-        background-color: var(--card-bg);
-        box-shadow: 0 2px 10px var(--shadow-color);
-        width: 70%;
-    }
-
-    td {
-        padding: 12px;
-        border: 1px solid var(--border-color);
-        font-size: 23px;
-        font-weight: 500;
-        color: var(--text-color);
-    }
-
-    /* Table styles */
-    #categorySongTable {
-        color: var(--text-color);
-    }
-
-    #categorySongTable a {
-        color: var(--link-color) !important;
-        text-decoration: none;
-        display: block;
-        height: 100%;
-    }
-
-    table.dataTable.display tbody td {
-        border-top: none;
-    }
-
-    /* Search bar styling */
-    .dataTables_wrapper .dataTables_filter {
-        float: none;
-        text-align: center !important;
-        margin: 20px auto 40px auto !important;
-    }
-
-    .dataTables_wrapper .dataTables_filter input {
-        width: 400px;
-        padding: 8px 16px;
-        border: 2px solid var(--border-color);
-        border-radius: 20px;
-        outline: none;
-        transition: all 0.3s ease;
-        font-size: 16px;
-        background-color: var(--card-bg);
-        color: var(--text-color);
-        margin-bottom: -100px;
-        margin-top: 10px;
-    }
-
-    .dataTables_wrapper .dataTables_filter input:focus {
-        box-shadow: 0 0 5px rgba(215, 134, 27, 0.5);
-        border-color: var(--primary-color);
-    }
-
-    .dataTables_wrapper .dataTables_filter input::placeholder {
-        color: var(--text-color);
-        opacity: 0.6;
-    }
-
-    .table.dataTable thead tr {
+    .loading {
+        text-align: center;
+        padding: 15px;
         display: none;
+        color: var(--text-color);
     }
 
-    /* Hide length dropdown */
-    .dataTables_wrapper .dataTables_length {
-        display: none;
-    }
-
-    /* Pagination styling */
-    .dataTables_wrapper .dataTables_paginate {
-        justify-content: center;
-        margin-top: 1.5rem;
-    }
-
-/* Hide sorting icons but keep the border */
-table.dataTable thead .sorting,
-table.dataTable thead .sorting_asc,
-table.dataTable thead .sorting_desc {
-    background-image: none !important;
-}
-
-table.dataTable thead th, 
-table.dataTable thead td {
-    padding: 0;
-}
-
-/* Override the existing rule that hides the entire header row */
-.table.dataTable thead tr {
-    display: table-row; /* Show the row */
-    height: 1px; /* Minimal height to show border */
-    opacity: 0.5; /* Make it subtle */
-}
-
-/* Keep the border */
-table.dataTable thead th,
-table.dataTable thead td {
-    border-bottom: 1px solid var(--border-color) !important;
-}
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        padding: 0.5em 1em;
-        color: var(--text-color) !important;
-        border: none !important;
-        border-radius: 4px;
-        margin: 1px 2px;
-        background: transparent !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        background: rgba(215, 134, 27, 0.1) !important;
-        color: var(--text-color) !important;
-        border: none !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-        background: var(--primary-color) !important;
-        color: white !important;
-        border: none !important;
-        font-weight: 500;
-    }
-
-    /* Dark theme specific */
-    [data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        background: rgba(215, 134, 27, 0.2) !important;
-    }
-
-    /* DataTables dark mode styles */
-    [data-theme="dark"] .table-container {
-        background-color: var(--card-bg) !important;
-    }
-
-    [data-theme="dark"] table.dataTable {
-        background-color: var(--card-bg) !important;
-    }
-
-    [data-theme="dark"] .dataTables_wrapper {
-        background-color: var(--card-bg) !important;
-    }
-
-    [data-theme="dark"] table.dataTable tbody tr {
-        background-color: var(--card-bg) !important;
-    }
-
-    [data-theme="dark"] table.dataTable tbody tr:nth-child(odd) {
-        background-color: var(--card-bg) !important;
-    }
-
-    [data-theme="dark"] table.dataTable tbody tr:nth-child(even) {
-        background-color: var(--card-bg) !important;
-    }
-
-    [data-theme="dark"] .dataTables_wrapper * {
-        background-color: var(--card-bg) !important;
-    }
-
-    [data-theme="dark"] .odd,
-    [data-theme="dark"] .even {
-        background-color: var(--card-bg) !important;
-    }
-
-    /* Responsive adjustments */
+    /* Mobile responsive styles */
     @media (max-width: 768px) {
-        .table-container {
-            border: none;
-            border-radius: 0;
-            padding: 10px;
-            background-color: transparent;
-            box-shadow: none;
+            .song-container {
+                max-width: 100%;
+                padding: 15px;
+            }
+            
+            .search-box {
+                width: 90%;
+            }
+            
+            .song-list li {
+                font-size: 20px;
+                padding: 15px;
+            }
+            .song-list li a {
+                font-weight: 500;
+            }
+        }
+        
+        .search-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--card-bg);
+            padding-bottom: 20px;
+            padding-top: 15px;
             width: 100%;
+            display: flex;
+            justify-content: center;
         }
-
-        .container-fluid {
-            padding: 0;
+        
+        .search-box {
+            width: 70%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
-
-        .dataTables_wrapper .dataTables_filter input {
-            width: 300px;
-        }
-    }
 </style>
-@endsection
+@endsection 
 
 @section('content')
-<div class="container-fluid">
-    <div class="table-container">
-        <table id="categorySongTable" class="display text-center" style="width:100%">
-            <thead>
-                <tr>
-                    <th></th>
-                </tr>
-            </thead>
-        </table>
+<div class="song-container">
+    <div class="search-container">
+        <input type="text" id="search" class="search-box" placeholder="{{ __('Search') }} {{ $subCategory->{'sub_category_' . app()->getLocale()} }}...">
     </div>
+
+    <ul id="songsList" class="song-list"></ul>
+
+    <div id="loading" class="loading">Loading...</div>
 </div>
 @endsection
 
 @section('script')
 <script>
-    $(document).ready(function() {
-        const categoryCode = "{{ $subCategory->sub_category_code }}";
-        const categoryName = "{{ $subCategory->{'sub_category_' . app()->getLocale()} }}";
-        const ajaxUrl = '{{ route('user.categories.show', ':id') }}'.replace(':id', categoryCode);
+    let page = 1;
+    let isLoading = false;
+    let searchQuery = '';
 
-        $('#categorySongTable').DataTable({
-            processing: true,
-            serverSide: true,
-            pageLength: 20,
-            stripeClasses: [], // Disable stripe classes
-            ajax: {
-                url: ajaxUrl,
-                data: function(d) {
-                    d.searchBoth = d.search.value;
-                }
+    function loadSongs() {
+        if (isLoading) return;
+        isLoading = true;
+        $('#loading').show();
+
+        $.ajax({
+            url: '{{ route('user.categories.show', $subCategory->sub_category_code) }}',
+            data: {
+                page: page,
+                search: searchQuery
             },
-            columns: [{
-                data: 'title_{{ app()->getLocale() }}',
-                name: 'title_{{ app()->getLocale() }}',
-                orderable: false,
-                render: function(data, type, row) {
-                    const theme = document.documentElement.getAttribute('data-theme');
-                    const textColor = theme === 'dark' ? '#f8f9fa' : '#212529';
-                    return `<a href="{{ url('kirtans') }}/${row.song_code}" style="color: ${textColor} !important;">${data}</a>`;
-                }
-            }],
-            language: {
-                search: "",
-                searchPlaceholder: "Search " + categoryName + "..."
-            },
-            dom: 'ft<"bottom"p>',
-            buttons: [],
-            createdRow: function(row, data, dataIndex) {
-                const theme = document.documentElement.getAttribute('data-theme');
-                if (theme === 'dark') {
-                    $(row).css({
-                        'background-color': 'var(--card-bg)',
-                        'color': 'var(--text-color)'
+            success: function(response) {
+                if (response.songs.length > 0) {
+                    response.songs.forEach(song => {
+                        $('#songsList').append(
+                            `<li><a href="{{ url('kirtans') }}/${song.song_code}">${song.title}</a></li>`
+                        );
                     });
+                    page++;
                 }
-            },
-            drawCallback: function() {
-                const theme = document.documentElement.getAttribute('data-theme');
-                if (theme === 'dark') {
-                    $('.dataTables_wrapper').addClass('dark-mode');
-                    $('table.dataTable').css({
-                        'background-color': 'var(--card-bg)',
-                        'color': 'var(--text-color)'
-                    });
-                    $('table.dataTable td').css('color', 'var(--text-color)');
-                    $('table.dataTable a').css('color', 'var(--text-color)');
-                }
-            },
-            initComplete: function() {
-                const theme = document.documentElement.getAttribute('data-theme');
-                if (theme === 'dark') {
-                    $('.dataTables_wrapper').addClass('dark-mode');
-                    $('table.dataTable').css({
-                        'background-color': 'var(--card-bg)',
-                        'color': 'var(--text-color)'
-                    });
-                }
+                isLoading = false;
+                $('#loading').hide();
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        loadSongs(); // Load initial songs
+
+        // Infinite scroll
+        $('#songsList').on('scroll', function() {
+            if ($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 50) {
+                loadSongs();
             }
         });
 
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.attributeName === "data-theme") {
-                    const theme = document.documentElement.getAttribute('data-theme');
-                    const table = $('#categorySongTable').DataTable();
-                    table.draw();
-                }
-            });
+        // Search functionality
+        $('#search').on('keyup', function() {
+            searchQuery = $(this).val();
+            page = 1;
+            $('#songsList').html('');
+            loadSongs();
         });
-
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme']
+        
+        // Reload songs when language changes
+        $(document).on('languageChanged', function() {
+            page = 1;
+            $('#songsList').html('');
+            loadSongs();
         });
-
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
-<script>
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
     });
 </script>
 @endsection
