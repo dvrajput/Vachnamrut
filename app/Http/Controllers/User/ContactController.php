@@ -20,14 +20,24 @@ class ContactController extends Controller
     {
         if ($request->ajax()) {
             $search = $request->get('q', ''); // Get the search query if provided
-
-            $songs = Song::select('song_code', 'title_en')
-                ->where('title_en', 'like', '%' . $search . '%') // Optional: search songs by title
-                ->limit(10) // Limit results to 10 (you can adjust this based on your preference)
+            $locale = app()->getLocale(); // Get current locale
+            
+            $query = Song::query()->select('song_code', 'title_en', 'title_gu');
+            
+            if (!empty($search)) {
+                $keyword = '%' . $search . '%';
+                $query->where('title_en', 'LIKE', $keyword)
+                    ->orWhere('title_gu', 'LIKE', $keyword)
+                    ->orWhere('song_code', 'LIKE', $keyword); // Add search by song_code
+            }
+            
+            $songs = $query->orderBy('title_' . $locale, 'asc')
+                ->limit(10)
                 ->get();
-
+            
             return response()->json($songs);
         }
+        
         return view('user.contact.create');
     }
 

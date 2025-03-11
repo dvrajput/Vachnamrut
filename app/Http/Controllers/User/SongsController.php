@@ -12,34 +12,34 @@ use Yajra\DataTables\DataTables;
 class SongsController extends Controller
 {
     public function index(Request $request)
-{
-    if ($request->ajax()) {
-        $query = Song::query();
+    {
+        if ($request->ajax()) {
+            $query = Song::query();
 
-        // Apply the search only for the full phrase (Vandu Sahajanand)
-        $query->where(function($q) use ($request) {
-            $keyword = $request->input('search.value');
-            $searchPhrase = '%' . $keyword . '%';
+            if ($request->has('search') && !empty($request->search)) {
+                $keyword = '%' . $request->search . '%';
+                $query->where('title_en', 'LIKE', $keyword)
+                    ->orWhere('title_gu', 'LIKE', $keyword)
+                    ->orWhere('lyrics_en', 'LIKE', $keyword)
+                    ->orWhere('lyrics_gu', 'LIKE', $keyword);
+            }
+            $locale = app()->getLocale();
+            $songs = $query->orderBy('title_' . $locale, 'asc')
+                ->paginate(30);
 
-            $q->where('title_en', 'LIKE', $searchPhrase)
-              ->orWhere('title_gu', 'LIKE', $searchPhrase)
-              ->orWhere('lyrics_en', 'LIKE', $searchPhrase)
-              ->orWhere('lyrics_gu', 'LIKE', $searchPhrase);
-        });
+            // Transform the songs to include the current locale's title as 'title'
+            $songsTransformed = $songs->map(function($song) use ($locale) {
+                $song->title = $song->{'title_' . $locale};
+                return $song;
+            });
 
-        // Order by title or any other field as you need
-        $query->orderBy('title_' . app()->getLocale(), 'asc'); 
-
-        return DataTables::of($query)
-            ->filterColumn('title_' . app()->getLocale(), function ($query, $keyword) {
-                // Match exact phrase in the columns
-                $sql = "title_en LIKE ? OR title_gu LIKE ? OR lyrics_en LIKE ? OR lyrics_gu LIKE ?";
-                $query->whereRaw($sql, ["%{$keyword}%", "%{$keyword}%", "%{$keyword}%", "%{$keyword}%"]);
-            })
-            ->make(true);
+            return response()->json([
+                'songs' => $songsTransformed,
+                'locale' => $locale
+            ]);
+        }
+        return view('user.songs.index');
     }
-    return view('user.songs.index');
-}
 
 
     public function show(string $songCode)

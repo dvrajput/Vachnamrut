@@ -98,6 +98,7 @@
             text-align: center;
             padding: 16px;
             font-size: 24px;
+            font-weight: 500;
             line-height: 1.6; /* Base line height */
             line-height: normal;
             color: var(--text-color);
@@ -131,6 +132,7 @@
 
             .lyrics {
                 line-height: 28px;
+
             }
 
             #songTab {
@@ -190,6 +192,30 @@
         [data-theme="dark"] .tab-content {
             border: 1px solid var(--border-color);
         }
+
+        /* Suggestion link styling */
+        .suggestion-link {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-weight: 400;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .suggestion-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        [data-theme="dark"] .suggestion-link {
+            border-color: var(--border-color);
+        }
     </style>
 @endsection
 
@@ -211,7 +237,7 @@
         </ul>
         
         <div class="tab-content" id="songTabContent">
-            <a href="{{ route('user.contact.edit', $song->song_code) }}"><i class="fas fa-regular fa-flag"></i></a>
+            
             @foreach ($songsInPlaylists as $playlistSong)
                 <div class="tab-pane fade {{ $playlistSong->song_code == $song->song_code ? 'show active' : '' }}"
                     id="content-{{ $playlistSong->song_code }}" role="tabpanel"
@@ -225,7 +251,6 @@
                     </div>
                 </div>
             @endforeach
-
             
             @if ($songsInPlaylists->isEmpty())
                 <div class="tab-pane fade show active" id="noPad" role="tabpanel" aria-labelledby="tab-noPad">
@@ -236,6 +261,12 @@
                     </div>
                 </div>
             @endif
+            <br>
+            <div class="text-center mt-4 mb-2">
+                <a href="{{ route('user.contact.edit', $song->song_code) }}" class="suggestion-link">
+                    <i class="fas fa-regular fa-flag"></i> {{ __('suggestion') }}
+                </a>
+            </div>
         </div>
     </div>
 @endsection

@@ -23,7 +23,7 @@
 
                             <div class="mb-3 kirtan-select">
                                 <input type="text" class="form-control"
-                                    value="{{ $song->title_en }} ({{ $song->song_code }})" readonly required>
+                                    value="{{ app()->getLocale() == 'gu' ? $song->title_gu : $song->title_en }}" readonly required>
                             </div>
                             <input type="hidden" class="form-control" value="{{ $song->song_code }}" id="song_code"
                                 name="song_code" readonly required>
