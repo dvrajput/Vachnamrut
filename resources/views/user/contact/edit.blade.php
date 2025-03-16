@@ -47,6 +47,7 @@
 
 @section('style')
     <style>
+        
         .select2-container .select2-selection--single {
             height: 38px !important;
         }
@@ -229,6 +230,12 @@
         [data-theme="dark"] .select2-results__option--highlighted[aria-selected] {
             background-color: var(--primary-color) !important;
             color: #ffffff !important;
+        }
+        .navbar .container{
+        transform: translateY(-5px);
+        }
+        .d-flex.align-items-center.d-lg-none {
+            transform: translateX(-10px);
         }
     </style>
 @endsection
