@@ -120,12 +120,11 @@ body {
 /* Font Size Controls */
 .font-size-popup {
     position: absolute;
+    transform: translateY(-5px) translateX(-25px);
     top: 150%;
-    right: 1;
     background-color: var(--navbar-bg);
     padding: 8px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     z-index: 1000;
     display: flex;
     flex-direction: row;

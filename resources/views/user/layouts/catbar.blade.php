@@ -6,6 +6,9 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none; /* Firefox */
     overflow-y: visible !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .horizontal-scroll-container::-webkit-scrollbar {
@@ -18,6 +21,7 @@
     padding-top:  1rem;
     justify-content: center; /* Center the buttons */
     overflow: visible !important;
+    align-items: center;
 }
 
 .scroll-item {
