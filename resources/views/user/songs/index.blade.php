@@ -5,7 +5,7 @@
     <style>
         /* Global variables for theme support */
         :root {
-            --primary-color: #d7861b;
+            --primary-color: #bf7a1f;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-color: #212529;
@@ -36,6 +36,7 @@
             margin: 0 auto;
             background-color: var(--card-bg);
             padding: 25px;
+            padding-top: 0px;
             border-radius: 0;
             box-shadow: 0 4px 15px var(--shadow-color);
             min-height: calc(100vh - 60px);
@@ -43,27 +44,29 @@
         }
         
         .search-container {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-color: var(--card-bg);
-            padding-bottom: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .search-box {
-            width: 70%;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            transition: all 0.3s ease;
-        }
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: var(--card-bg);
+        padding-bottom: 20px;
+        padding-top: 15px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .search-box {
+        width: 70%;
+        margin-top: 20px;
+        padding: 15px;
+        border: 2px solid var(--border-color);
+        border-radius: 25px;
+        font-size: 16px;
+        outline: none;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+    }
         
         .search-box:focus {
             box-shadow: 0 0 8px rgba(215, 134, 27, 0.4);
@@ -91,6 +94,7 @@
             font-size: 25px;
             transition: background-color 0.2s ease;
             text-align: center;
+            position: relative;
         }
 
         .song-list li a {
@@ -110,8 +114,39 @@
             display: none;
             color: var(--text-color);
         }
-    /* Mobile responsive styles */
-    @media (max-width: 768px) {
+        
+        /* Pad count badge styles */
+        .pad-count {
+            display: inline-block;
+            margin-left: 10px;
+            background-color: rgba(215, 134, 27, 0.3);
+            color: var(--text-color);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .song-title-container {
+            position: relative;
+            padding-right: 70px; /* Make space for the counter */
+            margin-bottom: 1.5rem;
+        }
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .pad-count {
+                font-size: 14px;
+                padding: 2px 8px;
+                margin-left: 8px;
+            }
+        
+        .song-title-container {
+            padding-right: 60px;
+        }
+        .container{
+            transform: translateY(-5px);
+        }
             .song-container {
                 max-width: 100%;
                 padding: 15px;
@@ -119,6 +154,7 @@
             
             .search-box {
                 width: 90%;
+                margin-top: 0px;
             }
             
             .song-list li {
@@ -127,6 +163,13 @@
             }
             .song-list li a {
                 font-weight: 500;
+            }
+            
+            .pad-count {
+                font-size: 14px;
+                padding: 4px 10px;
+                right: 10px;
+                background-color: rgba(215, 134, 27, 0.4);
             }
         }
         
@@ -157,6 +200,7 @@
 @endsection
 
 @section('content')
+@include('user.layouts.catbar')
     <div class="song-container">
         <div class="search-container">
             <input type="text" id="search" class="search-box" placeholder="{{ __('Search Kirtan...') }}">
@@ -166,6 +210,7 @@
 
         <div id="loading" class="loading">Loading...</div>
     </div>
+    
 @endsection
 
 @section('script')
@@ -188,9 +233,24 @@
                 success: function(response) {
                     if (response.songs.length > 0) {
                         response.songs.forEach(song => {
+                            // Check for pad_number and total_pads fields
+                            let currentPad = song.current_pad || 0;
+                            let totalPads = song.total_pads || 0;
+                            
+                            // Only show pad count if total pads is greater than 0
+                            let padInfo = '';
+                            if (totalPads > 0) {
+                                padInfo = `<span class="pad-count">${currentPad} / ${totalPads}</span>`;
+                            }
+                            
                             // Use the title property which is already set to the correct language
                             $('#songsList').append(
-                                `<li><a href="{{ url('kirtans') }}/${song.song_code}">${song.title || song.title_en}</a></li>`
+                                `<li>
+                                    <a href="{{ url('kirtans') }}/${song.song_code}">
+                                        ${song.title || song.title_en}
+                                        ${totalPads > 0 ? `<span class="pad-count">${currentPad} / ${totalPads}</span>` : ''}
+                                    </a>
+                                </li>`
                             );
                         });
                         page++;

@@ -118,9 +118,70 @@
             color: var(--text-color);
         }
 
+        /* Pad navigation arrows for mobile */
+        .pad-tabs-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pad-scroll-arrow {
+            display: none;
+            position: absolute;
+            top: 50%;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(-65%) translateX(5px);
+            background-color: rgb(33 37 41);
+            color: white;
+            width: 40px;
+            height: 60px;
+            /* border-radius: 8px; */
+            text-align: center;
+            line-height: 40px;
+            z-index: 10;
+            cursor: pointer;
+            font-size: 16px;
+}
+        
+        .pad-scroll-left {
+            left: 5px;
+            transform: translateY(-70%) translateX(-5px);
+        }
+        
+        .pad-scroll-right {
+            right: 5px;
+            /* transform: translateY(-100%);*/
+        }
+        /* Desktop styles for horizontal scrolling with many pads */
+        @media (min-width: 769px) {
+            #songTab.many-pads {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                justify-content: flex-start;
+                padding: 15px 30px;
+                gap: 8px;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE and Edge */
+            }
+            
+            #songTab.many-pads::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+            
+            .many-pads .pad-scroll-arrow {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
         @media (max-width: 768px) {
             .container-fluid {
                 padding: 8px;
+            }
+            .container{
+                transform: translateY(-5px);
             }
 
             .song-title {
@@ -132,36 +193,46 @@
 
             .lyrics {
                 line-height: 28px;
-
             }
-
-            #songTab {
-                gap: 4px;
-                flex-direction: row;
-                width: 100%;
+            
+            .pad-scroll-arrow {
                 display: flex;
-                gap: 2px;
-                padding: 8px;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            #songTab {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                justify-content: flex-start;
+                padding: 10px 30px;
+                gap: 8px;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE and Edge */
+                background-color: transparent;
+                border-radius: 0;
+            }
+            
+            #songTab::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
             }
 
             .nav-item {
-                flex: 0 0 calc(25% - 4px);
+                flex: 0 0 auto;
+                margin-right: 5px;
             }
-
+            
             #padBtn {
-                padding: 6px 4px;
+                padding: 8px 16px;
+                min-width: 80px;
                 font-size: 14px;
-                width: 100%;
-                min-width: auto;
-            }
-
-            #padBtn:hover {
+                border-radius: 8px;
                 color: var(--text-color);
-                opacity: 0.8;
-            }
-
-            .tab-content {
-                padding: 16px;
+                transition: all 0.3s ease;
+                border: 1px solid var(--border-color);
+                background-color: var(--card-bg);
             }
 
             .song-content {
@@ -208,7 +279,7 @@
         }
 
         .suggestion-link:hover {
-            background-color: var(--primary-color);
+            background-color: var(--tab-hover);
             color: white;
             border-color: var(--primary-color);
         }
@@ -220,21 +291,25 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid mb-3">
+<div class="container-fluid mb-3">
         <h1 class="song-title">{{ $song->{'title_' . app()->getLocale()} }}</h1>
 
-        <ul class="nav nav-tabs" id="songTab" role="tablist">
-            @foreach ($songsInPlaylists as $index => $playlistSong)
-                <li class="nav-item" role="presentation">
-                    <a id="padBtn" class="nav-link {{ $playlistSong->song_code == $song->song_code ? 'active' : '' }}"
-                        id="tab-{{ $playlistSong->song_code }}" href="{{ url('kirtans/' . $playlistSong->song_code) }}"
-                        role="tab" aria-controls="content-{{ $playlistSong->song_code }}"
-                        aria-selected="{{ $playlistSong->song_code == $song->song_code ? 'true' : 'false' }}">
-                        {{ __('Pad') }} {{ $index + 1 }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
+        <div class="pad-tabs-container">
+            <div class="pad-scroll-arrow pad-scroll-left"><i class="fas fa-chevron-left"></i></div>
+            <div class="pad-scroll-arrow pad-scroll-right"><i class="fas fa-chevron-right"></i></div>
+            <ul class="nav nav-tabs" id="songTab" role="tablist">
+                @foreach ($songsInPlaylists as $index => $playlistSong)
+                    <li class="nav-item" role="presentation">
+                        <a id="padBtn" class="nav-link {{ $playlistSong->song_code == $song->song_code ? 'active' : '' }}"
+                            id="tab-{{ $playlistSong->song_code }}" href="{{ url('kirtans/' . $playlistSong->song_code) }}"
+                            role="tab" aria-controls="content-{{ $playlistSong->song_code }}"
+                            aria-selected="{{ $playlistSong->song_code == $song->song_code ? 'true' : 'false' }}">
+                            {{ __('Pad') }} {{ $index + 1 }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
         
         <div class="tab-content" id="songTabContent">
             
@@ -363,6 +438,83 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Scroll to active tab in mobile view
+    if (window.innerWidth <= 768) {
+        const activeTab = document.querySelector('#songTab .nav-link.active');
+        if (activeTab) {
+            setTimeout(() => {
+                activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }, 100);
+        }
+    }
+    // Setup pad scroll functionality for both mobile and desktop
+    const tabContainer = document.getElementById('songTab');
+    const leftArrow = document.querySelector('.pad-scroll-left');
+    const rightArrow = document.querySelector('.pad-scroll-right');
+    
+    // Add 'many-pads' class if there are more than 8 pads
+    const padCount = tabContainer.querySelectorAll('.nav-item').length;
+    if (padCount > 8) {
+        tabContainer.classList.add('many-pads');
+    }
+    
+    // Scroll to active tab
+    const activeTab = document.querySelector('#songTab .nav-link.active');
+    if (activeTab) {
+        setTimeout(() => {
+            activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 100);
+    }
+    
+    // Check if scroll is needed and update arrow visibility
+    function checkScrollArrows() {
+        if (tabContainer.scrollWidth > tabContainer.clientWidth) {
+            leftArrow.style.display = tabContainer.scrollLeft > 0 ? 'flex' : 'none';
+            rightArrow.style.display = 
+                (tabContainer.scrollWidth - tabContainer.scrollLeft - tabContainer.clientWidth) > 10 ? 'flex' : 'none';
+        } else {
+            leftArrow.style.display = 'none';
+            rightArrow.style.display = 'none';
+        }
+    }
+    
+    // Initial check
+    checkScrollArrows();
+    
+    // Scroll left
+    leftArrow.addEventListener('click', function() {
+        tabContainer.scrollBy({ left: -100, behavior: 'smooth' });
+    });
+    
+    // Scroll right
+    rightArrow.addEventListener('click', function() {
+        tabContainer.scrollBy({ left: 100, behavior: 'smooth' });
+    });
+    
+    // Update arrows on scroll
+    tabContainer.addEventListener('scroll', checkScrollArrows);
+    
+    // Update arrows on window resize
+    window.addEventListener('resize', checkScrollArrows);
+
+    // Add mouse wheel scrolling for desktop
+    tabContainer.addEventListener('wheel', function(e) {
+        if (tabContainer.classList.contains('many-pads')) {
+            e.preventDefault();
+            tabContainer.scrollLeft += e.deltaY > 0 ? 60 : -60;
+            checkScrollArrows();
+        }
+    }, { passive: false });
+
+    // Prevent dragging of links
+    const links = document.querySelectorAll('a');
+    links.forEach(link => {
+        link.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    });
+
     // Setup controls for both mobile and desktop
     setupFontSizeControls('fontSizeToggleMobile', 'fontSizeControlsMobile', 'increaseFontSizeMobile', 'decreaseFontSizeMobile');
     setupFontSizeControls('fontSizeToggleDesktop', 'fontSizeControlsDesktop', 'increaseFontSizeDesktop', 'decreaseFontSizeDesktop');
@@ -373,12 +525,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection
-
-@section('script')
-    <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-    </script>
 @endsection

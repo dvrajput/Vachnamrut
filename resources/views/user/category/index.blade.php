@@ -82,6 +82,7 @@
 @endsection
 
 @section('content')
+@include('user.layouts.catbar')
       <div class="container-fluid">
             <div class="table-container">
                   <table id="userTable" class="display text-center" style="width:100%">

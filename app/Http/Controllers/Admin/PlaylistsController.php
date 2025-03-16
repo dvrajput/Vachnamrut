@@ -47,15 +47,21 @@ class PlaylistsController extends Controller
             // If there are no songs in 'song_playlist_rels', fetch all songs
             if (empty($existingSongs)) {
                 $songs = Song::select('song_code', 'title_en')
-                    ->where('title_en', 'like', '%' . $search . '%') // Optional: search songs by title
-                    ->limit(10) // Limit results to 10 (you can adjust this based on your preference)
+                    ->where(function($query) use ($search) {
+                        $query->where('title_en', 'like', '%' . $search . '%')
+                              ->orWhere('song_code', 'like', '%' . $search . '%'); // Search by song_code as well
+                    })
+                    ->limit(10)
                     ->get();
             } else {
                 // If there are songs in 'song_playlist_rels', fetch only the songs not in that table
                 $songs = Song::select('song_code', 'title_en')
                     ->whereNotIn('song_code', $existingSongs)
-                    ->where('title_en', 'like', '%' . $search . '%') // Optional: search songs by title
-                    ->limit(10) // Limit results to 10 (you can adjust this based on your preference)
+                    ->where(function($query) use ($search) {
+                        $query->where('title_en', 'like', '%' . $search . '%')
+                              ->orWhere('song_code', 'like', '%' . $search . '%'); // Search by song_code as well
+                    })
+                    ->limit(10)
                     ->get();
             }
 
@@ -64,7 +70,6 @@ class PlaylistsController extends Controller
 
         return view('admin.playlists.create');
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -150,7 +155,7 @@ class PlaylistsController extends Controller
 
         $songs = Song::select('songs.*')
             ->join('song_playlist_rels', 'songs.song_code', '=', 'song_playlist_rels.song_code')
-            ->where('song_playlist_rels.playlist_code', $play_code) // Change here to use playlist_code
+            ->where('song_playlist_rels.playlist_code', $play_code)
             ->get();
 
         $allSongs = Song::all();

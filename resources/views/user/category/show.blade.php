@@ -98,8 +98,22 @@
         transition: background-color 0.2s ease;
         text-align: center;
         background-color: var(--card-bg);
+        position: relative;
     }
 
+    /* Pad count badge styles */
+    .pad-count {
+        display: inline-block;
+        margin-left: 10px;
+        background-color: rgba(215, 134, 27, 0.3);
+        color: var(--text-color);
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 16px;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+    
     .song-list li a {
         text-decoration: none;
         font-weight: 500;
@@ -124,51 +138,61 @@
 
     /* Mobile responsive styles */
     @media (max-width: 768px) {
-            .song-container {
-                max-width: 100%;
-                padding: 15px;
-            }
-            
-            .search-box {
-                width: 90%;
-            }
-            
-            .song-list li {
-                font-size: 20px;
-                padding: 15px;
-            }
-            .song-list li a {
-                font-weight: 500;
-            }
+        .container{
+            transform: translateY(-5px);
         }
-        
-        .search-container {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-color: var(--card-bg);
-            padding-bottom: 20px;
-            padding-top: 15px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        .song-container {
+            max-width: 100%;
+            padding: 15px;
         }
         
         .search-box {
-            width: 70%;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            transition: all 0.3s ease;
+            width: 90%;
         }
+        
+        .song-list li {
+            font-size: 20px;
+            padding: 15px;
+        }
+        .song-list li a {
+            font-weight: 500;
+        }
+        
+        .pad-count {
+            font-size: 14px;
+            padding: 2px 8px;
+            margin-left: 8px;
+        }
+    }
+    
+    .search-container {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: var(--card-bg);
+        padding-bottom: 20px;
+        padding-top: 15px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .search-box {
+        width: 70%;
+        padding: 15px;
+        border: 2px solid var(--border-color);
+        border-radius: 25px;
+        font-size: 16px;
+        outline: none;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+    }
 </style>
 @endsection 
 
 @section('content')
+@include('user.layouts.catbar')
 <div class="song-container">
     <div class="search-container">
         <input type="text" id="search" class="search-box" placeholder="{{ __('Search') }} {{ $subCategory->{'sub_category_' . app()->getLocale()} }}...">
@@ -200,8 +224,23 @@
             success: function(response) {
                 if (response.songs.length > 0) {
                     response.songs.forEach(song => {
+                        // Check for pad_number and total_pads fields
+                        let currentPad = song.current_pad || 0;
+                        let totalPads = song.total_pads || 0;
+                        
+                        // Only show pad count if there are pads
+                        let padInfo = '';
+                        if (totalPads > 0) {
+                            padInfo = `<span class="pad-count">${currentPad} / ${totalPads}</span>`;
+                        }
+                        
                         $('#songsList').append(
-                            `<li><a href="{{ url('kirtans') }}/${song.song_code}">${song.title}</a></li>`
+                            `<li>
+                                <a href="{{ url('kirtans') }}/${song.song_code}">
+                                    ${song.title}
+                                    ${padInfo}
+                                </a>
+                            </li>`
                         );
                     });
                     page++;
