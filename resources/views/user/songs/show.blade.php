@@ -145,7 +145,7 @@
         
         .pad-scroll-left {
             left: 5px;
-            transform: translateY(-70%) translateX(-5px);
+            transform: translateY(-70%) translateX(-6px);
         }
         
         .pad-scroll-right {
