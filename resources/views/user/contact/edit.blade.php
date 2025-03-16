@@ -231,11 +231,14 @@
             background-color: var(--primary-color) !important;
             color: #ffffff !important;
         }
-        .navbar .container{
-        transform: translateY(-5px);
-        }
-        .d-flex.align-items-center.d-lg-none {
-            transform: translateX(-10px);
+
+        @media (max-width: 768px) {
+            .navbar .container{
+            transform: translateY(-5px);
+            }
+            .d-flex.align-items-center.d-lg-none {
+                transform: translateX(-10px);
+            }            
         }
     </style>
 @endsection
