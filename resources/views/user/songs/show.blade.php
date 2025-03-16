@@ -131,8 +131,8 @@
             align-items: center;
             justify-content: center;
             transform: translateY(-65%) translateX(5px);
-            background-color: rgb(33 37 41);
-            color: white;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             width: 40px;
             height: 60px;
             /* border-radius: 8px; */
