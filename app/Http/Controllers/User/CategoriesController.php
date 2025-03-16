@@ -57,6 +57,37 @@ class CategoriesController extends Controller
                   // Transform the songs to include the current locale's title as 'title'
                   $songsTransformed = collect($songs->items())->map(function($song) use ($locale) {
                         $song->title = $song->{'title_' . $locale};
+                        
+                        // Get playlist information for this song
+                        $playlists = DB::table('song_playlist_rels')
+                              ->where('song_code', $song->song_code)
+                              ->get();
+                        $playlistCodes = $playlists->pluck('playlist_code');
+                        
+                        // If song is in playlists, get its position and total count
+                        if ($playlistCodes->count() > 0) {
+                              // Get all songs in those playlists
+                              $songsInPlaylist = DB::table('song_playlist_rels')
+                                    ->whereIn('playlist_code', $playlistCodes)
+                                    ->orderBy('id', 'asc')
+                                    ->get();
+                              
+                              // Find current song position in playlist
+                              $currentPosition = 0;
+                              foreach ($songsInPlaylist as $index => $playlistSong) {
+                                    if ($playlistSong->song_code == $song->song_code) {
+                                          $currentPosition = $index + 1;
+                                          break;
+                                    }
+                              }
+                              
+                              $song->current_pad = $currentPosition;
+                              $song->total_pads = $songsInPlaylist->count();
+                        } else {
+                              $song->current_pad = 0;
+                              $song->total_pads = 0;
+                        }
+                        
                         return $song;
                   });
 

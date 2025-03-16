@@ -10,10 +10,14 @@ Route::get('/', function () {
     // return view('welcome');
     return redirect()->route('user.kirtans.index');
 });
+// Redirect /categories to home
+Route::get('/categories', function() {
+    return redirect()->route('user.kirtans.index');
+});
 
 Route::name('user.')->group(function () {
     Route::resource('kirtans', UserSongController::class);
-    Route::resource('categories', UserCategoriesController::class);
+    Route::resource('categories', UserCategoriesController::class)->except(['index']);
     Route::resource('contact', UserContactController::class);
 });
 Route::get('/language/{locale}', function ($locale) {

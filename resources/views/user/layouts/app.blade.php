@@ -26,28 +26,28 @@
 
 <style>
     :root {
-    /* Light theme variables */
-    --bg-color: #f8f9fa;
-    --text-color: #212529;
-    --card-bg: #ffffff;
-    --border-color: #ced4da;
-    --primary-color: #d7861b;
-    --navbar-bg: #d7861b;
-    --dropdown-bg: #ffffff;
-    --input-bg: #ffffff;
-    --input-text: #212529;
-    --mobile-font-size: 20px;
-    --mobile-padding: 8px;
-}
+        /* Light theme variables */
+        --bg-color: #f8f9fa;
+        --text-color: #212529;
+        --card-bg: #ffffff;
+        --border-color: #ced4da;
+        --primary-color: #d7861b;
+        --navbar-bg: #bf7a1f;
+        --dropdown-bg: #ffffff;
+        --input-bg: #ffffff;
+        --input-text: #212529;
+        --mobile-font-size: 20px;
+        --mobile-padding: 8px;
+    }
 
 [data-theme="dark"] {
     /* Dark theme variables */
     --bg-color: #212529;
     --text-color: #f8f9fa;
-    --card-bg: #2c3034;
+    --card-bg: #304057;
     --border-color: #495057;
     --primary-color: #e69932;
-    --navbar-bg: #d7861b;
+    --navbar-bg: #bf7a1f;
     --dropdown-bg: #343a40;
     --input-bg: #343a40;
     --input-text: #f8f9fa;
@@ -164,6 +164,38 @@ body {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
+/* Language Toggle Button */
+.language-toggle-container {
+        display: flex;
+        align-items: center;
+        margin: 10px;
+    }
+    
+    .language-toggle {
+        display: flex;
+        background-color: #ffffff;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .language-btn {
+        padding: 4px 8px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background-color 0.3s;
+    }
+    
+    .language-btn.active {
+        background-color: #d7861b;
+        color: white;
+    }
+    
+    .language-btn:hover:not(.active) {
+        background-color: rgba(215, 134, 27, 0.2);
+    }
 
 /* Desktop dropdown hover styles */
 @media (min-width: 992px) {
@@ -523,20 +555,16 @@ body {
             {{ __('Kirtanavali') }}
         </a>
         <!-- In top mobile controls -->
-<div class="d-flex align-items-center d-lg-none">
-    <button id="themeToggle" class="nav-link me-2">
-        <i class="fa-solid fa-moon dark-icon"></i>
-        <i class="fa-solid fa-sun light-icon d-none"></i>
-    </button>
+        <div class="d-flex align-items-center d-lg-none">
+            <button id="themeToggle" class="nav-link me-2">
+                <i class="fa-solid fa-moon dark-icon"></i>
+                <i class="fa-solid fa-sun light-icon d-none"></i>
+            </button>
     <!-- Language toggle for mobile -->
-    <div class="nav-item dropdown me-2">
-        <a class="nav-link dropdown-toggle" href="#" id="languageDropdownMobile" role="button"
-            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="material-symbols-outlined">g_translate</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="languageDropdownMobile">
-            <a class="dropdown-item" href="{{ route('locale', 'en') }}">{{ __('English') }}</a>
-            <a class="dropdown-item" href="{{ route('locale', 'gu') }}">{{ __('Gujarati') }}</a>
+    <div class="language-toggle-container me-2">
+        <div class="language-toggle">
+            <a href="{{ route('locale', 'en') }}" class="language-btn {{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+            <a href="{{ route('locale', 'gu') }}" class="language-btn {{ app()->getLocale() == 'gu' ? 'active' : '' }}">ગુજ</a>
         </div>
     </div>
     @if(request()->is('kirtans/*'))
@@ -554,9 +582,10 @@ body {
         </div>
     </div>
     @endif
-    <button class="navbar-toggler" type="button">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <!-- Replace the hamburger icon with vertical 3 dots -->
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-ellipsis-v"></i>
+</button>
 </div>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
@@ -564,7 +593,7 @@ body {
     $categories = DB::table('categories')->get();
 @endphp
 
-<li class="nav-item dropdown">
+<!-- <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle{{ request()->is('categories*') ? ' active' : '' }}"
         href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
@@ -604,7 +633,7 @@ body {
             @endif
         @endforeach
     </div>
-</li>
+</li> -->
 
             </ul>
             <!-- In navbar-nav (desktop controls) -->
@@ -613,14 +642,12 @@ body {
                     <a class="nav-link{{ request()->is('contact*') ? ' active' : '' }}"
                         href="{{ route('user.contact.create') }}">{{ __('Contact') }}</a>
                 </li>
-                <li class="nav-item dropdown d-none d-lg-block">
-                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="material-symbols-outlined">g_translate</span>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="languageDropdown">
-                        <a class="dropdown-item" href="{{ route('locale', 'en') }}">{{ __('English') }}</a>
-                        <a class="dropdown-item" href="{{ route('locale', 'gu') }}">{{ __('Gujarati') }}</a>
+                <li class="nav-item d-none d-lg-block">
+                    <div class="language-toggle-container">
+                        <div class="language-toggle">
+                            <a href="{{ route('locale', 'en') }}" class="language-btn {{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+                            <a href="{{ route('locale', 'gu') }}" class="language-btn {{ app()->getLocale() == 'gu' ? 'active' : '' }}">ગુજ</a>
+                        </div>
                     </div>
                 </li>
                 <li class="nav-item d-none d-lg-block">
