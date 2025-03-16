@@ -345,7 +345,6 @@
         </div>
     </div>
 @endsection
-
 @section('script')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -358,7 +357,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!fontSizeToggle) return; // Exit if elements don't exist
 
-        const lyrics = document.querySelector('.lyrics');
         const songTitle = document.querySelector('.song-title');
         
         // Get saved font sizes from localStorage or use defaults
@@ -379,12 +377,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Apply saved font sizes on page load
         function applyFontSizes() {
-            lyrics.style.fontSize = currentLyricsFontSize + 'px';
-            songTitle.style.fontSize = currentTitleFontSize + 'px';
+            // Target all lyrics elements, including those in tabs
+            const allLyrics = document.querySelectorAll('.lyrics');
+            allLyrics.forEach(lyrics => {
+                lyrics.style.fontSize = currentLyricsFontSize + 'px';
+                
+                // Apply appropriate line height
+                const lineHeight = calculateLineHeight(currentLyricsFontSize);
+                lyrics.style.lineHeight = lineHeight;
+            });
             
-            // Apply appropriate line height
-            const lineHeight = calculateLineHeight(currentLyricsFontSize);
-            lyrics.style.lineHeight = lineHeight;
+            songTitle.style.fontSize = currentTitleFontSize + 'px';
             
             // Adjust spacing between paragraphs based on font size
             const brSpacing = Math.max(12, currentLyricsFontSize * 0.5) + 'px';

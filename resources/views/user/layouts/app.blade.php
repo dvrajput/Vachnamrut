@@ -44,7 +44,7 @@
     /* Dark theme variables */
     --bg-color: #212529;
     --text-color: #f8f9fa;
-    --card-bg: #304057;
+    --card-bg: #2c3034;
     --border-color: #495057;
     --primary-color: #e69932;
     --navbar-bg: #bf7a1f;
@@ -120,7 +120,7 @@ body {
 /* Font Size Controls */
 .font-size-popup {
     position: absolute;
-    transform: translateY(-5px) translateX(-25px);
+    transform: translateY(-25px) translateX(-25px);
     top: 150%;
     background-color: var(--navbar-bg);
     padding: 8px;
@@ -281,6 +281,9 @@ body {
 }
 
 @media (max-width: 768px) {
+    .font-size-popup{
+        transform: translateY(-5px) translateX(-25px);
+    }
     .container {
         padding-left: 0;
         padding-right: 0;
@@ -336,6 +339,7 @@ body {
         bottom: 0;
         width: 70%;
         height: calc(100vh - 56px);
+        transform: translateY(-5px);
         background-color: var(--navbar-bg);
         transition: left 0.3s ease;
         z-index: 998;
