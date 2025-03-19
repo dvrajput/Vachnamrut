@@ -10,6 +10,8 @@ Route::get('/', function () {
     // return view('welcome');
     return redirect()->route('user.kirtans.index');
 });
+// Add this with your other admin routes
+Route::get('/admin/logs/users', [App\Http\Controllers\Admin\LogsController::class, 'getLogUsers'])->name('admin.logs.users');
 // Redirect /categories to home
 Route::get('/categories', function() {
     return redirect()->route('user.kirtans.index');

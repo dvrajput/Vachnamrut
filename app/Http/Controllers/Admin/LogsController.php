@@ -323,4 +323,45 @@ class LogsController extends Controller
             return response()->view('errors.404', [], 404);
         }
     }
+    public function getLogUsers(Request $request)
+    {
+        $user = User::where('id', Auth::id())->first();
+        
+        if ($user->role == 'admin') {
+            // Get the log type from the request
+            $type = $request->get('type', 'song');
+            
+            // Define the table and join column based on log type
+            switch ($type) {
+                case 'categories':
+                    $table = 'category_logs';
+                    $joinColumn = 'category_logs.user_id';
+                    break;
+                case 'subcategories':
+                    $table = 'sub_category_logs';
+                    $joinColumn = 'sub_category_logs.user_id';
+                    break;
+                case 'playlists':
+                    $table = 'playlist_logs';
+                    $joinColumn = 'playlist_logs.user_id';
+                    break;
+                default:
+                    $table = 'song_logs';
+                    $joinColumn = 'song_logs.user_id';
+            }
+            
+            // Get unique users who have entries in the logs
+            $users = DB::table($table)
+                ->select('users.name')
+                ->join('users', $joinColumn, '=', 'users.id')
+                ->distinct()
+                ->orderBy('users.name')
+                ->pluck('users.name')
+                ->toArray();
+            
+            return response()->json($users);
+        }
+        
+        return response()->json([]);
+    }
 }
