@@ -38,6 +38,23 @@
             <button type="button" class="btn btn-primary" data-type="playlists">Playlist Logs</button>
         </div>
 
+        <div class="row mb-3 mt-3">
+            <div class="col-md-3">
+                <label for="userFilter">Filter by User:</label>
+                <select id="userFilter" class="form-select">
+                    <option value="">All Users</option>
+                    <!-- Users will be loaded dynamically -->
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="dateSort">Sort by Date:</label>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary active" id="newestFirst">Newest First</button>
+                    <button type="button" class="btn btn-outline-secondary" id="oldestFirst">Oldest First</button>
+                </div>
+            </div>
+        </div>
+
         <table id="logsTable" class="table table-bordered table-striped w-100">
             <thead>
                 <tr>
@@ -55,6 +72,26 @@
 @section('script')
     <script>
         let table;
+        let currentLogType = 'song';
+        
+        function loadUsers(type) {
+            // Clear existing options except the first one
+            $('#userFilter').find('option:not(:first)').remove();
+            
+            // Load users for the current log type
+            $.ajax({
+                url: '{{ url("admin/logs/users") }}',
+                type: 'GET',
+                data: { type: type },
+                dataType: 'json',
+                success: function(data) {
+                    // Add users to dropdown
+                    $.each(data, function(key, value) {
+                        $('#userFilter').append('<option value="' + value + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
         
         function initializeDataTable(url) {
             if (table) {
@@ -101,25 +138,49 @@
                 search: {
                     return: true
                 }
-
-        });
+            });
+            
+            // Load users for the current log type
+            loadUsers(currentLogType);
         }
 
-         // Handle button clicks
-         $('.btn-group button').on('click', function() {
-            let type = $(this).data('type');
+        // Handle button clicks for log types
+        $('.btn-group button[data-type]').on('click', function() {
+            currentLogType = $(this).data('type');
             let url = '{{ url("admin/logs") }}';
             
             // Update active button
-            $('.btn-group button').removeClass('active-log');
+            $('.btn-group button[data-type]').removeClass('active-log');
             $(this).addClass('active-log');
 
-            if (type !== 'song') {
-                url += '/' + type;
+            if (currentLogType !== 'song') {
+                url += '/' + currentLogType;
             }
             
             // Reinitialize DataTable with new URL
             initializeDataTable(url);
+        });
+        
+        // Handle user filter
+        $('#userFilter').on('change', function() {
+            const selectedUser = $(this).val();
+            
+            if (selectedUser) {
+                table.column(1).search(selectedUser).draw();
+            } else {
+                table.column(1).search('').draw();
+            }
+        });
+        
+        // Handle date sorting
+        $('#newestFirst').on('click', function() {
+            $(this).addClass('active').siblings().removeClass('active');
+            table.order([4, 'desc']).draw();
+        });
+        
+        $('#oldestFirst').on('click', function() {
+            $(this).addClass('active').siblings().removeClass('active');
+            table.order([4, 'asc']).draw();
         });
 
         // Initialize with song logs
