@@ -54,7 +54,23 @@
         display: flex;
         justify-content: center;
     }
-    
+    /* No results message styling */
+    .no-results {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-color);
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+            border-bottom: none !important;
+        }
+        
+        .no-results div {
+            opacity: 0.7;
+            font-weight: 500;
+        }
     .search-box {
         width: 70%;
         margin-top: 20px;
@@ -204,13 +220,13 @@
     <div class="song-container">
         <div class="search-container">
             <input type="text" id="search" class="search-box" placeholder="{{ __('Search Kirtan...') }}">
+            <input type="hidden" id="searchQueryHolder" value="">
         </div>
 
         <ul id="songsList" class="song-list"></ul>
 
         <div id="loading" class="loading">Loading...</div>
     </div>
-    
 @endsection
 
 @section('script')
@@ -231,7 +247,11 @@
                     search: searchQuery
                 },
                 success: function(response) {
-                    if (response.songs.length > 0) {
+                    // If this is the first page and no results, show "no results" message
+                    if (page === 1 && response.songs.length === 0) {
+                        $('#songsList').html(`<li class="no-results"><div>{{ __('No results found') }}</div></li>`);
+                    } 
+                    else if (response.songs.length > 0) {
                         response.songs.forEach(song => {
                             // Check for pad_number and total_pads fields
                             let currentPad = song.current_pad || 0;
@@ -274,16 +294,24 @@
             // Search functionality
             $('#search').on('keyup', function() {
                 searchQuery = $(this).val();
+                // Store the query in the hidden field
+                $('#searchQueryHolder').val(searchQuery);
                 page = 1;
                 $('#songsList').html('');
                 loadSongs();
             });
             
-            // Reload songs when language changes
-            $(document).on('languageChanged', function() {
+                // Reload songs when language changes
+                $(document).on('languageChanged', function() {
+                // Get the query from the hidden field
+                searchQuery = $('#searchQueryHolder').val();
+                // Set the search input value
+                $('#search').val(searchQuery);
                 page = 1;
                 $('#songsList').html('');
                 loadSongs();
+                
+                console.log('Language changed, search query retained: ' + searchQuery);
             });
         });
     </script>
