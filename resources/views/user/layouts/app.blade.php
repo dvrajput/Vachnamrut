@@ -573,7 +573,7 @@ body {
     @if(request()->is('kirtans/*'))
     <div class="position-relative me-2">
         <button id="fontSizeToggleMobile" class="nav-link">
-        <span class="translate-icon"><img src="{{ asset('format_size_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg') }}" alt="format size"></span>
+        <span class="translate-icon"><img src="{{ asset('font_size.svg') }}" alt="format size"></span>
         </button>
         <div id="fontSizeControlsMobile" class="font-size-popup d-none">
             <button class="btn-font" id="increaseFontSizeMobile">
@@ -662,7 +662,7 @@ body {
                 @if(request()->is('kirtans/*'))
                 <li class="nav-item d-none d-lg-block position-relative">
                     <button id="fontSizeToggleDesktop" class="nav-link">
-                    <span class="translate-icon"><img src="{{ asset('format_size_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg') }}" alt="format size"></span>
+                    <span class="translate-icon"><img src="{{ asset('font_size.svg') }}" alt="format size"></span>
                     </button>
                     <div id="fontSizeControlsDesktop" class="font-size-popup d-none">
                         <button class="btn-font" id="increaseFontSizeDesktop">
