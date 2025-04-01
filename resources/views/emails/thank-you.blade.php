@@ -37,7 +37,7 @@
     <div class="content">
         <p>Dear {{ $name }},</p>
         
-        <p>Thank you for reaching out to us with your feedback{{($songName ? ' regarding "' . $songName . '"' : '') .' kirtan'}}. We greatly appreciate your contribution to improving our service.</p>
+        <p>Thank you for reaching out to us with your feedback{{$songName ? ' regarding "' . $songName . '"' : ''}}. We greatly appreciate your contribution to improving our service.</p>
         
         <p>Your input helps us enhance the experience for all users and make our platform better. We have reviewed your message and have taken appropriate action.</p>
         

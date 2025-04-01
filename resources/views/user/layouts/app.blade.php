@@ -58,7 +58,7 @@ body {
     padding-top: 56px;
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: 'Anek Gujarati', sans-serif;
+    font-family: 'rasa', sans-serif;
 }
 
 .title{
