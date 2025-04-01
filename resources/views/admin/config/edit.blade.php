@@ -1,6 +1,12 @@
 @extends('admin.layouts.app')
 @section('title', __('Edit') . ' - ' . $config->{'title_' . app()->getLocale()})
 @section('content')
+    @php
+        $user = Auth::user();
+        $isAdmin = $user && $user->role === 'admin';
+    @endphp
+
+    @if($isAdmin)
     <h3 class="mt-4 mb-4">{{ __('Edit Config') }}</h3>
     <form action="{{ route('admin.config.update', $config->id) }}" method="POST">
         @csrf
@@ -28,8 +34,16 @@
                 </div>
             </div>
         </div>
-
+        <br>
         <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
         <a href="{{ route('admin.config.index') }}" class="btn btn-secondary ml-2">{{ __('Cancel') }}</a>
     </form>
+    @else
+        <div class="container-fluid">
+            <div class="alert alert-danger">
+                <h4>{{ __('Access Denied') }}</h4>
+                <p>{{ __('You do not have permission to access this page.') }}</p>
+            </div>
+        </div>
+    @endif
 @endsection

@@ -311,8 +311,7 @@
                 $('#songsList').html('');
                 loadSongs();
                 
-                console.log('Language changed, search query retained: ' + searchQuery);
-            });
+                });
         });
     </script>
 @endsection
