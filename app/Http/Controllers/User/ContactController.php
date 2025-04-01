@@ -62,7 +62,14 @@ class ContactController extends Controller
 // dd($url);
 
 $kirtan=Song::where('song_code',$request->song_code)->first();
-$name=$kirtan->title_gu ?? $kirtan->title_en;
+// Check if song_code exists and get kirtan name
+$name = "No kirtan selected";
+if ($request->song_code) {
+    $kirtan = Song::where('song_code', $request->song_code)->first();
+    if ($kirtan) {
+        $name = $kirtan->title_gu ?? $kirtan->title_en;
+    }
+}
         $v= Http::post($url, [
             'chat_id' => -1002252561130,
             'text' => "kirtan id :{$request->song_code}\n".

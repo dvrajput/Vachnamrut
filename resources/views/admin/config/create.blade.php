@@ -1,6 +1,12 @@
 @extends('admin.layouts.app')
 @section('title', 'Create Config')
 @section('content')
+    @php
+        $user = Auth::user();
+        $isAdmin = $user && $user->role === 'admin';
+    @endphp
+
+    @if($isAdmin)
     <h3 class="mt-4 mb-4">{{ __('Add New Config') }}</h3>
     <form action="{{ route('admin.config.store') }}" method="POST">
         @csrf
@@ -26,8 +32,16 @@
                         placeholder="{{ __('Enter Message') }}" required>
                 </div>
             </div>
-        </div>
+        </div><br>
         <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
         <a href="{{ route('admin.config.index') }}" class="btn btn-secondary ml-2">{{ __('Cancel') }}</a>
     </form>
+    @else
+        <div class="container-fluid">
+            <div class="alert alert-danger">
+                <h4>{{ __('Access Denied') }}</h4>
+                <p>{{ __('You do not have permission to access this page.') }}</p>
+            </div>
+        </div>
+    @endif
 @endsection

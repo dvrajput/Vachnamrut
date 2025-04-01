@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Admin Home')
+@section('title', 'Admin Config')
 @section('style')
     <style>
         .display {
@@ -14,6 +14,12 @@
     </style>
 @endsection
 @section('content')
+    @php
+        $user = Auth::user();
+        $isAdmin = $user && $user->role === 'admin';
+    @endphp
+
+    @if($isAdmin)
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0">{{ __('Configuration') }}</h3>
@@ -34,9 +40,18 @@
             </thead>
         </table>
     </div>
+    @else
+        <div class="container-fluid">
+            <div class="alert alert-danger">
+                <h4>{{ __('Access Denied') }}</h4>
+                <p>{{ __('You do not have permission to access this page.') }}</p>
+            </div>
+        </div>
+    @endif
 @endsection
 
 @section('script')
+    @if($isAdmin)
     <script>
         $(document).ready(function() {
             $('#configTable').DataTable({
@@ -76,14 +91,6 @@
                             `;
                         }
                     }
-                    // <form action="{{ url('admin/config') }}/${row.id}" method="POST" style="display:inline;">
-                    //                 @csrf
-                    //                 @method('DELETE')
-                    //                 <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure?')">
-                    //                     <i class="fas fa-trash"></i>
-                    //                 </button>
-                    //             </form>
-
                 ],
 
                 dom: 'Bfrtip',
@@ -96,4 +103,5 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
+    @endif
 @endsection

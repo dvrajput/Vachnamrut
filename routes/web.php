@@ -17,6 +17,13 @@ Route::get('/categories', function() {
     return redirect()->route('user.kirtans.index');
 });
 
+// Add these routes in the admin group
+Route::post('/admin/contacts/{id}/approve', [App\Http\Controllers\Admin\ContactsController::class, 'approve'])->name('admin.contacts.approve');
+Route::post('/admin/contacts/{id}/reject', [App\Http\Controllers\Admin\ContactsController::class, 'reject'])->name('admin.contacts.reject');
+
+Route::post('/admin/contacts/bulk-delete', [App\Http\Controllers\Admin\ContactsController::class, 'bulkDelete'])->name('admin.contacts.bulk-delete');
+Route::post('/admin/contacts/delete-all', [App\Http\Controllers\Admin\ContactsController::class, 'deleteAll'])->name('admin.contacts.delete-all');
+
 Route::name('user.')->group(function () {
     Route::resource('kirtans', UserSongController::class);
     Route::resource('categories', UserCategoriesController::class)->except(['index']);
