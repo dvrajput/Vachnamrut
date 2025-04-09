@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             if (currentLyricsFontSize < maxFontSize) {
                 currentLyricsFontSize += stepSize;
-                currentTitleFontSize += stepSize;
+                //currentTitleFontSize += stepSize;  //Disabled font size change for title
                 applyFontSizes();
                 saveFontSizes();
             }
@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             if (currentLyricsFontSize > minFontSize) {
                 currentLyricsFontSize -= stepSize;
-                currentTitleFontSize -= stepSize;
+                //currentTitleFontSize -= stepSize;     //Disabled font size change for title
                 applyFontSizes();
                 saveFontSizes();
             }
