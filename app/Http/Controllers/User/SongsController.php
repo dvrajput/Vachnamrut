@@ -13,60 +13,61 @@ class SongsController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $query = Song::query();
+        // if ($request->ajax()) {
+        //     $query = Song::query();
 
-            if ($request->has('search') && !empty($request->search)) {
-                $keyword = '%' . $request->search . '%';
-                $query->where('title_en', 'LIKE', $keyword)
-                    ->orWhere('title_gu', 'LIKE', $keyword)
-                    ->orWhere('lyrics_en', 'LIKE', $keyword)
-                    ->orWhere('lyrics_gu', 'LIKE', $keyword);
-            }
-            $locale = app()->getLocale();
-            $songs = $query->orderBy('title_' . $locale, 'asc')
-                ->paginate(30);
+        //     if ($request->has('search') && !empty($request->search)) {
+        //         $keyword = '%' . $request->search . '%';
+        //         $query->where('title_en', 'LIKE', $keyword)
+        //             ->orWhere('title_gu', 'LIKE', $keyword)
+        //             ->orWhere('lyrics_en', 'LIKE', $keyword)
+        //             ->orWhere('lyrics_gu', 'LIKE', $keyword);
+        //     }
+        //     $locale = app()->getLocale();
+        //     $songs = $query->orderBy('title_' . $locale, 'asc')
+        //         ->paginate(30);
 
-            // Transform the songs to include the current locale's title as 'title'
-            $songsTransformed = $songs->map(function($song) use ($locale) {
-                $song->title = $song->{'title_' . $locale};
+        //     // Transform the songs to include the current locale's title as 'title'
+        //     $songsTransformed = $songs->map(function($song) use ($locale) {
+        //         $song->title = $song->{'title_' . $locale};
                 
-                // Get playlist information for this song
-                $playlists = SongPlaylistRel::where('song_code', $song->song_code)->get();
-                $playlistCodes = $playlists->pluck('playlist_code');
+        //         // Get playlist information for this song
+        //         $playlists = SongPlaylistRel::where('song_code', $song->song_code)->get();
+        //         $playlistCodes = $playlists->pluck('playlist_code');
                 
-                // If song is in playlists, get its position and total count
-                if ($playlistCodes->count() > 0) {
-                    // Get all songs in those playlists
-                    $songsInPlaylist = SongPlaylistRel::whereIn('playlist_code', $playlistCodes)
-                        ->orderBy('id', 'asc')
-                        ->get();
+        //         // If song is in playlists, get its position and total count
+        //         if ($playlistCodes->count() > 0) {
+        //             // Get all songs in those playlists
+        //             $songsInPlaylist = SongPlaylistRel::whereIn('playlist_code', $playlistCodes)
+        //                 ->orderBy('id', 'asc')
+        //                 ->get();
                     
-                    // Find current song position in playlist
-                    $currentPosition = 0;
-                    foreach ($songsInPlaylist as $index => $playlistSong) {
-                        if ($playlistSong->song_code == $song->song_code) {
-                            $currentPosition = $index + 1;
-                            break;
-                        }
-                    }
+        //             // Find current song position in playlist
+        //             $currentPosition = 0;
+        //             foreach ($songsInPlaylist as $index => $playlistSong) {
+        //                 if ($playlistSong->song_code == $song->song_code) {
+        //                     $currentPosition = $index + 1;
+        //                     break;
+        //                 }
+        //             }
                     
-                    $song->current_pad = $currentPosition;
-                    $song->total_pads = $songsInPlaylist->count();
-                } else {
-                    $song->current_pad = 0;
-                    $song->total_pads = 0;
-                }
+        //             $song->current_pad = $currentPosition;
+        //             $song->total_pads = $songsInPlaylist->count();
+        //         } else {
+        //             $song->current_pad = 0;
+        //             $song->total_pads = 0;
+        //         }
                 
-                return $song;
-            });
+        //         return $song;
+        //     });
 
-            return response()->json([
-                'songs' => $songsTransformed,
-                'locale' => $locale
-            ]);
-        }
-        return view('user.songs.index');
+        //     return response()->json([
+        //         'songs' => $songsTransformed,
+        //         'locale' => $locale
+        //     ]);
+        // }
+        // return view('user.songs.index');
+        return redirect()->route('home');
     }
 
     public function show(string $songCode)

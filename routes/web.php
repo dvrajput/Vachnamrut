@@ -6,16 +6,21 @@ use App\Http\Controllers\User\CategoriesController as UserCategoriesController;
 use App\Http\Controllers\User\ContactController as UserContactController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    // return view('welcome');
-    return redirect()->route('user.kirtans.index');
-});
+// Change root route to show categories as homepage instead of kirtans
+Route::get('/', [UserCategoriesController::class, 'index'])->name('home');
+
 // Add this with your other admin routes
 Route::get('/admin/logs/users', [App\Http\Controllers\Admin\LogsController::class, 'getLogUsers'])->name('admin.logs.users');
-// Redirect /categories to home
+
+// Redirect /categories to home (now that home shows categories)
 Route::get('/categories', function() {
-    return redirect()->route('user.kirtans.index');
+    return redirect()->route('home');
 });
+
+// Keep existing kirtans redirect for backward compatibility
+// Route::get('/kirtans', function () {
+//     return redirect()->route('user.kirtans.index');
+// });
 
 // Add these routes in the admin group
 Route::post('/admin/contacts/{id}/approve', [App\Http\Controllers\Admin\ContactsController::class, 'approve'])->name('admin.contacts.approve');
@@ -26,9 +31,12 @@ Route::post('/admin/contacts/delete-all', [App\Http\Controllers\Admin\ContactsCo
 
 Route::name('user.')->group(function () {
     Route::resource('kirtans', UserSongController::class);
-    Route::resource('categories', UserCategoriesController::class)->except(['index']);
+    Route::resource('categories', UserCategoriesController::class)->except(['index']); // Remove index since root route handles it
     Route::resource('contact', UserContactController::class);
+    Route::get('{alias}/{id}', [UserCategoriesController::class, 'aliasSongShow'])->name('categories.aliasSongShow');
+    Route::get('{alias}', [UserCategoriesController::class, 'aliasShow'])->name('categories.aliasShow');
 });
+
 Route::get('/language/{locale}', function ($locale) {
     session()->put('locale', $locale);
     // dump($locale);
@@ -49,9 +57,9 @@ Route::prefix('api/')->group(function () {
     Route::get('get_category', [ApiController::class, 'getCategory']);
 });
 
-Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
-});
+// Route::fallback(function () {
+//     return response()->view('errors.404', [], 404);
+// });
 
 // admin panel route
 require __DIR__ . '/admin.php';

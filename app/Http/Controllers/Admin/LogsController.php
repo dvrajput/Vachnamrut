@@ -103,7 +103,7 @@ class LogsController extends Controller
             return view('admin.logs.index');
         }
         else {
-            return response()->view('errors.404', [], 404);
+            // return response()->view('errors.404', [], 404);
         }
     }
 
@@ -175,7 +175,7 @@ class LogsController extends Controller
             return view('admin.logs.index');
         }
         else {
-            return response()->view('errors.404', [], 404);
+            // return response()->view('errors.404', [], 404);
         }
     }
 
@@ -248,7 +248,7 @@ class LogsController extends Controller
             return view('admin.logs.index');
         }
         else {
-            return response()->view('errors.404', [], 404);
+            // return response()->view('errors.404', [], 404);
         }
     }
 
@@ -320,7 +320,7 @@ class LogsController extends Controller
             return view('admin.logs.index');
         }
         else {
-            return response()->view('errors.404', [], 404);
+            // return response()->view('errors.404', [], 404);
         }
     }
     public function getLogUsers(Request $request)

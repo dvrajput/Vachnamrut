@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\CateSubCateRel;
 use App\Models\Configuration;
+use App\Models\SongCateRel;
 use App\Models\Song;
 use App\Models\SongCategoryRel;
 use App\Models\SubCategory;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoriesController extends Controller
 {
@@ -23,32 +25,16 @@ class CategoriesController extends Controller
             $data = Category::query(); // Customize your query as needed
 
             return DataTables::of($data)
-                //     ->addColumn('action', function ($row) {
-                //         $editButton = '<a href="' . route('admin.categories.edit', $row->id) . '" class="btn btn-warning btn-sm ml-2">Edit</a>';
-                //         $viewButton = '<a href="' . route('admin.categories.show', $row->id) . '" class="btn btn-info btn-sm">View</a>';
-
-                //         // Delete button with form
-                //         $deleteButton = '
-                //     <form action="' . route('admin.categories.destroy', $row->id) . '" method="POST" style="display:inline-block;" class="delete-form">
-                //         ' . csrf_field() . '
-                //         ' . method_field('DELETE') . '
-                //         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this categories?\')">Delete</button>
-                //     </form>
-                // ';
-
-                //         return $viewButton . $editButton . $deleteButton;
-                //     })
-                // <a href="' . route('categories.show', $row->id) . '" class="btn btn-info btn-sm">View</a>
-
                 ->make(true);
         }
+
         $config = Configuration::where('key', 'category_delete')->first();
         $deleteBtn = $config->value ?? 0;
         
         $config = Configuration::where('key', 'category_create')->first();
         $createBtnShow = $config->value ?? 0;
 
-        return view('admin.category.index',compact('deleteBtn','createBtnShow'));
+        return view('admin.category.index', compact('deleteBtn', 'createBtnShow'));
     }
 
     /**
@@ -66,7 +52,8 @@ class CategoriesController extends Controller
     {
         $request->validate([
             'category_en' => 'required|string',
-            'category_gu' => 'required|string'
+            'category_gu' => 'required|string',
+            'alias' => 'required|string',
         ]);
 
         //get category prefix from configuraton table
@@ -90,31 +77,12 @@ class CategoriesController extends Controller
         Category::create([
             'category_code' => $newCategoryCode,
             'category_en' => $request->category_en,
-            'category_gu' => $request->category_gu
+            'category_gu' => $request->category_gu,
+            'alias' => $request->alias,
         ]);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category added successfully!');
     }
-
-
-    // public function show(Request $request, string $category_code)
-    // {
-    //     // $category = Category::findOrFail($category_code);
-    //     $category = Category::where('category_code', $category_code)->firstOrFail();
-
-    //     if ($request->ajax()) {
-    //         $data = SongCategoryRel::where('category_code', $category_code)
-    //             ->join('songs', 'songs.song_code', '=', 'song_category_rels.song_code')
-    //             ->select('songs.song_code', 'songs.title_en') // only select necessary fields
-    //             ->get();
-
-    //         return DataTables::of($data)
-    //             ->make(true);
-    //     }
-    //     // dd($category);
-    //     return view('admin.category.show', compact('category'));
-    // }
-
 
     /**
      * Display the specified resource.
@@ -125,18 +93,17 @@ class CategoriesController extends Controller
         $category = Category::where('category_code', $category_code)->firstOrFail();
 
         if ($request->ajax()) {
-            $data = CateSubCateRel::where('cate_sub_cate_rels.category_code', $category_code)
-                ->join('sub_categories', 'sub_categories.sub_category_code', '=', 'cate_sub_cate_rels.sub_category_code')
-                ->select('sub_categories.sub_category_code', 'sub_categories.sub_category_en', 'sub_categories.sub_category_gu') // Adjust fields as needed
+            $data = SongCateRel::where('category_code', $category_code)
+                ->join('songs', 'songs.song_code', '=', 'song_cate_rels.song_code')
+                ->select('songs.song_code', 'songs.title_en') // Adjust fields as needed
                 ->get();
-            // dd
+            
             return DataTables::of($data)
                 ->make(true);
         }
-        // dd($category);
+        
         return view('admin.category.show', compact('category'));
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -154,7 +121,7 @@ class CategoriesController extends Controller
         $data = SongCategoryRel::where('category_code', $category_code)
             ->join('songs', 'songs.song_code', '=', 'song_category_rels.song_code')
             ->select('songs.song_code', 'songs.title_en');
-        // dd($category_code);
+        
         return DataTables::of($data)->make(true);
     }
 
@@ -169,36 +136,8 @@ class CategoriesController extends Controller
         return DataTables::of($data)->make(true);
     }
 
-    // public function fetchRemainingSongs(Request $request, string $id)
-    // {
-    //     $data = Song::whereNotIn('id', function ($query) use ($id) {
-    //         $query->select('song_id')
-    //             ->from('song_category_rels')
-    //             ->where('category_id', $id);
-    //     })->select('id', 'title_en');
-
-    //     return DataTables::of($data)->make(true);
-    // }
-
-    // public function addSongToCategory(Request $request)
-    // {
-    //     $request->validate([
-    //         'song_code' => 'required|exists:songs,song_code',
-    //         'category_code' => 'required|exists:categories,category_code',
-    //     ]);
-
-    //     // Create the relationship
-    //     SongCategoryRel::create([
-    //         'song_code' => $request->song_code,
-    //         'category_code' => $request->category_code,
-    //     ]);
-
-    //     return redirect()->back()->with('success', 'Song added to category successfully');
-    // }
-
     public function addSongToCategory(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'song_code' => 'required|exists:songs,song_code',
             'category_code' => 'required|exists:categories,category_code',
@@ -215,11 +154,10 @@ class CategoriesController extends Controller
 
     public function removeSongFromCategory(Request $request, $song_code)
     {
-        // dump($song_code);
         $relationship = SongCategoryRel::where('song_code', $song_code)
             ->where('category_code', $request->category_code)
             ->first();
-        // dump($relationship);
+        
         if ($relationship) {
             $relationship->delete();
             return redirect()->back()->with('success', 'Song removed from category successfully');
@@ -253,10 +191,8 @@ class CategoriesController extends Controller
      */
     public function destroy(string $category_code)
     {
-        // dd($category_code);
         $category = Category::where('category_code', $category_code)->firstOrFail();
-        // dd($category);
-        // $category->songs()->detach();
+        
         $subCategories = CateSubCateRel::where('category_code', $category_code)->pluck('sub_category_code');
 
         if ($subCategories->isNotEmpty()) {

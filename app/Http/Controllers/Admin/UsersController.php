@@ -46,7 +46,7 @@ class UsersController extends Controller
         if ($user->role == 'admin') {
             return view('admin.users.create');
         } else {
-            return response()->view('errors.404', [], 404);
+            // return response()->view('errors.404', [], 404);
         }
     }
 
@@ -74,7 +74,7 @@ class UsersController extends Controller
             $user = User::where('id', $id)->firstOrFail();
             return view('admin.users.edit', compact('user'));
         } else {
-            return response()->view('errors.404', [], 404);
+            // return response()->view('errors.404', [], 404);
         }
     }
 
@@ -99,7 +99,7 @@ class UsersController extends Controller
 
     public function show(int $id)
     {
-        return response()->view('errors.404', [], 404);
+        // return response()->view('errors.404', [], 404);
     }
 
     public function destroy(int $id)

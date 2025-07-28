@@ -174,17 +174,7 @@
                     ->get();
             @endphp
             
-            <div class="scroll-item {{ request()->is('categories/'.$category->category_code.'*') ? 'active' : '' }}">
-                @if ($subcategories->count() <= 1)
-                    <a href="{{ $subcategories->count() == 1 ? route('user.categories.show', $subcategories[0]->sub_category_code) : '#' }}">
-                        {{ $category->{'category_' . app()->getLocale()} }}
-                    </a>
-                @else
-                    <a href="#" class="dropdown-toggle" data-category="{{ $category->category_code }}">
-                        {{ $category->{'category_' . app()->getLocale()} }}
-                    </a>
-                @endif
-            </div>
+            
         @endforeach
     </div>
 </div>
@@ -199,15 +189,7 @@
             ->get();
     @endphp
     
-    @if ($subcategories->count() > 1)
-        <div id="dropdown-{{ $category->category_code }}" class="custom-dropdown-menu">
-            @foreach ($subcategories as $subcategory)
-                <a class="custom-dropdown-item" href="{{ route('user.categories.show', $subcategory->sub_category_code) }}">
-                    {{ $subcategory->{'sub_category_' . app()->getLocale()} }}
-                </a>
-            @endforeach
-        </div>
-    @endif
+    <!--  -->
 @endforeach
 
 <div class="dropdown-backdrop"></div>

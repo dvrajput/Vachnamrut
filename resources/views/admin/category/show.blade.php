@@ -44,13 +44,13 @@
                 serverSide: true,
                 ajax: '{{ route('admin.categories.show', ':id') }}'.replace(':id', categoryId),
                 columns: [{
-                        data: 'sub_category_code',
-                        name: 'sub_category_code',
+                        data: 'song_code',
+                        name: 'song_code',
                         orderable:false,
                     },
                     {
-                        data: 'sub_category_en',
-                        name: 'sub_category_en',
+                        data: 'title_en',
+                        name: 'title_en',
                         orderable:false,
                     },
                     {
@@ -60,7 +60,7 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `
-                                    <a href="{{ url('admin/subCategories') }}/${row.sub_category_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
+                                    <a href="{{ url('admin/subCategories') }}/${row.song_code}" class="btn btn-sm btn-info" data-toggle="tooltip" title="View">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     `;

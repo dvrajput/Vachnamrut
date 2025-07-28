@@ -16,6 +16,12 @@
                 required>
         </div>
 
+        <div class="form-group">
+            <label for="alias">{{ __('Alias') }}</label>
+            <input type="text" class="form-control" id="alias" name="alias" placeholder="{{__('Enter Alias')}}"
+                required>
+        </div>
+
         <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
         <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary ml-2">{{ __('Cancel') }}</a>
     </form>

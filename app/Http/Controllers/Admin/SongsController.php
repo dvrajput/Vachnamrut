@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Configuration;
 use App\Models\Song;
-use App\Models\SongCategoryRel;
+use App\Models\SongCateRel;
 use App\Models\SongSubCateRel;
 use App\Models\SubCategory;
 use Yajra\DataTables\DataTables;
@@ -64,8 +64,8 @@ class SongsController extends Controller
      */
     public function create()
     {
-        $subCategories = SubCategory::all();
-        return view('admin.songs.create', compact('subCategories'));
+        $categories = Category::all();
+        return view('admin.songs.create', compact('categories'));
     }
 
     /**
@@ -74,8 +74,8 @@ class SongsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title_en' => 'required|string|max:255',
-            'lyrics_en' => 'required|string',
+            'title_en' => 'nullable|string|max:255',
+            'lyrics_en' => 'nullable|string',
             'title_gu' => 'nullable|string|max:255',
             'lyrics_gu' => 'nullable|string',
             'sub_category_code' => 'nullable|array',
@@ -102,19 +102,19 @@ class SongsController extends Controller
 
         // Create the new song record
         $song = Song::create([
-            'song_code' => $newSongCode,
-            'title_en' => $request->title_en,
-            'lyrics_en' => $request->lyrics_en,
+            'song_code' => $request->song_code,
+            'title_en' => $request->title_en??'',
+            'lyrics_en' => $request->lyrics_en??'',
             'title_gu' => $request->title_gu,
             'lyrics_gu' => $request->lyrics_gu,
         ]);
 
         // Handle subcategories if provided
-        if ($request->filled('sub_category_code')) {
-            foreach ($request->sub_category_code as $subCategoryCode) {
-                SongSubCateRel::create([
+        if ($request->filled('category_code')) {
+            foreach ($request->category_code as $categoryCode) {
+                SongCateRel::create([
                     'song_code' => $song->song_code,
-                    'sub_category_code' => $subCategoryCode,
+                    'category_code' => $categoryCode,
                 ]);
             }
         }
@@ -159,8 +159,8 @@ class SongsController extends Controller
     public function update(Request $request, string $song_code)
     {
         $request->validate([
-            'title_en' => 'required|string|max:255',
-            'lyrics_en' => 'required|string',
+            'title_en' => 'nullable|string|max:255',
+            'lyrics_en' => 'nullable|string',
             'title_gu' => 'nullable|string|max:255',
             'lyrics_gu' => 'nullable|string',
             'sub_category_code' => 'nullable|array', // Ensure categories are passed as an array
@@ -172,8 +172,8 @@ class SongsController extends Controller
 
         // Update song details
         $song->update([
-            'title_en' => $request->title_en,
-            'lyrics_en' => $request->lyrics_en,
+            'title_en' => $request->title_en??"",
+            'lyrics_en' => $request->lyrics_en??"",
             'title_gu' => $request->title_gu,
             'lyrics_gu' => $request->lyrics_gu,
         ]);

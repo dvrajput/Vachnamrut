@@ -13,6 +13,7 @@ class Category extends Model
         'category_code',
         'category_en',
         'category_gu',
+        'alias',
     ];
 
     protected $hidden = [
@@ -23,4 +24,5 @@ class Category extends Model
     // {
     //     return $this->belongsToMany(Song::class, 'song_category_rels');
     // }
+    
 }
