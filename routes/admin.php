@@ -13,7 +13,6 @@ use App\Http\Controllers\Admin\LogsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
-    dd('hello');
     return redirect()->route('admin.loginPage');
 });
 
