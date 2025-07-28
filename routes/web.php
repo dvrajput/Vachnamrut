@@ -13,7 +13,7 @@ Route::get('/', [UserCategoriesController::class, 'index'])->name('home');
 Route::get('/admin/logs/users', [App\Http\Controllers\Admin\LogsController::class, 'getLogUsers'])->name('admin.logs.users');
 
 // Redirect /categories to home (now that home shows categories)
-Route::get('/categories', function() {
+Route::get('/categories', function () {
     return redirect()->route('home');
 });
 
@@ -33,8 +33,14 @@ Route::name('user.')->group(function () {
     Route::resource('kirtans', UserSongController::class);
     Route::resource('categories', UserCategoriesController::class)->except(['index']); // Remove index since root route handles it
     Route::resource('contact', UserContactController::class);
-    Route::get('{alias}/{id}', [UserCategoriesController::class, 'aliasSongShow'])->name('categories.aliasSongShow');
-    Route::get('{alias}', [UserCategoriesController::class, 'aliasShow'])->name('categories.aliasShow');
+    Route::get('{alias}/{id}', [UserCategoriesController::class, 'aliasSongShow'])
+        ->name('categories.aliasSongShow')
+        ->where('alias', '^(?!admin|api|language).*$')  // Exclude admin, api, language
+        ->where('id', '[0-9]+');  // Only numeric IDs
+
+    Route::get('{alias}', [UserCategoriesController::class, 'aliasShow'])
+        ->name('categories.aliasShow')
+        ->where('alias', '^(?!admin|api|language|test-route|categories|kirtans|contact).*$');
 });
 
 Route::get('/language/{locale}', function ($locale) {
@@ -62,4 +68,4 @@ Route::prefix('api/')->group(function () {
 // });
 
 // admin panel route
-require __DIR__ . '/admin.php';
+// require __DIR__ . '/admin.php';
