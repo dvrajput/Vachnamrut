@@ -74,6 +74,7 @@ class SongsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'written_date' => 'nullable|string|max:50', // Added validation for written_date
             'title_en' => 'nullable|string|max:255',
             'lyrics_en' => 'nullable|string',
             'title_gu' => 'nullable|string|max:255',
@@ -103,6 +104,7 @@ class SongsController extends Controller
         // Create the new song record
         $song = Song::create([
             'song_code' => $request->song_code,
+            'written_date' => $request->written_date, // Added written_date field
             'title_en' => $request->title_en??'',
             'lyrics_en' => $request->lyrics_en??'',
             'title_gu' => $request->title_gu,
@@ -159,6 +161,7 @@ class SongsController extends Controller
     public function update(Request $request, string $song_code)
     {
         $request->validate([
+            'written_date' => 'nullable|string|max:50', // Added validation for written_date
             'title_en' => 'nullable|string|max:255',
             'lyrics_en' => 'nullable|string',
             'title_gu' => 'nullable|string|max:255',
@@ -172,6 +175,7 @@ class SongsController extends Controller
 
         // Update song details
         $song->update([
+            'written_date' => $request->written_date, // Added written_date field
             'title_en' => $request->title_en??"",
             'lyrics_en' => $request->lyrics_en??"",
             'title_gu' => $request->title_gu,
@@ -210,7 +214,6 @@ class SongsController extends Controller
 
         return redirect()->route('admin.songs.index')->with('success', 'Song updated successfully!');
     }
-
 
     /**
      * Remove the specified resource from storage.

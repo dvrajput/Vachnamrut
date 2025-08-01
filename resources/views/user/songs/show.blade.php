@@ -83,6 +83,23 @@
         opacity: 0.9;
     }
 
+    /* FIXED: Written Date Styling */
+    .vachanamrut-date {
+        font-size: 0.85rem;
+        color: var(--text-color);
+        margin: 0.3rem 0 0;
+        font-weight: 400;
+        position: relative;
+        z-index: 2;
+        opacity: 0.7;
+        font-style: italic;
+    }
+
+    .vachanamrut-date.no-date {
+        opacity: 0.5;
+        color: #999;
+    }
+
     /* Navigation Tabs */
     .vachanamrut-nav {
         display: flex;
@@ -183,13 +200,11 @@
         text-decoration: none;
         transition: all 0.3s ease;
         border-bottom: none; /* REMOVED: underline */
-        /* Title attribute will be removed by JavaScript to prevent tooltips */
     }
 
     .vachanamrut-text abbr:hover {
         color: var(--abbr-hover-color);
         text-shadow: 0 1px 2px var(--light-shadow);
-        /* REMOVED: border-bottom styling */
     }
 
     /* Bold text styling */
@@ -243,10 +258,9 @@
         border-bottom: 2px solid var(--border-color);
     }
 
-    /* FIXED: Modal title size matches proportionally */
     .abbr-modal-title {
         color: var(--primary-color);
-        font-size: 1.3rem; /* Will be updated by JavaScript */
+        font-size: 1.3rem;
         font-weight: 700;
         margin: 0;
     }
@@ -271,14 +285,12 @@
         color: white;
     }
 
-    /* FIXED: Modal body text size matches Vachanamrut text */
     .abbr-modal-body {
-        font-size: 1.2rem; /* Will be updated by JavaScript to match current text size */
-        line-height: 1.6; /* Will be updated by JavaScript */
+        font-size: 1.2rem;
+        line-height: 1.6;
         color: var(--text-color);
     }
 
-    /* FIXED: Modal short form styling */
     .abbr-short-form {
         display: inline-block;
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -287,7 +299,7 @@
         border-radius: 6px;
         font-weight: 600;
         margin-right: 8px;
-        font-size: 1.1rem; /* Will be updated by JavaScript */
+        font-size: 1.1rem;
     }
 
     /* Report Button - Small and Centered */
@@ -340,6 +352,10 @@
             font-size: 0.9rem;
         }
 
+        .vachanamrut-date {
+            font-size: 0.75rem;
+        }
+
         .vachanamrut-content {
             padding: 1.2rem;
             border-radius: 12px;
@@ -374,6 +390,10 @@
 
         .vachanamrut-title {
             font-size: 1.4rem;
+        }
+
+        .vachanamrut-date {
+            font-size: 0.7rem;
         }
 
         .vachanamrut-content {
@@ -416,7 +436,14 @@
     <!-- Header Section -->
     <div class="vachanamrut-header">
         <h1 class="vachanamrut-title">{{ $song->{'title_' . app()->getLocale()} }}</h1>
-        <!-- <p class="vachanamrut-subtitle">{{ __('Vachanamrut') }}</p> -->
+        <!-- FIXED: Changed class from 'written-date' to 'vachanamrut-date' -->
+        <div class="vachanamrut-date {{ !$song->written_date ? 'no-date' : '' }}">
+            @if($song->written_date)
+                {{ $song->written_date->format('d/m/Y') }}
+            @else
+                Date not specified
+            @endif
+        </div>
     </div>
 
     <!-- Navigation (if you have multiple Vachanamruts) -->

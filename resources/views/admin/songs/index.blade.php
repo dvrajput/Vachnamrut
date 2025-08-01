@@ -328,6 +328,9 @@
     border-color: var(--admin-primary) !important;
     color: white !important;
 }
+table.dataTable thead .sorting_asc {
+    background-image: none !important;
+}
 
 /* DataTables Buttons */
 .dt-buttons {

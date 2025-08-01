@@ -11,6 +11,7 @@ class Song extends Model
 
     protected $fillable = [
         'song_code',
+        'written_date',  // Added this line for the date field
         'title_en',
         'lyrics_en',
         'title_gu',

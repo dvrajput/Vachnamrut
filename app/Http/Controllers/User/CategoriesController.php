@@ -32,27 +32,52 @@ class CategoriesController extends Controller
     }
 
     public function aliasSongShow(Request $request, string $code, string $id)
-    {
-        // Get the category
-        $category = DB::table('categories')->where('alias', $code)->first();
-        
-        if (!$category) {
-            abort(404, 'Category not found.');
-        }
-
-        // Get specific song/Vachanamrut from this category
-        $song = DB::table('song_cate_rels')
-            ->join('songs', 'song_cate_rels.song_code', '=', 'songs.song_code')
-            ->where('song_cate_rels.category_code', $category->category_code)
-            ->where('songs.song_code', $id)
-            ->first();
-        
-        if (!$song) {
-            abort(404, 'Vachanamrut not found.');
-        }
-
-        return view('user.category.alias_song_show', compact('category', 'song'));
+{
+    // Get the category
+    $category = DB::table('categories')->where('alias', $code)->first();
+    
+    if (!$category) {
+        abort(404, 'Category not found.');
     }
+
+    // Get specific song/Vachanamrut from this category
+    $song = DB::table('song_cate_rels')
+        ->join('songs', 'song_cate_rels.song_code', '=', 'songs.song_code')
+        ->where('song_cate_rels.category_code', $category->category_code)
+        ->where('songs.song_code', $id)
+        ->first();
+    
+    if (!$song) {
+        abort(404, 'Vachanamrut not found.');
+    }
+
+    // Get all songs in this category for navigation (ordered by creation or specific order)
+    $songsInPlaylists = DB::table('song_cate_rels')
+        ->join('songs', 'song_cate_rels.song_code', '=', 'songs.song_code')
+        ->where('song_cate_rels.category_code', $category->category_code)
+        ->orderBy('song_cate_rels.id', 'asc') // or use another ordering field like 'songs.created_at'
+        ->select('songs.*', 'song_cate_rels.*')
+        ->get();
+
+    // Find current song position in the collection
+    $currentIndex = $songsInPlaylists->search(function($item) use ($song) {
+        return $item->song_code == $song->song_code;
+    });
+
+    // Get previous and next songs for navigation
+    $previousSong = $currentIndex > 0 ? $songsInPlaylists[$currentIndex - 1] : null;
+    $nextSong = $currentIndex < $songsInPlaylists->count() - 1 ? $songsInPlaylists[$currentIndex + 1] : null;
+
+    return view('user.category.alias_song_show', compact(
+        'category', 
+        'song', 
+        'songsInPlaylists', 
+        'currentIndex', 
+        'previousSong', 
+        'nextSong'
+    ));
+}
+
 
     public function aliasShow(Request $request, string $code)
     {

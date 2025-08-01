@@ -632,7 +632,7 @@
                             <i class="fa-solid fa-sun light-icon d-none"></i>
                         </button>
                     </li>
-                    @if (request()->is('kirtans/*') || request()->is('vachanamruts/*'))
+                    @if (request()->routeIs('vachanamruts.*'))
                         <li class="nav-item d-none d-lg-block position-relative">
                             <button id="fontSizeToggleDesktop" class="nav-link">
                                 <span class="translate-icon"><img src="{{ asset('font_size.svg') }}"

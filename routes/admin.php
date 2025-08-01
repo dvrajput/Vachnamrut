@@ -72,7 +72,7 @@ Route::prefix('admin/')->name('admin.')->group(function () {
         Route::get('logs', [LogsController::class, 'getSongLogs'])->name('logs.index');
         Route::get('logs/song', [LogsController::class, 'getSongLogs'])->name('logs.songs');
         Route::get('logs/categories', [LogsController::class, 'getCategoryLogs'])->name('logs.categories');
-        Route::get('logs/subcategories', [LogsController::class, 'getSubcategoryLogs'])->name('logs.subcategories');
-        Route::get('logs/playlists', [LogsController::class, 'getPlaylistLogs'])->name('logs.playlists');
+        // Route::get('logs/subcategories', [LogsController::class, 'getSubcategoryLogs'])->name('logs.subcategories');
+        // Route::get('logs/playlists', [LogsController::class, 'getPlaylistLogs'])->name('logs.playlists');
     });
 });

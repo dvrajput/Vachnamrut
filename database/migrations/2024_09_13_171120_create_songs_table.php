@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('songs', function (Blueprint $table) {
             $table->id();
             $table->string('song_code')->unique();
+            $table->string('written_date')->nullable()->index();
             $table->string('title_en');
             $table->text('lyrics_en');
             $table->string('title_gu');

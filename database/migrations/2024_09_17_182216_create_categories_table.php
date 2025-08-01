@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('category_code')->unique();
             $table->string('category_en');
             $table->string('category_gu');
+            $table->string('alias');
             $table->timestamps();
         });
     }

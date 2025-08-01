@@ -45,20 +45,7 @@
                             <span>{{ __('Categories') }}</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link{{ request()->is('admin/subCategories*') ? ' active' : '' }}"
-                            href="{{ route('admin.subCategories.index') }}">
-                            <i class="fas fa-folder-open"></i>
-                            <span>{{ __('Sub Categories') }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{{ request()->is('admin/playlists*') ? ' active' : '' }}"
-                            href="{{ route('admin.playlists.index') }}">
-                            <i class="fas fa-list"></i>
-                            <span>{{ __('Playlists') }}</span>
-                        </a>
-                    </li>
+                    
                     @if ($contactShow == '1')
                     <li class="nav-item">
                         <a class="nav-link{{ request()->is('admin/contacts*') ? ' active' : '' }}"
@@ -68,15 +55,7 @@
                         </a>
                     </li>
                     @endif
-                    @if ($exportShow == '1')
-                    <li class="nav-item">
-                        <a class="nav-link{{ request()->is('admin/exports*') ? ' active' : '' }}"
-                            href="{{ route('admin.exports.index') }}">
-                            <i class="fas fa-download"></i>
-                            <span>{{ __('Export') }}</span>
-                        </a>
-                    </li>
-                    @endif
+                    
                 </ul>
                 
                 <!-- Right Side Controls -->
