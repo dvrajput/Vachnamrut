@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="vachanamrut-admin-container">
-        <!-- FIXED: Page Header (renamed from admin-header) -->
+        <!-- Page Header -->
         <div class="page-header">
             <div class="header-content">
                 <h2 class="page-title">
@@ -69,7 +69,7 @@
 
                     <div class="language-tabs">
                         <div class="tab-buttons">
-                            <!-- FIXED: GUJARATI IS NOW DEFAULT -->
+                            <!-- GUJARATI IS DEFAULT ACTIVE -->
                             <button type="button" class="tab-btn active" data-tab="gujarati">
                                 <i class="fas fa-font"></i> {{ __('ગુજરાતી') }}
                             </button>
@@ -78,7 +78,7 @@
                             </button>
                         </div>
 
-                        <!-- Gujarati Tab - NOW DEFAULT ACTIVE -->
+                        <!-- Gujarati Tab - DEFAULT ACTIVE -->
                         <div class="tab-content active" id="gujarati-tab">
                             <div class="form-group">
                                 <label for="title_gu" class="form-label required">{{ __('Gujarati Title') }}</label>
@@ -93,14 +93,69 @@
 
                             <div class="form-group">
                                 <label for="lyrics_gu" class="form-label required">{{ __('Gujarati Content') }}</label>
-                                <textarea class="form-control gujarati-text summernote-editor @error('lyrics_gu') is-invalid @enderror" id="lyrics_gu"
-                                    name="lyrics_gu" placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}" required>{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
+                                
+                                <!-- Custom Toolbar -->
+                                <div class="custom-toolbar" data-target="lyrics_gu">
+                                    <div class="toolbar-group">
+                                        <span class="toolbar-label">Format:</span>
+                                        <button type="button" class="toolbar-btn" data-action="bold" title="Bold">
+                                            <i class="fas fa-bold"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" data-action="abbr" title="Abbreviation">
+                                            <i class="fas fa-text-width"></i>
+                                        </button>
+                                    </div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-group">
+                                        <span class="toolbar-label">Align:</span>
+                                        <button type="button" class="toolbar-btn" data-action="alignLeft" title="Align Left">
+                                            <i class="fas fa-align-left"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" data-action="alignCenter" title="Align Center">
+                                            <i class="fas fa-align-center"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" data-action="alignRight" title="Align Right">
+                                            <i class="fas fa-align-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-group">
+                                        <span class="toolbar-label">Font:</span>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Noto Sans Gujarati" title="Default Gujarati">
+                                            <i class="fas fa-font"></i> Default
+                                        </button>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Gopika" title="Gopika Font">
+                                            <i class="fas fa-font"></i> Gopika
+                                        </button>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Sanskrit" title="Sanskrit Font">
+                                            <i class="fas fa-font"></i> Sanskrit
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Split Editor and Preview Layout -->
+                                <div class="editor-preview-container">
+                                    <div class="editor-section">
+                                        <div class="section-title">{{ __('Editor') }}</div>
+                                        <textarea class="form-control gujarati-text content-textarea custom-editor @error('lyrics_gu') is-invalid @enderror" 
+                                            id="lyrics_gu" name="lyrics_gu"
+                                            placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}" required>{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
+                                    </div>
+                                    
+                                    <div class="preview-section">
+                                        <div class="section-title">{{ __('Live Preview') }}</div>
+                                        <div class="live-preview gujarati-text" id="preview_lyrics_gu">
+                                            <div class="preview-content">{{ __('Preview will appear here...') }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 @error('lyrics_gu')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <small class="form-text text-muted">
                                     <i class="fas fa-info-circle"></i>
-                                    {{ __('Use the rich text editor to format your content') }}
+                                    {{ __('Use the toolbar buttons to format your text. Select text first, then click formatting, alignment, or font buttons. Preview updates automatically.') }}
                                 </small>
                             </div>
                         </div>
@@ -119,14 +174,68 @@
 
                             <div class="form-group">
                                 <label for="lyrics_en" class="form-label">{{ __('English Content') }}</label>
-                                <textarea class="form-control summernote-editor @error('lyrics_en') is-invalid @enderror" id="lyrics_en"
-                                    name="lyrics_en" placeholder="{{ __('English translation (optional)') }}">{{ old('lyrics_en', $song->lyrics_en) }}</textarea>
+                                
+                                <!-- Custom Toolbar -->
+                                <div class="custom-toolbar" data-target="lyrics_en">
+                                    <div class="toolbar-group">
+                                        <span class="toolbar-label">Format:</span>
+                                        <button type="button" class="toolbar-btn" data-action="bold" title="Bold">
+                                            <i class="fas fa-bold"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" data-action="abbr" title="Abbreviation">
+                                            <i class="fas fa-text-width"></i>
+                                        </button>
+                                    </div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-group">
+                                        <span class="toolbar-label">Align:</span>
+                                        <button type="button" class="toolbar-btn" data-action="alignLeft" title="Align Left">
+                                            <i class="fas fa-align-left"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" data-action="alignCenter" title="Align Center">
+                                            <i class="fas fa-align-center"></i>
+                                        </button>
+                                        <button type="button" class="toolbar-btn" data-action="alignRight" title="Align Right">
+                                            <i class="fas fa-align-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-group">
+                                        <span class="toolbar-label">Font:</span>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Arial" title="Default English">
+                                            <i class="fas fa-font"></i> Default
+                                        </button>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Gopika" title="Gopika Font">
+                                            <i class="fas fa-font"></i> Gopika
+                                        </button>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Sanskrit" title="Sanskrit Font">
+                                            <i class="fas fa-font"></i> Sanskrit
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Split Editor and Preview Layout -->
+                                <div class="editor-preview-container">
+                                    <div class="editor-section">
+                                        <div class="section-title">{{ __('Editor') }}</div>
+                                        <textarea class="form-control content-textarea custom-editor @error('lyrics_en') is-invalid @enderror" 
+                                            id="lyrics_en" name="lyrics_en" 
+                                            placeholder="{{ __('English translation (optional)') }}">{{ old('lyrics_en', $song->lyrics_en) }}</textarea>
+                                    </div>
+                                    
+                                    <div class="preview-section">
+                                        <div class="section-title">{{ __('Live Preview') }}</div>
+                                        <div class="live-preview" id="preview_lyrics_en">
+                                            <div class="preview-content">{{ __('Preview will appear here...') }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 @error('lyrics_en')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -170,228 +279,35 @@
 
 @section('style')
     <style>
-        /* Summernote Editor Styles */
-        .note-editor {
-            border: 2px solid var(--admin-border-color) !important;
-            border-radius: 6px !important;
-            background-color: var(--admin-bg-secondary) !important;
+        /* Import fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        /* Define font faces for local Gopika and Sanskrit fonts */
+        @font-face {
+            font-family: 'Gopika';
+            src: url('{{ asset("fonts/Gopika.ttf") }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
 
-        .note-editor.note-frame {
-            border: 2px solid var(--admin-border-color) !important;
+        @font-face {
+            font-family: 'Sanskrit';
+            src: url('{{ asset("fonts/Sanskrit.ttf") }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
 
-        .note-editor.note-frame.codeview .note-editing-area .note-codable {
-            background-color: var(--admin-bg-secondary) !important;
-            color: var(--admin-text-primary) !important;
-            border: none !important;
-        }
-
-        .note-toolbar {
-            background-color: var(--admin-bg-tertiary) !important;
-            border-bottom: 1px solid var(--admin-border-color) !important;
-            border-radius: 6px 6px 0 0 !important;
-        }
-
-        .note-editing-area {
-            background-color: var(--admin-bg-secondary) !important;
-            min-height: 300px !important;
-        }
-
-        .note-editable {
-            background-color: var(--admin-bg-secondary) !important;
-            color: var(--admin-text-primary) !important;
-            min-height: 300px !important;
-            padding: 15px !important;
-            line-height: 1.6 !important;
-        }
-
-        /* Text Alignment Styles */
-        .note-editable .text-left,
-        .note-editable [style*="text-align: left"] {
-            text-align: left !important;
-        }
-
-        .note-editable .text-center,
-        .note-editable [style*="text-align: center"] {
-            text-align: center !important;
-        }
-
-        .note-editable .text-right,
-        .note-editable [style*="text-align: right"] {
-            text-align: right !important;
-        }
-
-        .note-editable .text-justify,
-        .note-editable [style*="text-align: justify"] {
-            text-align: justify !important;
-        }
-
-        /* Additional HTML element styles */
-        .note-editable blockquote {
-            padding: 10px 20px;
-            margin: 0 0 20px;
-            font-size: 1.1em;
-            border-left: 5px solid var(--admin-primary);
-            background-color: var(--admin-bg-tertiary);
-            color: var(--admin-text-primary);
-            font-style: italic;
-        }
-
-        .note-editable pre {
-            background-color: var(--admin-bg-tertiary);
-            border: 1px solid var(--admin-border-color);
-            border-radius: 4px;
-            padding: 15px;
-            overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            color: var(--admin-text-primary);
-            white-space: pre-wrap;
-        }
-
-        .note-editable code {
-            background-color: var(--admin-bg-tertiary);
-            color: var(--admin-primary);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }
-
-        .note-editable strong,
-        .note-editable b {
-            font-weight: bold;
-            color: var(--admin-text-primary);
-        }
-
-        .note-editable em,
-        .note-editable i {
-            font-style: italic;
-            color: var(--admin-text-primary);
-        }
-
-        .note-editable u {
-            text-decoration: underline;
-            color: var(--admin-text-primary);
-        }
-
-        .note-editable s,
-        .note-editable strike,
-        .note-editable del {
-            text-decoration: line-through;
-            color: var(--admin-text-muted);
-        }
-
-        .note-editable sup {
-            vertical-align: super;
-            font-size: smaller;
-        }
-
-        .note-editable sub {
-            vertical-align: sub;
-            font-size: smaller;
-        }
-
-        .note-editable p {
-            margin: 0 0 10px 0;
-            line-height: 1.6;
-            color: var(--admin-text-primary);
-        }
-
-        .note-editable h1,
-        .note-editable h2,
-        .note-editable h3,
-        .note-editable h4,
-        .note-editable h5,
-        .note-editable h6 {
-            color: var(--admin-text-primary);
-            margin: 15px 0 10px 0;
-            font-weight: bold;
-        }
-
-        /* Gujarati font for Gujarati editor */
-        .gujarati-editor .note-editable {
-            font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif !important;
-            direction: ltr !important;
-        }
-
-        /* Dark mode specific styles */
-        [data-theme="dark"] .note-toolbar .btn {
-            color: var(--admin-text-primary) !important;
-            background-color: transparent !important;
-            border: 1px solid transparent !important;
-        }
-
-        [data-theme="dark"] .note-toolbar .btn:hover {
-            background-color: var(--admin-border-light) !important;
-            color: var(--admin-text-primary) !important;
-        }
-
-        [data-theme="dark"] .note-toolbar .btn.active {
-            background-color: var(--admin-primary) !important;
-            color: white !important;
-        }
-
-        [data-theme="dark"] .note-dropdown-menu {
-            background-color: var(--admin-bg-secondary) !important;
-            border: 1px solid var(--admin-border-color) !important;
-        }
-
-        [data-theme="dark"] .note-dropdown-menu .dropdown-item {
-            color: var(--admin-text-primary) !important;
-        }
-
-        [data-theme="dark"] .note-dropdown-menu .dropdown-item:hover {
-            background-color: var(--admin-primary) !important;
-            color: white !important;
-        }
-
-        /* Focus states */
-        .note-editor.note-frame:focus-within {
-            border-color: var(--admin-primary) !important;
-            box-shadow: 0 0 0 3px rgba(215, 134, 27, 0.1) !important;
-        }
-
-        /* Summernote validation styles */
-        .note-editor.is-invalid {
-            border-color: var(--admin-error) !important;
-            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1) !important;
-        }
-
-        .note-editor.is-invalid .note-toolbar {
-            border-bottom-color: var(--admin-error) !important;
-        }
-
-        /* Custom toolbar button styles */
-        .note-toolbar .note-btn-group .note-btn {
-            background: transparent;
-            border: none;
-            color: var(--admin-text-primary);
-            padding: 6px 8px;
-            margin: 2px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .note-toolbar .note-btn-group .note-btn:hover {
-            background-color: var(--admin-border-light);
-            color: var(--admin-text-primary);
-        }
-
-        .note-toolbar .note-btn-group .note-btn.active {
-            background-color: var(--admin-primary);
-            color: white;
-        }
-
-
-        /* FIXED: Admin Edit Page with Theme Support */
+        /* Container with proper navbar spacing */
         .vachanamrut-admin-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 15px;
         }
 
-        /* FIXED: Page Header (renamed from admin-header to avoid navbar conflict) */
+        /* Page Header */
         .page-header {
             background: linear-gradient(135deg, var(--admin-primary), var(--admin-primary-light));
             border-radius: 10px;
@@ -521,7 +437,200 @@
             box-shadow: none !important;
         }
 
-        /* FIXED: BIGGER CONTENT TEXTAREAS */
+        /* Enhanced Custom Toolbar Styles */
+        .custom-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            padding: 12px;
+            background-color: var(--admin-bg-tertiary);
+            border: 1px solid var(--admin-border-color);
+            border-radius: 6px 6px 0 0;
+            border-bottom: none;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toolbar-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--admin-text-secondary);
+            margin-right: 4px;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 30px;
+            background-color: var(--admin-border-color);
+            margin: 0 4px;
+        }
+
+        .toolbar-btn {
+            background-color: transparent;
+            border: 1px solid var(--admin-border-color);
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: var(--admin-text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 36px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .toolbar-btn:hover {
+            background-color: var(--admin-primary);
+            color: white;
+            border-color: var(--admin-primary);
+        }
+
+        .toolbar-btn.active {
+            background-color: var(--admin-primary);
+            color: white;
+            border-color: var(--admin-primary);
+        }
+
+        /* Font-specific styles for different buttons */
+        .font-btn[data-font="Noto Sans Gujarati"],
+        .font-btn[data-font="Arial"] {
+            font-weight: 500;
+        }
+
+        .font-btn[data-font="Gopika"] {
+            font-family: 'Gopika', 'Noto Sans Gujarati', sans-serif;
+        }
+
+        .font-btn[data-font="Sanskrit"] {
+            font-family: 'Sanskrit', 'Noto Sans Devanagari', sans-serif;
+        }
+
+        /* Split Editor and Preview Layout */
+        .editor-preview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            border: 2px solid var(--admin-border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            overflow: hidden;
+        }
+
+        .editor-section,
+        .preview-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            background-color: var(--admin-bg-tertiary);
+            color: var(--admin-text-secondary);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--admin-border-color);
+        }
+
+        /* Custom Editor Styles */
+        .custom-editor {
+            border: none !important;
+            border-radius: 0 !important;
+            min-height: 300px !important;
+            resize: none;
+            line-height: 1.6;
+            font-family: inherit;
+            flex: 1;
+        }
+
+        .custom-editor:focus {
+            box-shadow: none !important;
+        }
+
+        /* Live Preview Styles */
+        .live-preview {
+            background-color: var(--admin-bg-secondary);
+            min-height: 300px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .preview-content {
+            padding: 15px;
+            color: var(--admin-text-primary);
+            line-height: 1.6;
+            min-height: 270px;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .preview-content:empty::before {
+            content: attr(data-placeholder);
+            color: var(--admin-text-muted);
+            font-style: italic;
+        }
+
+        /* Font classes for content */
+        .font-gopika, .preview-content .font-gopika {
+            font-family: 'Gopika', 'Noto Sans Gujarati', sans-serif !important;
+        }
+
+        .font-sanskrit, .preview-content .font-sanskrit {
+            font-family: 'Sanskrit', 'Noto Sans Devanagari', sans-serif !important;
+        }
+
+        .font-gujarati, .preview-content .font-gujarati {
+            font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif !important;
+        }
+
+        .font-english, .preview-content .font-english {
+            font-family: 'Arial', 'Helvetica', sans-serif !important;
+        }
+
+        /* Preview HTML rendering */
+        .preview-content strong {
+            font-weight: bold;
+        }
+
+        .preview-content abbr {
+            text-decoration: underline dotted;
+            cursor: help;
+            border-bottom: 1px dotted var(--admin-text-secondary);
+        }
+
+        .preview-content abbr:hover {
+            background-color: var(--admin-primary-bg);
+            color: var(--admin-primary);
+        }
+
+        /* Alignment styles for preview */
+        .preview-content div[style*="text-align: left"] {
+            text-align: left !important;
+        }
+
+        .preview-content div[style*="text-align: center"] {
+            text-align: center !important;
+        }
+
+        .preview-content div[style*="text-align: right"] {
+            text-align: right !important;
+        }
+
+        /* Handle line breaks and spaces in preview */
+        .preview-content {
+            white-space: pre-wrap;
+        }
+
+        /* BIGGER CONTENT TEXTAREAS */
         .content-textarea {
             min-height: 300px !important;
             resize: vertical;
@@ -642,7 +751,7 @@
             border-color: var(--admin-text-muted);
         }
 
-        /* FIXED: Complete Select2 Integration with Dark Mode Support */
+        /* Select2 Styles (keeping existing) */
         .select2-container--default .select2-selection--single,
         .select2-container--default .select2-selection--multiple {
             background-color: var(--admin-bg-secondary) !important;
@@ -656,7 +765,6 @@
             padding: 6px 10px !important;
         }
 
-        /* FIXED: Placeholder Text in Both Modes */
         .select2-container--default .select2-selection--single .select2-selection__placeholder,
         .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
             color: var(--admin-text-muted) !important;
@@ -671,85 +779,6 @@
             color: var(--admin-text-primary) !important;
         }
 
-        /* FIXED: Dark Mode Specific Styles */
-        [data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__placeholder,
-        [data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
-            color: var(--admin-text-muted) !important;
-        }
-
-        [data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: var(--admin-text-primary) !important;
-        }
-
-        [data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__rendered {
-            color: var(--admin-text-primary) !important;
-        }
-
-        /* FIXED: Dropdown Menu Dark Mode */
-        [data-theme="dark"] .select2-dropdown {
-            background-color: var(--admin-bg-secondary) !important;
-            border: 1px solid var(--admin-border-color) !important;
-            border-radius: 6px;
-            box-shadow: var(--admin-shadow-lg);
-        }
-
-        [data-theme="dark"] .select2-search--dropdown .select2-search__field {
-            background-color: var(--admin-bg-tertiary) !important;
-            border: 1px solid var(--admin-border-color) !important;
-            color: var(--admin-text-primary) !important;
-        }
-
-        [data-theme="dark"] .select2-results__option {
-            background-color: var(--admin-bg-secondary) !important;
-            color: var(--admin-text-primary) !important;
-            padding: 8px 12px;
-        }
-
-        [data-theme="dark"] .select2-results__option--highlighted {
-            background-color: var(--admin-primary) !important;
-            color: white !important;
-        }
-
-        [data-theme="dark"] .select2-results__option[aria-selected="true"] {
-            background-color: var(--admin-primary-bg) !important;
-            color: var(--admin-primary) !important;
-        }
-
-        /* FIXED: Selected Items in Multiple Select */
-        [data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: var(--admin-primary) !important;
-            border: 1px solid var(--admin-primary-dark) !important;
-            color: white !important;
-            border-radius: 4px;
-            padding: 2px 8px;
-        }
-
-        [data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-            color: rgba(255, 255, 255, 0.8) !important;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        [data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
-            color: white !important;
-        }
-
-        /* Light Mode Styles */
-        [data-theme="light"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: var(--admin-primary) !important;
-            border: 1px solid var(--admin-primary-dark) !important;
-            color: white !important;
-            border-radius: 4px;
-            padding: 2px 8px;
-        }
-
-        /* FIXED: Focus States */
-        .select2-container--default.select2-container--focus .select2-selection--single,
-        .select2-container--default.select2-container--focus .select2-selection--multiple {
-            border-color: var(--admin-primary) !important;
-            box-shadow: 0 0 0 3px rgba(215, 134, 27, 0.1) !important;
-        }
-
         /* Validation States */
         .is-invalid {
             border-color: var(--admin-error) !important;
@@ -762,9 +791,36 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
+            .editor-preview-container {
+                grid-template-columns: 1fr;
+            }
+            
             .vachanamrut-admin-container {
+                max-width: 100%;
                 padding: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .custom-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .toolbar-group {
+                justify-content: center;
+            }
+
+            .toolbar-separator {
+                display: none;
+            }
+
+            .toolbar-btn {
+                font-size: 0.75rem;
+                padding: 6px 8px;
+                min-height: 32px;
             }
 
             .page-header {
@@ -784,10 +840,6 @@
 
             .section-header h4 {
                 font-size: 1rem;
-            }
-
-            .content-textarea {
-                min-height: 250px !important;
             }
 
             .form-actions {
@@ -826,10 +878,6 @@
             .tab-content {
                 padding: 15px;
             }
-
-            .content-textarea {
-                min-height: 200px !important;
-            }
         }
     </style>
 @endsection
@@ -837,234 +885,12 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            // Initialize Summernote editors with comprehensive HTML support
-            function initializeSummernote() {
-                // Destroy existing instances
-                $('.summernote-editor').each(function() {
-                    if ($(this).hasClass('note-editor-preview')) {
-                        $(this).summernote('destroy');
-                    }
-                });
-
-                // Comprehensive Summernote configuration with all HTML tags + Text Alignment
-                const summernoteConfig = {
-                    height: 300,
-                    minHeight: 300,
-                    maxHeight: 600,
-                    focus: false,
-                    // COMPREHENSIVE TOOLBAR WITH TEXT ALIGNMENT OPTIONS
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'underline', 'italic', 'clear']],
-                        ['fontname', ['fontname']],
-                        ['fontsize', ['fontsize']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['align', ['alignLeft', 'alignCenter', 'alignRight',
-                        'alignJustify']], // TEXT ALIGNMENT ADDED
-                        ['height', ['height']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video', 'hr']],
-                        ['view', ['fullscreen', 'codeview', 'help']],
-                        ['custom', ['blockquote', 'strikethrough', 'superscript', 'subscript']]
-                    ],
-                    // ALLOW ALL HTML TAGS AND ATTRIBUTES
-                    codeviewFilter: false,
-                    codeviewIframeFilter: false,
-                    // CUSTOM STYLE TAGS
-                    styleTags: [
-                        'p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                        {
-                            title: 'Blockquote',
-                            tag: 'blockquote',
-                            className: 'blockquote',
-                            value: 'blockquote'
-                        },
-                        {
-                            title: 'Pre',
-                            tag: 'pre',
-                            className: 'pre',
-                            value: 'pre'
-                        },
-                        {
-                            title: 'Code',
-                            tag: 'code',
-                            className: 'code',
-                            value: 'code'
-                        }
-                    ],
-                    fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact',
-                        'Tahoma', 'Times New Roman', 'Verdana', 'Noto Sans Gujarati', 'Shruti'
-                    ],
-                    fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '24', '28', '32', '36',
-                        '48', '64'
-                    ],
-                    placeholder: 'Start typing your content...',
-                    // ALLOW ALL HTML TAGS - NO FILTERING
-                    cleaner: {
-                        action: 'paste',
-                        newline: '<br>',
-                        notTime: 2400,
-                        icon: '<i class="note-icon">[Your Button]</i>',
-                        keepHtml: true,
-                        keepOnlyTags: false, // Keep all tags
-                        keepClasses: true,
-                        badTags: [], // No bad tags - allow everything
-                        badAttributes: [], // No bad attributes - allow everything
-                        limitChars: false,
-                        limitDisplay: 'both',
-                        limitStop: false
-                    },
-                    // CUSTOM BUTTON DEFINITIONS
-                    buttons: {
-                        blockquote: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-quote-left"></i>',
-                                tooltip: 'Insert Blockquote',
-                                click: function() {
-                                    context.invoke('editor.formatBlock', 'blockquote');
-                                }
-                            });
-                            return button.render();
-                        },
-                        strikethrough: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-strikethrough"></i>',
-                                tooltip: 'Strikethrough',
-                                click: function() {
-                                    context.invoke('editor.strikethrough');
-                                }
-                            });
-                            return button.render();
-                        },
-                        superscript: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-superscript"></i>',
-                                tooltip: 'Superscript',
-                                click: function() {
-                                    context.invoke('editor.superscript');
-                                }
-                            });
-                            return button.render();
-                        },
-                        subscript: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-subscript"></i>',
-                                tooltip: 'Subscript',
-                                click: function() {
-                                    context.invoke('editor.subscript');
-                                }
-                            });
-                            return button.render();
-                        },
-                        // CUSTOM ALIGNMENT BUTTONS (if you want more control)
-                        alignLeft: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-align-left"></i>',
-                                tooltip: 'Align Left',
-                                click: function() {
-                                    context.invoke('editor.justifyLeft');
-                                }
-                            });
-                            return button.render();
-                        },
-                        alignCenter: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-align-center"></i>',
-                                tooltip: 'Align Center',
-                                click: function() {
-                                    context.invoke('editor.justifyCenter');
-                                }
-                            });
-                            return button.render();
-                        },
-                        alignRight: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-align-right"></i>',
-                                tooltip: 'Align Right',
-                                click: function() {
-                                    context.invoke('editor.justifyRight');
-                                }
-                            });
-                            return button.render();
-                        },
-                        alignJustify: function(context) {
-                            var ui = $.summernote.ui;
-                            var button = ui.button({
-                                contents: '<i class="fa fa-align-justify"></i>',
-                                tooltip: 'Justify',
-                                click: function() {
-                                    context.invoke('editor.justifyFull');
-                                }
-                            });
-                            return button.render();
-                        }
-                    },
-                    callbacks: {
-                        onInit: function() {
-                            // Custom initialization
-                        },
-                        onChange: function(contents, $editable) {
-                            // Auto-save or validation logic can go here
-                        },
-                        onFocus: function() {
-                            $(this).closest('.note-editor').css('border-color', 'var(--admin-primary)');
-                        },
-                        onBlur: function() {
-                            $(this).closest('.note-editor').css('border-color',
-                            'var(--admin-border-color)');
-                        },
-                        // PRESERVE ALL HTML ON PASTE
-                        onPaste: function(e) {
-                            // Allow all HTML content on paste
-                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData)
-                                .getData('Text');
-                            e.preventDefault();
-                            document.execCommand('insertHTML', false, bufferText);
-                        }
-                    }
-                };
-
-                // Initialize Gujarati editor with special font and all HTML support
-                $('#lyrics_gu').summernote({
-                    ...summernoteConfig,
-                    fontNames: ['Noto Sans Gujarati', 'Shruti', 'Arial', 'Arial Black', 'Comic Sans MS',
-                        'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'
-                    ],
-                    placeholder: 'વచનામૃતનું મૂળ લખાણ લખો...',
-                    callbacks: {
-                        ...summernoteConfig.callbacks,
-                        onInit: function() {
-                            // Set Gujarati font as default
-                            $(this).closest('.note-editor').addClass('gujarati-editor');
-                            // Set default font
-                            $(this).summernote('fontName', 'Noto Sans Gujarati');
-                        }
-                    }
-                });
-
-                // Initialize English editor with all HTML support
-                $('#lyrics_en').summernote({
-                    ...summernoteConfig,
-                    placeholder: 'English translation (optional)...'
-                });
-            }
-
-            // Enhanced Select2 initialization with proper theme support
+            // Initialize Select2
             function initializeSelect2() {
-                // Destroy existing instance if it exists
                 if ($('.select2').hasClass('select2-hidden-accessible')) {
                     $('.select2').select2('destroy');
                 }
 
-                // Initialize with proper settings
                 $('.select2').select2({
                     placeholder: '{{ __('Select categories') }}',
                     allowClear: true,
@@ -1081,47 +907,203 @@
                 });
             }
 
-            // Initialize components
-            initializeSummernote();
+            // Initialize Select2
             initializeSelect2();
 
             // Reinitialize on theme change
             window.addEventListener('themeChanged', function(e) {
                 setTimeout(function() {
-                    initializeSummernote();
                     initializeSelect2();
                 }, 150);
             });
 
-            // Tab functionality with Gujarati as DEFAULT
+            // Tab functionality
             $('.tab-btn').on('click', function() {
                 const tabId = $(this).data('tab');
 
-                // Update active tab button
                 $('.tab-btn').removeClass('active');
                 $(this).addClass('active');
 
-                // Update active tab content
                 $('.tab-content').removeClass('active');
                 $('#' + tabId + '-tab').addClass('active');
 
-                // Refresh Summernote in active tab
                 setTimeout(function() {
-                    $('#' + tabId + '-tab').find('.summernote-editor').summernote('focus');
+                    $('#' + tabId + '-tab').find('textarea').first().focus();
                 }, 100);
+            });
+
+            // Live preview update function
+            function updatePreview(textareaId) {
+                const textarea = $('#' + textareaId);
+                const previewContainer = $('#preview_' + textareaId + ' .preview-content');
+                let content = textarea.val();
+                
+                if (content.trim()) {
+                    // Handle line breaks and preserve formatting
+                    content = content.replace(/\n/g, '<br>');
+                    
+                    // Handle font spans properly
+                    content = content.replace(
+                        /<span style="font-family:\s*['"](.*?)['"]">(.*?)<\/span>/g,
+                        '<span style="font-family: $1">$2</span>'
+                    );
+                    
+                    previewContainer.html(content);
+                } else {
+                    previewContainer.attr('data-placeholder', '{{ __('Preview will appear here...') }}');
+                    previewContainer.html('');
+                }
+            }
+
+            // Enhanced Custom toolbar functionality
+            $('.toolbar-btn').on('click', function(e) {
+                e.preventDefault();
+                
+                const action = $(this).data('action');
+                const target = $(this).closest('.custom-toolbar').data('target');
+                const textarea = $('#' + target)[0];
+                
+                if (action === 'font') {
+                    // Font change functionality
+                    const fontFamily = $(this).data('font');
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const selectedText = textarea.value.substring(start, end);
+                    
+                    if (selectedText === '') {
+                        alert('{{ __('Please select text first to change font') }}');
+                        return;
+                    }
+                    
+                    // Create font span with inline style
+                    let wrappedText = '<span style="font-family: \'' + fontFamily + '\'">' + selectedText + '</span>';
+                    
+                    // Replace selected text with wrapped text
+                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                    textarea.value = newValue;
+                    
+                    // Set cursor position after the wrapped text
+                    const newCursorPos = start + wrappedText.length;
+                    textarea.setSelectionRange(newCursorPos, newCursorPos);
+                    textarea.focus();
+                    
+                    // Update preview immediately
+                    updatePreview(target);
+                    
+                    // Visual feedback
+                    $(this).addClass('active');
+                    setTimeout(() => {
+                        $(this).removeClass('active');
+                    }, 300);
+                    
+                } else if (['alignLeft', 'alignCenter', 'alignRight'].includes(action)) {
+                    // Alignment functionality
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const selectedText = textarea.value.substring(start, end);
+                    
+                    if (selectedText === '') {
+                        alert('{{ __('Please select text first to align') }}');
+                        return;
+                    }
+                    
+                    let alignValue = 'left';
+                    if (action === 'alignCenter') alignValue = 'center';
+                    else if (action === 'alignRight') alignValue = 'right';
+                    
+                    let wrappedText = '<div style="text-align: ' + alignValue + '">' + selectedText + '</div>';
+                    
+                    // Replace selected text with wrapped text
+                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                    textarea.value = newValue;
+                    
+                    // Set cursor position after the wrapped text
+                    const newCursorPos = start + wrappedText.length;
+                    textarea.setSelectionRange(newCursorPos, newCursorPos);
+                    textarea.focus();
+                    
+                    // Update preview immediately
+                    updatePreview(target);
+                    
+                    // Visual feedback
+                    $(this).addClass('active');
+                    setTimeout(() => {
+                        $(this).removeClass('active');
+                    }, 300);
+                    
+                } else {
+                    // Existing formatting functionality (bold, abbr)
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const selectedText = textarea.value.substring(start, end);
+                    
+                    if (selectedText === '') {
+                        alert('{{ __('Please select text first') }}');
+                        return;
+                    }
+                    
+                    let wrappedText = '';
+                    
+                    if (action === 'bold') {
+                        wrappedText = '<strong>' + selectedText + '</strong>';
+                    } else if (action === 'abbr') {
+                        const title = prompt('{{ __('Enter abbreviation meaning:') }}');
+                        if (title) {
+                            wrappedText = '<abbr title="' + title + '">' + selectedText + '</abbr>';
+                        } else {
+                            return;
+                        }
+                    }
+                    
+                    // Replace selected text with wrapped text
+                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                    textarea.value = newValue;
+                    
+                    // Set cursor position after the wrapped text
+                    const newCursorPos = start + wrappedText.length;
+                    textarea.setSelectionRange(newCursorPos, newCursorPos);
+                    textarea.focus();
+                    
+                    // Update preview immediately
+                    updatePreview(target);
+                    
+                    // Visual feedback
+                    $(this).addClass('active');
+                    setTimeout(() => {
+                        $(this).removeClass('active');
+                    }, 200);
+                }
+            });
+
+            // Live preview on typing (with debouncing for performance)
+            let previewTimeout;
+            $('textarea.custom-editor').on('input keyup paste', function() {
+                const textareaId = $(this).attr('id');
+                
+                // Clear previous timeout
+                clearTimeout(previewTimeout);
+                
+                // Update preview after a short delay to improve performance
+                previewTimeout = setTimeout(function() {
+                    updatePreview(textareaId);
+                }, 100);
+            });
+
+            // Initial preview update with existing content
+            $('textarea.custom-editor').each(function() {
+                const textareaId = $(this).attr('id');
+                updatePreview(textareaId);
             });
 
             // Enhanced form validation
             $('.vachanamrut-form').on('submit', function(e) {
-                // Update Summernote content to textareas before validation
-                $('.summernote-editor').each(function() {
-                    const content = $(this).summernote('code');
-                    $(this).val(content);
-                });
-
                 if (!validateForm()) {
                     e.preventDefault();
-                    toastr.error('{{ __('Please fill in all required fields.') }}', 'Validation Error');
+                    if (typeof toastr !== 'undefined') {
+                        toastr.error('{{ __('Please fill in all required fields.') }}', 'Validation Error');
+                    } else {
+                        alert('{{ __('Please fill in all required fields.') }}');
+                    }
                     return false;
                 }
             });
@@ -1135,19 +1117,7 @@
                 }
             });
 
-            // Summernote validation
-            $('.summernote-editor[required]').on('summernote.change', function() {
-                const content = $(this).summernote('code');
-                const textContent = $('<div>').html(content).text().trim();
-
-                if (textContent.length > 0) {
-                    $(this).closest('.note-editor').removeClass('is-invalid');
-                } else {
-                    $(this).closest('.note-editor').addClass('is-invalid');
-                }
-            });
-
-            // Focus on Gujarati title by default (since Gujarati tab is active)
+            // Focus on Gujarati title by default
             setTimeout(function() {
                 $('#title_gu').focus();
             }, 100);
@@ -1157,26 +1127,12 @@
         function validateForm() {
             let isValid = true;
 
-            // Validate regular required fields
-            $('.form-control[required]').not('.summernote-editor').each(function() {
+            $('.form-control[required]').each(function() {
                 if (!$(this).val().trim()) {
                     $(this).addClass('is-invalid');
                     isValid = false;
                 } else {
                     $(this).removeClass('is-invalid');
-                }
-            });
-
-            // Validate Summernote editors
-            $('.summernote-editor[required]').each(function() {
-                const content = $(this).summernote('code');
-                const textContent = $('<div>').html(content).text().trim();
-
-                if (textContent.length === 0) {
-                    $(this).closest('.note-editor').addClass('is-invalid');
-                    isValid = false;
-                } else {
-                    $(this).closest('.note-editor').removeClass('is-invalid');
                 }
             });
 
