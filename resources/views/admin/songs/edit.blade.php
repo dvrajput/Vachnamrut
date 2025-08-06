@@ -93,7 +93,7 @@
 
                             <div class="form-group">
                                 <label for="lyrics_gu" class="form-label required">{{ __('Gujarati Content') }}</label>
-                                
+
                                 <!-- Custom Toolbar -->
                                 <div class="custom-toolbar" data-target="lyrics_gu">
                                     <div class="toolbar-group">
@@ -108,48 +108,53 @@
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Align:</span>
-                                        <button type="button" class="toolbar-btn" data-action="alignLeft" title="Align Left">
+                                        <button type="button" class="toolbar-btn" data-action="alignLeft"
+                                            title="Align Left">
                                             <i class="fas fa-align-left"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignCenter" title="Align Center">
+                                        <button type="button" class="toolbar-btn" data-action="alignCenter"
+                                            title="Align Center">
                                             <i class="fas fa-align-center"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignRight" title="Align Right">
+                                        <button type="button" class="toolbar-btn" data-action="alignRight"
+                                            title="Align Right">
                                             <i class="fas fa-align-right"></i>
                                         </button>
                                     </div>
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Font:</span>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Noto Sans Gujarati" title="Default Gujarati">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Noto Sans Gujarati" title="Default Gujarati">
                                             <i class="fas fa-font"></i> Default
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Gopika" title="Gopika Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Gopika" title="Gopika Font">
                                             <i class="fas fa-font"></i> Gopika
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Sanskrit" title="Sanskrit Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Sanskrit" title="Sanskrit Font">
                                             <i class="fas fa-font"></i> Sanskrit
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Split Editor and Preview Layout -->
                                 <div class="editor-preview-container">
                                     <div class="editor-section">
                                         <div class="section-title">{{ __('Editor') }}</div>
-                                        <textarea class="form-control gujarati-text content-textarea custom-editor @error('lyrics_gu') is-invalid @enderror" 
-                                            id="lyrics_gu" name="lyrics_gu"
-                                            placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}" required>{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
+                                        <textarea class="form-control gujarati-text content-textarea custom-editor @error('lyrics_gu') is-invalid @enderror"
+                                            id="lyrics_gu" name="lyrics_gu" placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}" required>{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
                                     </div>
-                                    
+
                                     <div class="preview-section">
-                                        <div class="section-title">{{ __('Live Preview') }}</div>
+                                        <div class="section-title">{{ __('Preview') }}</div>
                                         <div class="live-preview gujarati-text" id="preview_lyrics_gu">
                                             <div class="preview-content">{{ __('Preview will appear here...') }}</div>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 @error('lyrics_gu')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -174,7 +179,7 @@
 
                             <div class="form-group">
                                 <label for="lyrics_en" class="form-label">{{ __('English Content') }}</label>
-                                
+
                                 <!-- Custom Toolbar -->
                                 <div class="custom-toolbar" data-target="lyrics_en">
                                     <div class="toolbar-group">
@@ -182,47 +187,53 @@
                                         <button type="button" class="toolbar-btn" data-action="bold" title="Bold">
                                             <i class="fas fa-bold"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="abbr" title="Abbreviation">
+                                        <button type="button" class="toolbar-btn" data-action="abbr"
+                                            title="Abbreviation">
                                             <i class="fas fa-text-width"></i>
                                         </button>
                                     </div>
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Align:</span>
-                                        <button type="button" class="toolbar-btn" data-action="alignLeft" title="Align Left">
+                                        <button type="button" class="toolbar-btn" data-action="alignLeft"
+                                            title="Align Left">
                                             <i class="fas fa-align-left"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignCenter" title="Align Center">
+                                        <button type="button" class="toolbar-btn" data-action="alignCenter"
+                                            title="Align Center">
                                             <i class="fas fa-align-center"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignRight" title="Align Right">
+                                        <button type="button" class="toolbar-btn" data-action="alignRight"
+                                            title="Align Right">
                                             <i class="fas fa-align-right"></i>
                                         </button>
                                     </div>
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Font:</span>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Arial" title="Default English">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Arial" title="Default English">
                                             <i class="fas fa-font"></i> Default
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Gopika" title="Gopika Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Gopika" title="Gopika Font">
                                             <i class="fas fa-font"></i> Gopika
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Sanskrit" title="Sanskrit Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Sanskrit" title="Sanskrit Font">
                                             <i class="fas fa-font"></i> Sanskrit
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Split Editor and Preview Layout -->
                                 <div class="editor-preview-container">
                                     <div class="editor-section">
                                         <div class="section-title">{{ __('Editor') }}</div>
-                                        <textarea class="form-control content-textarea custom-editor @error('lyrics_en') is-invalid @enderror" 
-                                            id="lyrics_en" name="lyrics_en" 
-                                            placeholder="{{ __('English translation (optional)') }}">{{ old('lyrics_en', $song->lyrics_en) }}</textarea>
+                                        <textarea class="form-control content-textarea custom-editor @error('lyrics_en') is-invalid @enderror" id="lyrics_en"
+                                            name="lyrics_en" placeholder="{{ __('English translation (optional)') }}">{{ old('lyrics_en', $song->lyrics_en) }}</textarea>
                                     </div>
-                                    
+
                                     <div class="preview-section">
                                         <div class="section-title">{{ __('Live Preview') }}</div>
                                         <div class="live-preview" id="preview_lyrics_en">
@@ -230,7 +241,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 @error('lyrics_en')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -240,7 +251,7 @@
                 </div>
 
                 <!-- Categories Section -->
-                <div class="form-section">
+                {{-- <div class="form-section">
                     <div class="section-header">
                         <h4><i class="fas fa-tags"></i> {{ __('Categories') }}</h4>
                     </div>
@@ -259,7 +270,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Action Buttons -->
                 <div class="form-actions">
@@ -286,7 +297,7 @@
         /* Define font faces for local Gopika and Sanskrit fonts */
         @font-face {
             font-family: 'Gopika';
-            src: url('{{ asset("fonts/Gopika.ttf") }}') format('truetype');
+            src: url('{{ asset('fonts/Gopika.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -294,7 +305,7 @@
 
         @font-face {
             font-family: 'Sanskrit';
-            src: url('{{ asset("fonts/Sanskrit.ttf") }}') format('truetype');
+            src: url('{{ asset('fonts/Sanskrit.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -568,7 +579,7 @@
             color: var(--admin-text-primary);
             line-height: 1.6;
             min-height: 270px;
-            font-size: 0.9rem;
+            font-size: 1.5rem;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
@@ -580,19 +591,23 @@
         }
 
         /* Font classes for content */
-        .font-gopika, .preview-content .font-gopika {
+        .font-gopika,
+        .preview-content .font-gopika {
             font-family: 'Gopika', 'Noto Sans Gujarati', sans-serif !important;
         }
 
-        .font-sanskrit, .preview-content .font-sanskrit {
+        .font-sanskrit,
+        .preview-content .font-sanskrit {
             font-family: 'Sanskrit', 'Noto Sans Devanagari', sans-serif !important;
         }
 
-        .font-gujarati, .preview-content .font-gujarati {
+        .font-gujarati,
+        .preview-content .font-gujarati {
             font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif !important;
         }
 
-        .font-english, .preview-content .font-english {
+        .font-english,
+        .preview-content .font-english {
             font-family: 'Arial', 'Helvetica', sans-serif !important;
         }
 
@@ -628,6 +643,10 @@
         /* Handle line breaks and spaces in preview */
         .preview-content {
             white-space: pre-wrap;
+        }
+
+        #lyrics_gu {
+            font-size: 1.5rem;
         }
 
         /* BIGGER CONTENT TEXTAREAS */
@@ -795,7 +814,7 @@
             .editor-preview-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .vachanamrut-admin-container {
                 max-width: 100%;
                 padding: 10px;
@@ -937,17 +956,17 @@
                 const textarea = $('#' + textareaId);
                 const previewContainer = $('#preview_' + textareaId + ' .preview-content');
                 let content = textarea.val();
-                
+
                 if (content.trim()) {
                     // Handle line breaks and preserve formatting
                     content = content.replace(/\n/g, '<br>');
-                    
+
                     // Handle font spans properly
                     content = content.replace(
                         /<span style="font-family:\s*['"](.*?)['"]">(.*?)<\/span>/g,
                         '<span style="font-family: $1">$2</span>'
                     );
-                    
+
                     previewContainer.html(content);
                 } else {
                     previewContainer.attr('data-placeholder', '{{ __('Preview will appear here...') }}');
@@ -958,92 +977,96 @@
             // Enhanced Custom toolbar functionality
             $('.toolbar-btn').on('click', function(e) {
                 e.preventDefault();
-                
+
                 const action = $(this).data('action');
                 const target = $(this).closest('.custom-toolbar').data('target');
                 const textarea = $('#' + target)[0];
-                
+
                 if (action === 'font') {
                     // Font change functionality
                     const fontFamily = $(this).data('font');
                     const start = textarea.selectionStart;
                     const end = textarea.selectionEnd;
                     const selectedText = textarea.value.substring(start, end);
-                    
+
                     if (selectedText === '') {
                         alert('{{ __('Please select text first to change font') }}');
                         return;
                     }
-                    
+
                     // Create font span with inline style
-                    let wrappedText = '<span style="font-family: \'' + fontFamily + '\'">' + selectedText + '</span>';
-                    
+                    let wrappedText = '<span style="font-family: \'' + fontFamily + '\'">' + selectedText +
+                        '</span>';
+
                     // Replace selected text with wrapped text
-                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value
+                        .substring(end);
                     textarea.value = newValue;
-                    
+
                     // Set cursor position after the wrapped text
                     const newCursorPos = start + wrappedText.length;
                     textarea.setSelectionRange(newCursorPos, newCursorPos);
                     textarea.focus();
-                    
+
                     // Update preview immediately
                     updatePreview(target);
-                    
+
                     // Visual feedback
                     $(this).addClass('active');
                     setTimeout(() => {
                         $(this).removeClass('active');
                     }, 300);
-                    
+
                 } else if (['alignLeft', 'alignCenter', 'alignRight'].includes(action)) {
                     // Alignment functionality
                     const start = textarea.selectionStart;
                     const end = textarea.selectionEnd;
                     const selectedText = textarea.value.substring(start, end);
-                    
+
                     if (selectedText === '') {
                         alert('{{ __('Please select text first to align') }}');
                         return;
                     }
-                    
+
                     let alignValue = 'left';
                     if (action === 'alignCenter') alignValue = 'center';
                     else if (action === 'alignRight') alignValue = 'right';
-                    
-                    let wrappedText = '<div style="text-align: ' + alignValue + '">' + selectedText + '</div>';
-                    
+
+                    let wrappedText = '<div style="text-align: ' + alignValue + '">' + selectedText +
+                        '</div>';
+
                     // Replace selected text with wrapped text
-                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value
+                        .substring(end);
                     textarea.value = newValue;
-                    
+
                     // Set cursor position after the wrapped text
                     const newCursorPos = start + wrappedText.length;
                     textarea.setSelectionRange(newCursorPos, newCursorPos);
                     textarea.focus();
-                    
+
                     // Update preview immediately
                     updatePreview(target);
-                    
+
                     // Visual feedback
                     $(this).addClass('active');
                     setTimeout(() => {
                         $(this).removeClass('active');
                     }, 300);
-                    
+
                 } else {
                     // Existing formatting functionality (bold, abbr)
                     const start = textarea.selectionStart;
                     const end = textarea.selectionEnd;
                     const selectedText = textarea.value.substring(start, end);
-                    
+
                     if (selectedText === '') {
                         alert('{{ __('Please select text first') }}');
                         return;
                     }
-                    
+
                     let wrappedText = '';
-                    
+
                     if (action === 'bold') {
                         wrappedText = '<strong>' + selectedText + '</strong>';
                     } else if (action === 'abbr') {
@@ -1054,19 +1077,20 @@
                             return;
                         }
                     }
-                    
+
                     // Replace selected text with wrapped text
-                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
+                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value
+                        .substring(end);
                     textarea.value = newValue;
-                    
+
                     // Set cursor position after the wrapped text
                     const newCursorPos = start + wrappedText.length;
                     textarea.setSelectionRange(newCursorPos, newCursorPos);
                     textarea.focus();
-                    
+
                     // Update preview immediately
                     updatePreview(target);
-                    
+
                     // Visual feedback
                     $(this).addClass('active');
                     setTimeout(() => {
@@ -1079,10 +1103,10 @@
             let previewTimeout;
             $('textarea.custom-editor').on('input keyup paste', function() {
                 const textareaId = $(this).attr('id');
-                
+
                 // Clear previous timeout
                 clearTimeout(previewTimeout);
-                
+
                 // Update preview after a short delay to improve performance
                 previewTimeout = setTimeout(function() {
                     updatePreview(textareaId);
@@ -1100,7 +1124,8 @@
                 if (!validateForm()) {
                     e.preventDefault();
                     if (typeof toastr !== 'undefined') {
-                        toastr.error('{{ __('Please fill in all required fields.') }}', 'Validation Error');
+                        toastr.error('{{ __('Please fill in all required fields.') }}',
+                        'Validation Error');
                     } else {
                         alert('{{ __('Please fill in all required fields.') }}');
                     }

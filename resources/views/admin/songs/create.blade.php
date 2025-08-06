@@ -578,6 +578,7 @@
         /* Handle line breaks and spaces in preview */
         .preview-content {
             white-space: pre-wrap;
+            font-size: 1.5rem;
         }
 
         /* BIGGER CONTENT TEXTAREAS */
@@ -586,6 +587,10 @@
             resize: vertical;
             line-height: 1.6;
             font-family: inherit;
+        }
+
+        #lyrics_gu{
+            font-size: 1.5rem;
         }
 
         .gujarati-text {
