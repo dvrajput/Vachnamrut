@@ -12,32 +12,66 @@ use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('user.contact.create');
     }
 
     public function create(Request $request)
     {
-        if ($request->ajax()) {
-            $search = $request->get('q', ''); // Get the search query if provided
-            $locale = app()->getLocale(); // Get current locale
-            
-            $query = Song::query()->select('song_code', 'title_en', 'title_gu');
-            
-            if (!empty($search)) {
-                $keyword = '%' . $search . '%';
-                $query->where('title_en', 'LIKE', $keyword)
-                    ->orWhere('title_gu', 'LIKE', $keyword)
-                    ->orWhere('song_code', 'LIKE', $keyword); // Add search by song_code
+        if ($request->ajax() || $request->wantsJson()) {
+            try {
+                $search = $request->get('q', '');
+                $locale = app()->getLocale();
+
+                // Build the query
+                $query = Song::query()->select(['song_code', 'title_en', 'title_gu']);
+
+                // Apply search if provided
+                if (!empty(trim($search))) {
+                    $keyword = '%' . trim($search) . '%';
+                    $query->where(function ($q) use ($keyword) {
+                        $q->where('title_en', 'LIKE', $keyword)
+                            ->orWhere('title_gu', 'LIKE', $keyword)
+                            ->orWhere('song_code', 'LIKE', $keyword);
+                    });
+                }
+
+                // Get results with proper ordering
+                $songs = $query->orderBy('title_' . $locale, 'asc')
+                    ->limit(20) // Increased limit for better UX
+                    ->get();
+
+                // Transform data for Select2
+                $results = $songs->map(function ($song) use ($locale) {
+                    $title = $locale === 'gu' && $song->title_gu
+                        ? $song->title_gu
+                        : $song->title_en;
+
+                    return [
+                        'id' => $song->song_code,
+                        'text' => $title ?: $song->song_code,
+                        'title_en' => $song->title_en,
+                        'title_gu' => $song->title_gu
+                    ];
+                });
+
+                return response()->json([
+                    'results' => $results,
+                    'pagination' => [
+                        'more' => false // You can implement pagination later if needed
+                    ],
+                    'success' => true
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'results' => [],
+                    'error' => config('app.debug') ? $e->getMessage() : 'Error loading songs',
+                    'success' => false
+                ], 500);
             }
-            
-            $songs = $query->orderBy('title_' . $locale, 'asc')
-                ->limit(10)
-                ->get();
-            
-            return response()->json($songs);
         }
-        
+
         return view('user.contact.create');
     }
 
@@ -59,24 +93,24 @@ class ContactController extends Controller
         ]);
 
         $url = "https://api.telegram.org/bot8033660943:AAEyvbadTsoO_NCDwgcDfcW3jgm2h9bM9rE/sendMessage";
-// dd($url);
+        // dd($url);
 
-$kirtan=Song::where('song_code',$request->song_code)->first();
-// Check if song_code exists and get kirtan name
-$name = "No kirtan selected";
-if ($request->song_code) {
-    $kirtan = Song::where('song_code', $request->song_code)->first();
-    if ($kirtan) {
-        $name = $kirtan->title_gu ?? $kirtan->title_en;
-    }
-}
-        $v= Http::post($url, [
+        $kirtan = Song::where('song_code', $request->song_code)->first();
+        // Check if song_code exists and get kirtan name
+        $name = "No kirtan selected";
+        if ($request->song_code) {
+            $kirtan = Song::where('song_code', $request->song_code)->first();
+            if ($kirtan) {
+                $name = $kirtan->title_gu ?? $kirtan->title_en;
+            }
+        }
+        $v = Http::post($url, [
             'chat_id' => -1002252561130,
-            'text' => "kirtan id :{$request->song_code}\n".
-            "kirtan name: {$name}\n".
-            "name: {$request->name}\n".
-            "email: {$request->email}\n".
-            "message: {$request->message}",
+            'text' => "kirtan id :{$request->song_code}\n" .
+                "kirtan name: {$name}\n" .
+                "name: {$request->name}\n" .
+                "email: {$request->email}\n" .
+                "message: {$request->message}",
             'parse_mode' => 'HTML'
         ]);
         Log::info($v->body());
@@ -86,7 +120,7 @@ if ($request->song_code) {
 
     public function edit(Request $request, $song_code)
     {
-        $song = Song::select('id','song_code','title_en','lyrics_en','title_gu','lyrics_gu')->where('song_code', $song_code)->first();
+        $song = Song::select('id', 'song_code', 'title_en', 'lyrics_en', 'title_gu', 'lyrics_gu')->where('song_code', $song_code)->first();
         return view('user.contact.edit', compact('song'));
     }
 }
