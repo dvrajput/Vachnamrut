@@ -29,34 +29,82 @@ class SongsController extends Controller
     // }
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Song::orderBy('id', 'asc'); // Customize your query as needed
+        if ($request->ajax() || $request->wantsJson()) {
+            try {
+                $query = Song::query();
 
-            return DataTables::of($data)
-                // ->addColumn('action', function ($row) {
-                //     $editButton = '<a href="' . route('admin.songs.edit', $row->id) . '" class="btn btn-warning btn-sm ml-2">Edit</a>';
-                //     $viewButton = '<a href="' . route('admin.songs.show', $row->id) . '" class="btn btn-info btn-sm">View</a>';
+                // Handle DataTables parameters
+                $start = $request->get('start', 0);
+                $length = $request->get('length', 25);
+                $searchValue = $request->get('search')['value'] ?? '';
 
-                //     // Delete button with form
-                //     $deleteButton = '
-                //     <form action="' . route('admin.songs.destroy', $row->id) . '" method="POST" style="display:inline-block;" class="delete-form">
-                //         ' . csrf_field() . '
-                //         ' . method_field('DELETE') . '
-                //         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this song?\')">Delete</button>
-                //     </form>
-                // ';
+                // Apply search if provided
+                if (!empty($searchValue)) {
+                    $query->where(function ($q) use ($searchValue) {
+                        $q->where('song_code', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('title_en', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('title_gu', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('lyrics_en', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('lyrics_gu', 'LIKE', "%{$searchValue}%");
+                    });
+                }
 
-                //     return $viewButton . $editButton . $deleteButton;
-                // })
-                ->make(true);
+                // Handle ordering
+                $orderColumn = $request->get('order')[0]['column'] ?? 0;
+                $orderDir = $request->get('order')[0]['dir'] ?? 'asc';
+                $columns = ['song_code', 'title_en', 'lyrics_en', 'title_gu', 'lyrics_gu', 'action'];
+
+                if (isset($columns[$orderColumn]) && $columns[$orderColumn] !== 'action') {
+                    $query->orderBy($columns[$orderColumn], $orderDir);
+                } else {
+                    $query->orderBy('id', 'asc');
+                }
+
+                // Get total records
+                $totalRecords = Song::count();
+                $filteredRecords = $query->count();
+
+                // Get paginated results
+                $songs = $query->skip($start)->take($length)->get();
+
+                // Transform data for DataTables
+                $data = $songs->map(function ($song) {
+                    return [
+                        'song_code' => $song->song_code,
+                        'title_en' => $song->title_en,
+                        'lyrics_en' => $song->lyrics_en,
+                        'title_gu' => $song->title_gu,
+                        'lyrics_gu' => $song->lyrics_gu,
+                        'action' => $song // Pass the whole object for action rendering
+                    ];
+                });
+
+                return response()->json([
+                    'draw' => intval($request->get('draw')),
+                    'recordsTotal' => $totalRecords,
+                    'recordsFiltered' => $filteredRecords,
+                    'data' => $data,
+                    'success' => true
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'draw' => intval($request->get('draw', 0)),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'data' => [],
+                    'error' => config('app.debug') ? $e->getMessage() : 'Error loading songs',
+                    'success' => false
+                ], 500);
+            }
         }
+
         $config = Configuration::where('key', 'song_delete')->first();
         $deleteBtn = $config->value ?? 0;
 
         $config = Configuration::where('key', 'song_create')->first();
         $createBtnShow = $config->value ?? 0;
 
-        return view('admin.songs.index', compact('deleteBtn','createBtnShow'));
+        return view('admin.songs.index', compact('deleteBtn', 'createBtnShow'));
     }
 
     /**
@@ -105,8 +153,8 @@ class SongsController extends Controller
         $song = Song::create([
             'song_code' => $request->song_code,
             'written_date' => $request->written_date, // Added written_date field
-            'title_en' => $request->title_en??'',
-            'lyrics_en' => $request->lyrics_en??'',
+            'title_en' => $request->title_en ?? '',
+            'lyrics_en' => $request->lyrics_en ?? '',
             'title_gu' => $request->title_gu,
             'lyrics_gu' => $request->lyrics_gu,
         ]);
@@ -176,8 +224,8 @@ class SongsController extends Controller
         // Update song details
         $song->update([
             'written_date' => $request->written_date, // Added written_date field
-            'title_en' => $request->title_en??"",
-            'lyrics_en' => $request->lyrics_en??"",
+            'title_en' => $request->title_en ?? "",
+            'lyrics_en' => $request->lyrics_en ?? "",
             'title_gu' => $request->title_gu,
             'lyrics_gu' => $request->lyrics_gu,
         ]);
