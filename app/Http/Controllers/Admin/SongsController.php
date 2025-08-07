@@ -121,7 +121,7 @@ class SongsController extends Controller
             }
         }
 
-        return redirect()->route('admin.songs.index')->with('success', 'Song added successfully!');
+        return redirect()->route('admin.songs.index')->with('success', 'Vachnamrut added successfully!');
     }
 
     /**
@@ -212,7 +212,7 @@ class SongsController extends Controller
             DB::table('song_sub_cate_rels')->where('song_code', $song->song_code)->delete();
         }
 
-        return redirect()->route('admin.songs.index')->with('success', 'Song updated successfully!');
+        return redirect()->route('admin.songs.index')->with('success', 'Vachnamrut updated successfully!');
     }
 
     /**
@@ -232,7 +232,7 @@ class SongsController extends Controller
         $song->delete();
 
         // Redirect with a success message
-        return redirect()->back()->with('success', 'Song deleted successfully');
+        return redirect()->back()->with('success', 'Vachnamrut deleted successfully');
     }
 
     public function changeLanguage($locale)

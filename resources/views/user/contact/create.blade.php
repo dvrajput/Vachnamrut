@@ -27,7 +27,7 @@
                         <div class="mb-3 kirtan-select">
                             <!-- <label for="song_code" class="form-label">{{ __('Kirtan') }}</label> -->
                             <select class="form-control select2" id="song_code" name="song_code"
-                                data-placeholder="{{ __('Select Kirtan (optional)') }}">
+                                data-placeholder="{{ __('Select Vachnamrut (optional)') }}">
                                 <!-- Songs will be loaded via AJAX -->
                             </select>
                             @error('song_code')

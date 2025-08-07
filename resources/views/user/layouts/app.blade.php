@@ -8,14 +8,14 @@
     <title>@yield('title', 'Default Title')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
-    <!-- Latest Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- Vendor CSS Files (Load First) -->
+    <link href="{{ asset('css/vendor/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/vendor/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vendor/datatables-buttons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vendor/toastr.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet"
@@ -127,7 +127,7 @@
         .font-size-popup {
             position: absolute;
             transform: translateY(-25px) translateX(-25px);
-            top: 150%;
+            top: 270%;
             background-color: var(--navbar-bg);
             padding: 8px;
             border-radius: 8px;
@@ -564,22 +564,20 @@
             <a class="navbar-brand title" href="{{ route('home') }}">
                 {{ __('Vachanamrut') }}
             </a>
+            
             <!-- In top mobile controls -->
             <div class="d-flex align-items-center d-lg-none">
                 <button id="themeToggle" class="nav-link me-2">
                     <i class="fa-solid fa-moon dark-icon"></i>
                     <i class="fa-solid fa-sun light-icon d-none"></i>
                 </button>
-                <!-- Language toggle for mobile -->
-                <div class="language-toggle-container me-2">
-                    <div class="language-toggle">
-                        <a href="{{ route('locale', 'en') }}"
-                            class="language-btn {{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                        <a href="{{ route('locale', 'gu') }}"
-                            class="language-btn {{ app()->getLocale() == 'gu' ? 'active' : '' }}">ગુજ</a>
-                    </div>
-                </div>
-                @if (request()->is('kirtans/*') || request()->is('vachanamruts/*'))
+                {{-- FIXED: Show font controls only when reading a specific Vachanamrut --}}
+                @php
+                    // Check if we're on a specific Vachanamrut reading page
+                    $isReadingVachanamrut = request()->routeIs('user.categories.aliasSongShow');
+                @endphp
+                
+                @if ($isReadingVachanamrut)
                     <div class="position-relative me-2">
                         <button id="fontSizeToggleMobile" class="nav-link">
                             <span class="translate-icon"><img src="{{ asset('font_size.svg') }}"
@@ -595,6 +593,8 @@
                         </div>
                     </div>
                 @endif
+                
+                
                 <!-- Replace the hamburger icon with vertical 3 dots -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -602,37 +602,30 @@
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
             </div>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     @php
                         $categories = DB::table('categories')->get();
                     @endphp
-
-
                 </ul>
+                
                 <!-- In navbar-nav (desktop controls) -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link{{ request()->is('contact*') ? ' active' : '' }}"
                             href="{{ route('user.contact.create') }}">{{ __('Contact') }}</a>
                     </li>
-                    <li class="nav-item d-none d-lg-block">
-                        <div class="language-toggle-container">
-                            <div class="language-toggle">
-                                <a href="{{ route('locale', 'en') }}"
-                                    class="language-btn {{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                                <a href="{{ route('locale', 'gu') }}"
-                                    class="language-btn {{ app()->getLocale() == 'gu' ? 'active' : '' }}">ગુજ</a>
-                            </div>
-                        </div>
-                    </li>
+                    
                     <li class="nav-item d-none d-lg-block">
                         <button id="themeToggle" class="nav-link">
                             <i class="fa-solid fa-moon dark-icon"></i>
                             <i class="fa-solid fa-sun light-icon d-none"></i>
                         </button>
                     </li>
-                    @if (request()->routeIs('vachanamruts.*'))
+                    
+                    {{-- FIXED: Show font controls only when reading a specific Vachanamrut --}}
+                    @if ($isReadingVachanamrut)
                         <li class="nav-item d-none d-lg-block position-relative">
                             <button id="fontSizeToggleDesktop" class="nav-link">
                                 <span class="translate-icon"><img src="{{ asset('font_size.svg') }}"
@@ -657,17 +650,17 @@
     @yield('content')
 
     <!-- Load jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{{ asset('js/vendor/jquery.min.js') }}"></script>
     <!-- Load Bootstrap and other scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <script src="{{ asset('js/vendor/popper.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/select2.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/datatables-buttons.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/jszip.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/buttons.html5.min.js') }}"></script>
     <!-- Load Toastr -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="{{ asset('js/vendor/toastr.min.js') }}"></script>
 
     <script>
         // Toastr Notifications
@@ -688,6 +681,7 @@
             @endif
         });
     </script>
+    
     <script>
         $(document).ready(function() {
             function isMobile() {
@@ -750,6 +744,7 @@
             });
         });
     </script>
+    
     <script>
         // Check for saved theme preference
         document.addEventListener('DOMContentLoaded', function() {

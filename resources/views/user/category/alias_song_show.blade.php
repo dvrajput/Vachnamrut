@@ -106,7 +106,6 @@
             }
         }
 
-
         [data-theme="dark"] {
             --text-color: #f8f9fa;
             --bg-color: #1a1a1a;
@@ -242,10 +241,10 @@
             line-height: 1.6;
             color: var(--text-color);
             text-align: justify;
-            font-weight: 400;
             margin: 0;
             padding: 0;
             white-space: pre-line;
+            letter-spacing: 0.01em;
         }
 
         .vachanamrut-text br {
@@ -262,7 +261,28 @@
         /* Control spacing after line breaks */
         .vachanamrut-text br+br {
             display: none;
-            /* Remove double line breaks */
+        }
+
+        /* Font styling preserved in vachanamrut text */
+        .vachanamrut-text .font-gopika,
+        .vachanamrut-text span[style*="Gopika"] {
+            font-family: 'Gopika';
+        }
+
+        /* ADDED: ssgd3 font styling in vachanamrut text */
+        .vachanamrut-text .font-ssgd3,
+        .vachanamrut-text span[style*="ssgd3"] {
+            font-family: 'ssgd3';
+        }
+
+        .vachanamrut-text .font-sanskrit,
+        .vachanamrut-text span[style*="Sanskrit"] {
+            font-family: 'Sanskrit';
+        }
+        
+        .abbr-modal-body .font-english,
+        .abbr-modal-body span[style*="Arial"] {
+            font-family: 'Arial', 'Helvetica', sans-serif !important;
         }
 
         /* FIXED: Abbreviation Styling - No underlines, no tooltips */
@@ -273,18 +293,16 @@
             text-decoration: none;
             transition: all 0.3s ease;
             border-bottom: none;
-            /* REMOVED: underline */
-            /* Title attribute will be removed by JavaScript to prevent tooltips */
         }
 
         .vachanamrut-text abbr:hover {
             color: var(--abbr-hover-color);
             text-shadow: 0 1px 2px var(--light-shadow);
-            /* REMOVED: border-bottom styling */
         }
 
         /* Bold text styling */
-        .vachanamrut-text b {
+        .vachanamrut-text b,
+        .vachanamrut-text strong {
             font-weight: 700;
         }
 
@@ -319,7 +337,6 @@
                 transform: translateY(-30px);
                 opacity: 0;
             }
-
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -335,11 +352,9 @@
             border-bottom: 2px solid var(--border-color);
         }
 
-        /* FIXED: Modal title size matches proportionally */
         .abbr-modal-title {
             color: var(--primary-color);
             font-size: 1.3rem;
-            /* Will be updated by JavaScript */
             font-weight: 700;
             margin: 0;
         }
@@ -347,7 +362,7 @@
         .abbr-close {
             color: var(--text-color);
             font-size: 20px;
-            font-weight: bold;
+            font-weight: normal;
             cursor: pointer;
             padding: 4px;
             border-radius: 50%;
@@ -364,16 +379,39 @@
             color: white;
         }
 
-        /* FIXED: Modal body text size matches Vachanamrut text */
+        /* ENHANCED: Modal body with font preservation */
         .abbr-modal-body {
             font-size: 1.2rem;
-            /* Will be updated by JavaScript to match current text size */
             line-height: 1.6;
-            /* Will be updated by JavaScript */
             color: var(--text-color);
         }
 
-        /* FIXED: Modal short form styling */
+        /* ENHANCED: Modal font preservation for all fonts including ssgd3 */
+        .abbr-modal-body .font-gopika,
+        .abbr-modal-body span[style*="Gopika"] {
+            font-family: 'Gopika';
+        }
+
+        .abbr-modal-body .font-ssgd3,
+        .abbr-modal-body span[style*="ssgd3"] {
+            font-family: 'ssgd3';
+        }
+
+        .abbr-modal-body .font-sanskrit,
+        .abbr-modal-body span[style*="Sanskrit"] {
+            font-family: 'Sanskrit';
+        }
+
+        .abbr-modal-body .font-english,
+        .abbr-modal-body span[style*="Arial"] {
+            font-family: 'Arial', 'Helvetica', sans-serif !important;
+        }
+
+        .abbr-modal-body strong,
+        .abbr-modal-body b {
+            font-weight: normal;
+        }
+
         .abbr-short-form {
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -383,7 +421,16 @@
             font-weight: 600;
             margin-right: 8px;
             font-size: 1.1rem;
-            /* Will be updated by JavaScript */
+        }
+
+        /* UPDATED: Default modal font changed to ssgd3 */
+        #modalShortForm {
+            font-family: 'Gopika';
+        }
+
+        #modalFullForm {
+            font-family: 'Gopika';
+            text-align: justify;
         }
 
         /* Report Button - Small and Centered */
@@ -439,12 +486,14 @@
             .vachanamrut-content {
                 padding: 1.2rem;
                 border-radius: 12px;
+                text-align: justify;
             }
 
             .vachanamrut-text {
                 font-size: 1rem;
                 line-height: 1.4;
-                text-align: left;
+                text-align: justify;
+                font-style: normal;
             }
 
             .vachanamrut-text p {
@@ -489,7 +538,6 @@
 
         /* Print Styles */
         @media print {
-
             .vachanamrut-actions,
             .nav-tab-btn {
                 display: none !important;
@@ -506,12 +554,24 @@
             }
         }
     </style>
+
     <style>
+        /* FONT DECLARATIONS */
         @font-face {
             font-family: 'Gopika';
             src: url('{{ asset('fonts/Gopika.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
+            font-display: swap;
+        }
+
+        /* ADDED: ssgd3 font declaration */
+        @font-face {
+            font-family: 'ssgd3';
+            src: url('{{ asset('fonts/ssgd3.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
 
         @font-face {
@@ -519,6 +579,7 @@
             src: url('{{ asset('fonts/Sanskrit.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
+            font-display: swap;
         }
     </style>
 @endsection
@@ -535,18 +596,16 @@
                     Date not specified
                 @endif
             </div>
-            <!-- <p class="vachanamrut-subtitle">{{ __('Vachanamrut') }}</p> -->
         </div>
-
-
-
 
         <!-- Main Content -->
         <div class="vachanamrut-content">
-            <div class="vachanamrut-text" id="vachanamrutText" style="font-family: 'Gopika', 'Sanskrit'; font-size: 14px;">
+            <!-- UPDATED: Added ssgd3 to default font-family -->
+            <div class="vachanamrut-text" id="vachanamrutText" style="font-family: 'ssgd3', 'Gopika', 'Sanskrit'; font-size: 14px;">
                 {!! $song->{'lyrics_' . app()->getLocale()} !!}
             </div>
         </div>
+
         <!-- Previous/Next Navigation -->
         @if (isset($songsInPlaylists) && $songsInPlaylists->count() > 1)
             @php
@@ -605,16 +664,12 @@
             </div>
         @endif
 
-
         <!-- Report Button Only -->
         <div class="vachanamrut-actions">
             <a href="{{ route('user.contact.edit', $song->song_code) }}" class="suggestion-link">
                 <i class="fas fa-flag"></i> {{ __('suggestion') }}
             </a>
         </div>
-
-
-
     </div>
 
     <!-- Abbreviation Modal -->
@@ -639,8 +694,8 @@
 
             // Font Size Controls
             let currentFontSize = parseInt(localStorage.getItem('vachanamrutFontSize')) || 20;
-            const minFontSize = 16;
-            const maxFontSize = 28;
+            const minFontSize = 26;
+            const maxFontSize = 36;
             const stepSize = 2;
 
             // Apply saved font size
@@ -687,7 +742,7 @@
                 if (currentFontSize < maxFontSize) {
                     currentFontSize += stepSize;
                     applyFontSize();
-                    updateModalFontSize(); // FIXED: Update modal when font changes
+                    updateModalFontSize();
                     saveFontSize();
                 }
             };
@@ -696,7 +751,7 @@
                 if (currentFontSize > minFontSize) {
                     currentFontSize -= stepSize;
                     applyFontSize();
-                    updateModalFontSize(); // FIXED: Update modal when font changes
+                    updateModalFontSize();
                     saveFontSize();
                 }
             };
@@ -704,37 +759,48 @@
             window.resetFontSize = function() {
                 currentFontSize = 20;
                 applyFontSize();
-                updateModalFontSize(); // FIXED: Update modal when font changes
+                updateModalFontSize();
                 saveFontSize();
             };
 
-            // FIXED: Abbreviation Modal Functionality
+            // ENHANCED: Abbreviation Modal Functionality with Font Preservation
             const abbrModal = document.getElementById('abbrModal');
             const modalShortForm = document.getElementById('modalShortForm');
             const modalFullForm = document.getElementById('modalFullForm');
             const closeModal = document.querySelector('.abbr-close');
 
-            // FIXED: Handle abbreviation clicks and remove hover tooltips
-            document.querySelectorAll('.vachanamrut-text abbr').forEach(abbr => {
-                // Store the title content and remove the title attribute to prevent browser tooltip
-                const explanation = abbr.getAttribute('title');
-                abbr.removeAttribute('title'); // FIXED: Remove title to prevent hover tooltip
-                abbr.dataset.explanation = explanation; // Store in data attribute instead
+            // ENHANCED: Handle abbreviation clicks with font preservation
+            function setupAbbreviationHandlers() {
+                document.querySelectorAll('.vachanamrut-text abbr').forEach(abbr => {
+                    // Get the original HTML content of the abbreviation (with formatting)
+                    const originalHTML = abbr.innerHTML;
+                    
+                    // Store both the original formatted content and explanation
+                    const explanation = abbr.getAttribute('title');
+                    abbr.removeAttribute('title'); // Remove title to prevent browser tooltip
+                    abbr.dataset.explanation = explanation;
+                    abbr.dataset.originalHtml = originalHTML;
 
-                abbr.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const shortForm = this.textContent;
-                    const fullForm = this.dataset.explanation;
+                    abbr.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const formattedShortForm = this.dataset.originalHtml; // Get formatted HTML
+                        const fullForm = this.dataset.explanation;
 
-                    if (fullForm) {
-                        modalShortForm.textContent = shortForm;
-                        modalFullForm.textContent = fullForm;
-                        updateModalFontSize(); // FIXED: Update modal font size before showing
-                        abbrModal.style.display = 'block';
-                        document.body.style.overflow = 'hidden';
-                    }
+                        if (fullForm) {
+                            // Set the formatted content (preserving fonts, bold, etc.)
+                            modalShortForm.innerHTML = formattedShortForm;
+                            modalFullForm.textContent = fullForm;
+                            
+                            updateModalFontSize(); // Update modal font size before showing
+                            abbrModal.style.display = 'block';
+                            document.body.style.overflow = 'hidden';
+                        }
+                    });
                 });
-            });
+            }
+
+            // Initialize abbreviation handlers
+            setupAbbreviationHandlers();
 
             // Close modal
             closeModal.addEventListener('click', function() {

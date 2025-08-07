@@ -56,8 +56,7 @@
                         @error('written_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        <small
-                            class="form-text text-muted">{{ __('Enter date in format: DD/MM/YYYY, Day (e.g., 17/09/1825, Saturday)') }}</small>
+                        <small class="form-text text-muted">{{ __('Enter date in format: DD/MM/YYYY, Day (e.g., 17/09/1825, Saturday)') }}</small>
                     </div>
                 </div>
 
@@ -98,9 +97,9 @@
                                 <div class="custom-toolbar" data-target="lyrics_gu">
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Format:</span>
-                                        <button type="button" class="toolbar-btn" data-action="bold" title="Bold">
+                                        {{-- <button type="button" class="toolbar-btn" data-action="bold" title="Bold">
                                             <i class="fas fa-bold"></i>
-                                        </button>
+                                        </button> --}}
                                         <button type="button" class="toolbar-btn" data-action="abbr" title="Abbreviation">
                                             <i class="fas fa-text-width"></i>
                                         </button>
@@ -133,26 +132,35 @@
                                             <i class="fas fa-font"></i> Gopika
                                         </button>
                                         <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="ssgd3" title="Sanskardham Font">
+                                            <i class="fas fa-font"></i> Sanskardham
+                                        </button>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
                                             data-font="Sanskrit" title="Sanskrit Font">
                                             <i class="fas fa-font"></i> Sanskrit
                                         </button>
                                     </div>
                                 </div>
 
-                                <!-- Split Editor and Preview Layout -->
-                                <div class="editor-preview-container">
-                                    <div class="editor-section">
-                                        <div class="section-title">{{ __('Editor') }}</div>
-                                        <textarea class="form-control gujarati-text content-textarea custom-editor @error('lyrics_gu') is-invalid @enderror"
-                                            id="lyrics_gu" name="lyrics_gu" placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}" required>{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
+                                <!-- Single Rich Text Editor with Live Preview -->
+                                <div class="single-editor-container">
+                                    <div class="section-title">
+                                        {{ __('Editor') }} <span class="live-indicator">● LIVE</span>
                                     </div>
-
-                                    <div class="preview-section">
-                                        <div class="section-title">{{ __('Preview') }}</div>
-                                        <div class="live-preview gujarati-text" id="preview_lyrics_gu">
-                                            <div class="preview-content">{{ __('Preview will appear here...') }}</div>
-                                        </div>
+                                    
+                                    <div class="rich-text-editor gujarati-text" 
+                                         id="rich_editor_lyrics_gu" 
+                                         contenteditable="true" 
+                                         data-target="lyrics_gu"
+                                         data-placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}">
                                     </div>
+                                    
+                                    <!-- Hidden textarea to maintain form functionality -->
+                                    <textarea class="form-control gujarati-text content-textarea custom-editor hidden-textarea @error('lyrics_gu') is-invalid @enderror"
+                                              id="lyrics_gu" 
+                                              name="lyrics_gu" 
+                                              required 
+                                              style="display: none;">{{ old('lyrics_gu', $song->lyrics_gu) }}</textarea>
                                 </div>
 
                                 @error('lyrics_gu')
@@ -160,7 +168,7 @@
                                 @enderror
                                 <small class="form-text text-muted">
                                     <i class="fas fa-info-circle"></i>
-                                    {{ __('Use the toolbar buttons to format your text. Select text first, then click formatting, alignment, or font buttons. Preview updates automatically.') }}
+                                    {{ __('Use the toolbar buttons to format your text. Select text first, then click formatting buttons. Live preview shows as you type.') }}
                                 </small>
                             </div>
                         </div>
@@ -220,26 +228,34 @@
                                             <i class="fas fa-font"></i> Gopika
                                         </button>
                                         <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="ssgd3" title="Sanskardham Font">
+                                            <i class="fas fa-font"></i> Sanskardham
+                                        </button>
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
                                             data-font="Sanskrit" title="Sanskrit Font">
                                             <i class="fas fa-font"></i> Sanskrit
                                         </button>
                                     </div>
                                 </div>
 
-                                <!-- Split Editor and Preview Layout -->
-                                <div class="editor-preview-container">
-                                    <div class="editor-section">
-                                        <div class="section-title">{{ __('Editor') }}</div>
-                                        <textarea class="form-control content-textarea custom-editor @error('lyrics_en') is-invalid @enderror" id="lyrics_en"
-                                            name="lyrics_en" placeholder="{{ __('English translation (optional)') }}">{{ old('lyrics_en', $song->lyrics_en) }}</textarea>
+                                <!-- Single Rich Text Editor with Live Preview -->
+                                <div class="single-editor-container">
+                                    <div class="section-title">
+                                        {{ __('Editor') }} <span class="live-indicator">● LIVE</span>
                                     </div>
-
-                                    <div class="preview-section">
-                                        <div class="section-title">{{ __('Live Preview') }}</div>
-                                        <div class="live-preview" id="preview_lyrics_en">
-                                            <div class="preview-content">{{ __('Preview will appear here...') }}</div>
-                                        </div>
+                                    
+                                    <div class="rich-text-editor" 
+                                         id="rich_editor_lyrics_en" 
+                                         contenteditable="true" 
+                                         data-target="lyrics_en"
+                                         data-placeholder="{{ __('English translation (optional)') }}">
                                     </div>
+                                    
+                                    <!-- Hidden textarea to maintain form functionality -->
+                                    <textarea class="form-control content-textarea custom-editor hidden-textarea @error('lyrics_en') is-invalid @enderror" 
+                                              id="lyrics_en"
+                                              name="lyrics_en" 
+                                              style="display: none;">{{ old('lyrics_en', $song->lyrics_en) }}</textarea>
                                 </div>
 
                                 @error('lyrics_en')
@@ -249,28 +265,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Categories Section -->
-                {{-- <div class="form-section">
-                    <div class="section-header">
-                        <h4><i class="fas fa-tags"></i> {{ __('Categories') }}</h4>
-                    </div>
-                    <div class="form-group">
-                        <label for="sub_category_code" class="form-label">{{ __('Sub Categories') }}</label>
-                        <select class="form-control select2" id="sub_category_code" name="sub_category_code[]"
-                            multiple="multiple" data-placeholder="{{ __('Select categories') }}">
-                            @foreach ($allSubCategories as $category)
-                                <option value="{{ $category->sub_category_code }}"
-                                    {{ $subCategories->contains('sub_category_code', $category->sub_category_code) ? 'selected' : '' }}>
-                                    {{ $category->sub_category_en }} ({{ $category->sub_category_gu }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('sub_category_code')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div> --}}
 
                 <!-- Action Buttons -->
                 <div class="form-actions">
@@ -286,6 +280,9 @@
             </form>
         </div>
     </div>
+
+    <!-- Custom Tooltip Container -->
+    <div id="custom-tooltip" class="custom-tooltip" style="display: none;"></div>
 @endsection
 
 @section('style')
@@ -294,10 +291,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@100;200;300;400;500;600;700;800;900&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-        /* Define font faces for local Gopika and Sanskrit fonts */
+        /* Define font faces for local fonts */
         @font-face {
             font-family: 'Gopika';
             src: url('{{ asset('fonts/Gopika.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* FIXED: Correct ssgd3 font declaration */
+        @font-face {
+            font-family: 'ssgd3';
+            src: url('{{ asset('fonts/ssgd3.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -521,25 +527,22 @@
             font-family: 'Gopika', 'Noto Sans Gujarati', sans-serif;
         }
 
+        /* FIXED: ssgd3 font button styling */
+        .font-btn[data-font="ssgd3"] {
+            font-family: 'ssgd3', 'Noto Sans Gujarati', sans-serif;
+        }
+
         .font-btn[data-font="Sanskrit"] {
             font-family: 'Sanskrit', 'Noto Sans Devanagari', sans-serif;
         }
 
-        /* Split Editor and Preview Layout */
-        .editor-preview-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        /* Single Editor Container */
+        .single-editor-container {
             border: 2px solid var(--admin-border-color);
             border-top: none;
             border-radius: 0 0 6px 6px;
             overflow: hidden;
-        }
-
-        .editor-section,
-        .preview-section {
-            display: flex;
-            flex-direction: column;
+            background-color: var(--admin-bg-secondary);
         }
 
         .section-title {
@@ -549,112 +552,147 @@
             font-size: 0.8rem;
             font-weight: 600;
             border-bottom: 1px solid var(--admin-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        /* Custom Editor Styles */
-        .custom-editor {
+        /* Rich Text Editor with Clean Live Preview */
+        .rich-text-editor {
             border: none !important;
             border-radius: 0 !important;
-            min-height: 300px !important;
-            resize: none;
-            line-height: 1.6;
-            font-family: inherit;
-            flex: 1;
-        }
-
-        .custom-editor:focus {
-            box-shadow: none !important;
-        }
-
-        /* Live Preview Styles */
-        .live-preview {
-            background-color: var(--admin-bg-secondary);
-            min-height: 300px;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .preview-content {
+            min-height: 400px !important;
             padding: 15px;
-            color: var(--admin-text-primary);
-            line-height: 1.6;
-            min-height: 270px;
             font-size: 1.5rem;
+            line-height: 1.6;
+            font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif;
+            background-color: var(--admin-bg-secondary);
+            color: var(--admin-text-primary);
+            overflow-y: auto;
             white-space: pre-wrap;
             word-wrap: break-word;
+            outline: none;
+            resize: none;
+            text-align: justify;
         }
 
-        .preview-content:empty::before {
+        .rich-text-editor:focus {
+            background-color: var(--admin-bg-secondary);
+            border: 2px solid var(--admin-primary) !important;
+            margin: -2px;
+        }
+
+        .rich-text-editor:empty::before {
             content: attr(data-placeholder);
             color: var(--admin-text-muted);
             font-style: italic;
+            pointer-events: none;
         }
 
-        /* Font classes for content */
-        .font-gopika,
-        .preview-content .font-gopika {
-            font-family: 'Gopika', 'Noto Sans Gujarati', sans-serif !important;
-        }
-
-        .font-sanskrit,
-        .preview-content .font-sanskrit {
-            font-family: 'Sanskrit', 'Noto Sans Devanagari', sans-serif !important;
-        }
-
-        .font-gujarati,
-        .preview-content .font-gujarati {
-            font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif !important;
-        }
-
-        .font-english,
-        .preview-content .font-english {
-            font-family: 'Arial', 'Helvetica', sans-serif !important;
-        }
-
-        /* Preview HTML rendering */
-        .preview-content strong {
+        /* Clean formatting styles - NO COLORS, just subtle differences */
+        .rich-text-editor strong {
             font-weight: bold;
         }
 
-        .preview-content abbr {
+        .rich-text-editor abbr {
             text-decoration: underline dotted;
             cursor: help;
-            border-bottom: 1px dotted var(--admin-text-secondary);
+            border-bottom: 1px dotted var(--admin-text-muted);
         }
 
-        .preview-content abbr:hover {
-            background-color: var(--admin-primary-bg);
-            color: var(--admin-primary);
+        .rich-text-editor abbr:hover {
+            opacity: 0.8;
         }
 
-        /* Alignment styles for preview */
-        .preview-content div[style*="text-align: left"] {
-            text-align: left !important;
+        /* Clean font styling - NO COLORS, just font changes */
+        .rich-text-editor .font-gopika,
+        .rich-text-editor span[style*="Gopika"] {
+            font-family: 'Gopika', 'Noto Sans Gujarati', sans-serif !important;
         }
 
-        .preview-content div[style*="text-align: center"] {
+        /* FIXED: ssgd3 font styling in rich editor */
+        .rich-text-editor .font-ssgd3,
+        .rich-text-editor span[style*="ssgd3"] {
+            font-family: 'ssgd3', 'Noto Sans Gujarati', sans-serif !important;
+        }
+
+        .rich-text-editor .font-sanskrit,
+        .rich-text-editor span[style*="Sanskrit"] {
+            font-family: 'Sanskrit', 'Noto Sans Devanagari', sans-serif !important;
+        }
+
+        .rich-text-editor .font-gujarati,
+        .rich-text-editor span[style*="Noto Sans Gujarati"] {
+            font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif !important;
+        }
+
+        .rich-text-editor .font-english,
+        .rich-text-editor span[style*="Arial"] {
+            font-family: 'Arial', 'Helvetica', sans-serif !important;
+        }
+
+        /* Clean alignment styling - NO COLORS, just alignment */
+        .rich-text-editor div[style*="text-align: center"] {
             text-align: center !important;
         }
 
-        .preview-content div[style*="text-align: right"] {
+        .rich-text-editor div[style*="text-align: right"] {
             text-align: right !important;
         }
 
-        /* Handle line breaks and spaces in preview */
-        .preview-content {
-            white-space: pre-wrap;
+        .rich-text-editor div[style*="text-align: left"] {
+            text-align: left !important;
         }
 
-        #lyrics_gu {
-            font-size: 1.5rem;
+        /* Simple live indicator - minimal */
+        .live-indicator {
+            color: var(--admin-text-muted);
+            font-size: 0.7rem;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        /* BIGGER CONTENT TEXTAREAS */
-        .content-textarea {
-            min-height: 300px !important;
-            resize: vertical;
-            line-height: 1.6;
-            font-family: inherit;
+        .live-indicator::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: var(--admin-text-muted);
+            border-radius: 50%;
+        }
+
+        /* Hidden textarea */
+        .hidden-textarea {
+            display: none !important;
+        }
+
+        /* Selection and cursor styling */
+        .rich-text-editor::selection {
+            background-color: var(--admin-primary);
+            color: white;
+        }
+
+        .rich-text-editor {
+            caret-color: var(--admin-primary);
+        }
+
+        /* Scrollbar styling for rich editor */
+        .rich-text-editor::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .rich-text-editor::-webkit-scrollbar-track {
+            background: var(--admin-bg-tertiary);
+        }
+
+        .rich-text-editor::-webkit-scrollbar-thumb {
+            background: var(--admin-border-color);
+            border-radius: 3px;
+        }
+
+        .rich-text-editor::-webkit-scrollbar-thumb:hover {
+            background: var(--admin-text-muted);
         }
 
         .gujarati-text {
@@ -770,34 +808,6 @@
             border-color: var(--admin-text-muted);
         }
 
-        /* Select2 Styles (keeping existing) */
-        .select2-container--default .select2-selection--single,
-        .select2-container--default .select2-selection--multiple {
-            background-color: var(--admin-bg-secondary) !important;
-            border: 2px solid var(--admin-border-color) !important;
-            color: var(--admin-text-primary) !important;
-            border-radius: 6px !important;
-            min-height: 42px !important;
-        }
-
-        .select2-container--default .select2-selection--multiple {
-            padding: 6px 10px !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__placeholder,
-        .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
-            color: var(--admin-text-muted) !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: var(--admin-text-primary) !important;
-            line-height: 28px;
-        }
-
-        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
-            color: var(--admin-text-primary) !important;
-        }
-
         /* Validation States */
         .is-invalid {
             border-color: var(--admin-error) !important;
@@ -809,18 +819,82 @@
             margin-top: 4px;
         }
 
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .editor-preview-container {
-                grid-template-columns: 1fr;
-            }
-
-            .vachanamrut-admin-container {
-                max-width: 100%;
-                padding: 10px;
-            }
+        /* Enhanced Custom Tooltip with Font Support */
+        .custom-tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            z-index: 10000;
+            pointer-events: none;
+            white-space: nowrap;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .custom-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border: 6px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        /* Font preservation in custom tooltip */
+        .custom-tooltip .font-gopika {
+            font-family: 'Gopika', 'Noto Sans Gujarati', sans-serif !important;
+        }
+
+        /* FIXED: ssgd3 font in custom tooltip */
+        .custom-tooltip .font-ssgd3 {
+            font-family: 'ssgd3', 'Noto Sans Gujarati', sans-serif !important;
+        }
+
+        .custom-tooltip .font-sanskrit {
+            font-family: 'Sanskrit', 'Noto Sans Devanagari', sans-serif !important;
+        }
+
+        .custom-tooltip .font-gujarati {
+            font-family: 'Noto Sans Gujarati', 'Shruti', sans-serif !important;
+        }
+
+        .custom-tooltip .font-english {
+            font-family: 'Arial', 'Helvetica', sans-serif !important;
+        }
+
+        .custom-tooltip strong {
+            font-weight: bold;
+        }
+
+        /* Simple guidance tooltip styles */
+        .toolbar-tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            z-index: 1000;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toolbar-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .custom-toolbar {
                 flex-direction: column;
@@ -840,6 +914,13 @@
                 font-size: 0.75rem;
                 padding: 6px 8px;
                 min-height: 32px;
+            }
+
+            .rich-text-editor {
+                min-height: 300px !important;
+                font-size: 1.2rem;
+                padding: 12px;
+                text-align: justify;
             }
 
             .page-header {
@@ -879,9 +960,20 @@
             .tab-btn {
                 padding: 10px;
             }
+
+            .vachanamrut-admin-container {
+                max-width: 100%;
+                padding: 10px;
+            }
         }
 
         @media (max-width: 480px) {
+            .rich-text-editor {
+                min-height: 250px !important;
+                font-size: 1rem;
+                padding: 10px;
+            }
+
             .page-header {
                 padding: 12px;
             }
@@ -911,16 +1003,16 @@
                 }
 
                 $('.select2').select2({
-                    placeholder: '{{ __('Select categories') }}',
+                    placeholder: '{{ __("Select categories") }}',
                     allowClear: true,
                     width: '100%',
                     theme: 'default',
                     language: {
                         noResults: function() {
-                            return '{{ __('No results found') }}';
+                            return '{{ __("No results found") }}';
                         },
                         searching: function() {
-                            return '{{ __('Searching...') }}';
+                            return '{{ __("Searching...") }}';
                         }
                     }
                 });
@@ -947,198 +1039,316 @@
                 $('#' + tabId + '-tab').addClass('active');
 
                 setTimeout(function() {
-                    $('#' + tabId + '-tab').find('textarea').first().focus();
+                    const richEditor = $('#' + tabId + '-tab').find('.rich-text-editor').first();
+                    if (richEditor.length) {
+                        richEditor.focus();
+                    }
                 }, 100);
             });
 
-            // Live preview update function
-            function updatePreview(textareaId) {
-                const textarea = $('#' + textareaId);
-                const previewContainer = $('#preview_' + textareaId + ' .preview-content');
-                let content = textarea.val();
-
-                if (content.trim()) {
-                    // Handle line breaks and preserve formatting
-                    content = content.replace(/\n/g, '<br>');
-
-                    // Handle font spans properly
-                    content = content.replace(
-                        /<span style="font-family:\s*['"](.*?)['"]">(.*?)<\/span>/g,
-                        '<span style="font-family: $1">$2</span>'
-                    );
-
-                    previewContainer.html(content);
-                } else {
-                    previewContainer.attr('data-placeholder', '{{ __('Preview will appear here...') }}');
-                    previewContainer.html('');
+            // Rich Text Editor functionality
+            function initializeRichEditor(editorId) {
+                const richEditor = $('#rich_editor_' + editorId);
+                const hiddenTextarea = $('#' + editorId);
+                
+                // Set initial content from textarea to rich editor
+                const initialContent = hiddenTextarea.val();
+                if (initialContent) {
+                    richEditor.html(initialContent);
                 }
+                
+                // Update hidden textarea when rich editor content changes
+                richEditor.on('input paste keyup', function() {
+                    const htmlContent = richEditor.html();
+                    hiddenTextarea.val(htmlContent);
+                    
+                    // Trigger validation check
+                    if (hiddenTextarea.attr('required') && htmlContent.trim()) {
+                        hiddenTextarea.removeClass('is-invalid');
+                    }
+                });
+                
+                // Handle paste to preserve formatting but clean up unwanted styles
+                richEditor.on('paste', function(e) {
+                    e.preventDefault();
+                    const clipboardData = e.originalEvent.clipboardData || window.clipboardData;
+                    const text = clipboardData.getData('text/plain');
+                    
+                    // Insert plain text to avoid unwanted formatting
+                    document.execCommand('insertText', false, text);
+                    
+                    // Update textarea
+                    setTimeout(() => {
+                        hiddenTextarea.val(richEditor.html());
+                    }, 10);
+                });
+
+                // Handle keyboard shortcuts
+                richEditor.on('keydown', function(e) {
+                    // Ctrl+B for bold
+                    if (e.ctrlKey && e.which === 66) {
+                        e.preventDefault();
+                        document.execCommand('bold', false, null);
+                        hiddenTextarea.val(richEditor.html());
+                        return false;
+                    }
+                    
+                    // Ctrl+I for italic (if needed)
+                    if (e.ctrlKey && e.which === 73) {
+                        e.preventDefault();
+                        document.execCommand('italic', false, null);
+                        hiddenTextarea.val(richEditor.html());
+                        return false;
+                    }
+                });
             }
 
-            // Enhanced Custom toolbar functionality
+            // Enhanced Custom Tooltip System
+            let customTooltip = $('#custom-tooltip');
+            let tooltipTimeout;
+
+            function showCustomTooltip(element, content) {
+                // Clear any existing tooltip timeout
+                clearTimeout(tooltipTimeout);
+                
+                // Set tooltip content (preserving HTML and fonts)
+                customTooltip.html(content);
+                
+                // Position tooltip
+                const elementOffset = $(element).offset();
+                const elementWidth = $(element).outerWidth();
+                const elementHeight = $(element).outerHeight();
+                const tooltipWidth = customTooltip.outerWidth();
+                
+                // Calculate position (above the element, centered)
+                const left = elementOffset.left + (elementWidth / 2) - (tooltipWidth / 2);
+                const top = elementOffset.top - customTooltip.outerHeight() - 10;
+                
+                customTooltip.css({
+                    left: Math.max(10, left) + 'px',
+                    top: top + 'px',
+                    display: 'block'
+                });
+            }
+
+            function hideCustomTooltip() {
+                tooltipTimeout = setTimeout(() => {
+                    customTooltip.hide();
+                }, 300); // Slight delay to prevent flickering
+            }
+
+            // Enhanced toolbar functionality for rich editor
             $('.toolbar-btn').on('click', function(e) {
                 e.preventDefault();
-
+                
                 const action = $(this).data('action');
                 const target = $(this).closest('.custom-toolbar').data('target');
-                const textarea = $('#' + target)[0];
-
+                const richEditor = $('#rich_editor_' + target)[0];
+                const $richEditor = $('#rich_editor_' + target);
+                
+                // Focus the rich editor
+                richEditor.focus();
+                
                 if (action === 'font') {
-                    // Font change functionality
                     const fontFamily = $(this).data('font');
-                    const start = textarea.selectionStart;
-                    const end = textarea.selectionEnd;
-                    const selectedText = textarea.value.substring(start, end);
-
-                    if (selectedText === '') {
-                        alert('{{ __('Please select text first to change font') }}');
-                        return;
-                    }
-
-                    // Create font span with inline style
-                    let wrappedText = '<span style="font-family: \'' + fontFamily + '\'">' + selectedText +
-                        '</span>';
-
-                    // Replace selected text with wrapped text
-                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value
-                        .substring(end);
-                    textarea.value = newValue;
-
-                    // Set cursor position after the wrapped text
-                    const newCursorPos = start + wrappedText.length;
-                    textarea.setSelectionRange(newCursorPos, newCursorPos);
-                    textarea.focus();
-
-                    // Update preview immediately
-                    updatePreview(target);
-
-                    // Visual feedback
-                    $(this).addClass('active');
-                    setTimeout(() => {
-                        $(this).removeClass('active');
-                    }, 300);
-
-                } else if (['alignLeft', 'alignCenter', 'alignRight'].includes(action)) {
-                    // Alignment functionality
-                    const start = textarea.selectionStart;
-                    const end = textarea.selectionEnd;
-                    const selectedText = textarea.value.substring(start, end);
-
-                    if (selectedText === '') {
-                        alert('{{ __('Please select text first to align') }}');
-                        return;
-                    }
-
-                    let alignValue = 'left';
-                    if (action === 'alignCenter') alignValue = 'center';
-                    else if (action === 'alignRight') alignValue = 'right';
-
-                    let wrappedText = '<div style="text-align: ' + alignValue + '">' + selectedText +
-                        '</div>';
-
-                    // Replace selected text with wrapped text
-                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value
-                        .substring(end);
-                    textarea.value = newValue;
-
-                    // Set cursor position after the wrapped text
-                    const newCursorPos = start + wrappedText.length;
-                    textarea.setSelectionRange(newCursorPos, newCursorPos);
-                    textarea.focus();
-
-                    // Update preview immediately
-                    updatePreview(target);
-
-                    // Visual feedback
-                    $(this).addClass('active');
-                    setTimeout(() => {
-                        $(this).removeClass('active');
-                    }, 300);
-
-                } else {
-                    // Existing formatting functionality (bold, abbr)
-                    const start = textarea.selectionStart;
-                    const end = textarea.selectionEnd;
-                    const selectedText = textarea.value.substring(start, end);
-
-                    if (selectedText === '') {
-                        alert('{{ __('Please select text first') }}');
-                        return;
-                    }
-
-                    let wrappedText = '';
-
-                    if (action === 'bold') {
-                        wrappedText = '<strong>' + selectedText + '</strong>';
-                    } else if (action === 'abbr') {
-                        const title = prompt('{{ __('Enter abbreviation meaning:') }}');
-                        if (title) {
-                            wrappedText = '<abbr title="' + title + '">' + selectedText + '</abbr>';
-                        } else {
-                            return;
+                    const selection = window.getSelection();
+                    
+                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                        const range = selection.getRangeAt(0);
+                        const span = document.createElement('span');
+                        span.style.fontFamily = fontFamily;
+                        span.className = 'font-' + fontFamily.toLowerCase().replace(/\s+/g, '');
+                        
+                        try {
+                            range.surroundContents(span);
+                            selection.removeAllRanges();
+                        } catch (e) {
+                            // If surroundContents fails, extract and wrap content
+                            const contents = range.extractContents();
+                            span.appendChild(contents);
+                            range.insertNode(span);
+                            selection.removeAllRanges();
                         }
+                        
+                        // Update textarea
+                        $('#' + target).val($richEditor.html());
+                        
+                        // Setup custom tooltips for new abbreviations with fonts
+                        setupCustomTooltips();
+                    } else {
+                        // Show user-friendly message
+                        showTooltip($(this), '{{ __("Please select text first to change font") }}');
+                        return;
                     }
-
-                    // Replace selected text with wrapped text
-                    const newValue = textarea.value.substring(0, start) + wrappedText + textarea.value
-                        .substring(end);
-                    textarea.value = newValue;
-
-                    // Set cursor position after the wrapped text
-                    const newCursorPos = start + wrappedText.length;
-                    textarea.setSelectionRange(newCursorPos, newCursorPos);
-                    textarea.focus();
-
-                    // Update preview immediately
-                    updatePreview(target);
-
-                    // Visual feedback
-                    $(this).addClass('active');
-                    setTimeout(() => {
-                        $(this).removeClass('active');
-                    }, 200);
+                    
+                } else if (['alignLeft', 'alignCenter', 'alignRight'].includes(action)) {
+                    const selection = window.getSelection();
+                    
+                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                        let alignValue = 'left';
+                        if (action === 'alignCenter') alignValue = 'center';
+                        else if (action === 'alignRight') alignValue = 'right';
+                        
+                        const range = selection.getRangeAt(0);
+                        const div = document.createElement('div');
+                        div.style.textAlign = alignValue;
+                        
+                        try {
+                            range.surroundContents(div);
+                            selection.removeAllRanges();
+                        } catch (e) {
+                            const contents = range.extractContents();
+                            div.appendChild(contents);
+                            range.insertNode(div);
+                            selection.removeAllRanges();
+                        }
+                        
+                        // Update textarea
+                        $('#' + target).val($richEditor.html());
+                    } else {
+                        showTooltip($(this), '{{ __("Please select text first to align") }}');
+                        return;
+                    }
+                    
+                } else if (action === 'bold') {
+                    const selection = window.getSelection();
+                    
+                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                        document.execCommand('bold', false, null);
+                        $('#' + target).val($richEditor.html());
+                    } else {
+                        showTooltip($(this), '{{ __("Please select text first to make bold") }}');
+                        return;
+                    }
+                    
+                } else if (action === 'abbr') {
+                    const selection = window.getSelection();
+                    
+                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                        const selectedRange = selection.getRangeAt(0);
+                        const selectedContent = selectedRange.cloneContents();
+                        
+                        // Get the HTML content of selected text (preserving formatting)
+                        const tempDiv = document.createElement('div');
+                        tempDiv.appendChild(selectedContent);
+                        const selectedHTML = tempDiv.innerHTML;
+                        
+                        const title = prompt('{{ __("Enter abbreviation meaning:") }}');
+                        if (title) {
+                            const range = selection.getRangeAt(0);
+                            const abbr = document.createElement('abbr');
+                            abbr.setAttribute('title', selectedHTML); // Store formatted content for tooltip
+                            abbr.title = ''; // Remove default title to prevent double tooltips
+                            
+                            try {
+                                range.surroundContents(abbr);
+                                selection.removeAllRanges();
+                            } catch (e) {
+                                const contents = range.extractContents();
+                                abbr.appendChild(contents);
+                                range.insertNode(abbr);
+                                selection.removeAllRanges();
+                            }
+                            
+                            // Store the meaning as data attribute
+                            abbr.setAttribute('title', title);
+                            
+                            $('#' + target).val($richEditor.html());
+                            
+                            // Setup custom tooltips for new abbreviations
+                            setupCustomTooltips();
+                        }
+                    } else {
+                        showTooltip($(this), '{{ __("Please select text first") }}');
+                        return;
+                    }
                 }
+                
+                // Visual feedback
+                $(this).addClass('active');
+                setTimeout(() => {
+                    $(this).removeClass('active');
+                }, 300);
             });
 
-            // Live preview on typing (with debouncing for performance)
-            let previewTimeout;
-            $('textarea.custom-editor').on('input keyup paste', function() {
-                const textareaId = $(this).attr('id');
+            // Setup custom tooltips for abbreviations
+            function setupCustomTooltips() {
+                // Remove existing event handlers to prevent multiple bindings
+                $('.rich-text-editor abbr').off('mouseenter mouseleave');
+                
+                // Setup new event handlers
+                $('.rich-text-editor abbr').on('mouseenter', function(e) {
+                    const meaning = $(this).attr('data-meaning');
+                    const tooltipContent = $(this).attr('data-tooltip');
+                    
+                    if (meaning) {
+                        // Create tooltip content with formatted text and meaning
+                        const formattedTooltip = '<div><strong>Text:</strong> ' + tooltipContent + '</div><div><strong>Meaning:</strong> ' + meaning + '</div>';
+                        showCustomTooltip(this, formattedTooltip);
+                    }
+                });
+                
+                $('.rich-text-editor abbr').on('mouseleave', function(e) {
+                    hideCustomTooltip();
+                });
+            }
 
-                // Clear previous timeout
-                clearTimeout(previewTimeout);
+            // Tooltip function for user guidance (simple tooltips for toolbar)
+            function showTooltip(element, message) {
+                const tooltip = $('<div class="toolbar-tooltip">' + message + '</div>');
+                $('body').append(tooltip);
+                
+                const offset = element.offset();
+                tooltip.css({
+                    top: offset.top - 35,
+                    left: offset.left + (element.outerWidth() / 2) - (tooltip.outerWidth() / 2)
+                });
+                
+                setTimeout(() => {
+                    tooltip.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                }, 2000);
+            }
 
-                // Update preview after a short delay to improve performance
-                previewTimeout = setTimeout(function() {
-                    updatePreview(textareaId);
-                }, 100);
-            });
-
-            // Initial preview update with existing content
-            $('textarea.custom-editor').each(function() {
-                const textareaId = $(this).attr('id');
-                updatePreview(textareaId);
-            });
+            // Initialize rich editors
+            initializeRichEditor('lyrics_gu');
+            initializeRichEditor('lyrics_en');
+            
+            // Setup initial custom tooltips
+            setTimeout(() => {
+                setupCustomTooltips();
+            }, 500);
 
             // Enhanced form validation
             $('.vachanamrut-form').on('submit', function(e) {
                 if (!validateForm()) {
                     e.preventDefault();
                     if (typeof toastr !== 'undefined') {
-                        toastr.error('{{ __('Please fill in all required fields.') }}',
-                        'Validation Error');
+                        toastr.error('{{ __("Please fill in all required fields.") }}', 'Validation Error');
                     } else {
-                        alert('{{ __('Please fill in all required fields.') }}');
+                        alert('{{ __("Please fill in all required fields.") }}');
                     }
                     return false;
                 }
             });
 
             // Real-time validation for required fields
-            $('.form-control[required]').on('input blur', function() {
-                if ($(this).val().trim()) {
-                    $(this).removeClass('is-invalid');
+            $('.form-control[required], .rich-text-editor').on('input blur', function() {
+                if ($(this).hasClass('rich-text-editor')) {
+                    const target = $(this).data('target');
+                    const hiddenField = $('#' + target);
+                    if ($(this).html().trim()) {
+                        hiddenField.removeClass('is-invalid');
+                    } else {
+                        hiddenField.addClass('is-invalid');
+                    }
                 } else {
-                    $(this).addClass('is-invalid');
+                    if ($(this).val().trim()) {
+                        $(this).removeClass('is-invalid');
+                    } else {
+                        $(this).addClass('is-invalid');
+                    }
                 }
             });
 

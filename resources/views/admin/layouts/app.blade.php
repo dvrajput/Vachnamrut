@@ -8,19 +8,16 @@
     <link rel="icon" type="image/x-icon" href="{{asset('favicon.ico')}}">
 
     <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <link href="{{ asset('css/vendor/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/vendor/toastr.min.css') }}">
+    <link href="{{ asset('css/vendor/select2.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/vendor/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vendor/datatables-buttons.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<!-- Summernote CSS -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-
 
     <style>
         /* Theme Variables */
@@ -297,17 +294,14 @@
     </button>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-<!-- Summernote JS -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <script src="{{ asset('js/vendor/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/select2.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/datatables-buttons.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/jszip.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/toastr.min.js') }}"></script>
 
 
     <script>
