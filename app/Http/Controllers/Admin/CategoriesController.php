@@ -10,6 +10,7 @@ use App\Models\SongCateRel;
 use App\Models\Song;
 use App\Models\SongCategoryRel;
 use App\Models\SubCategory;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,83 +21,82 @@ class CategoriesController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    if ($request->ajax() || $request->wantsJson()) {
-        try {
-            $query = Category::query();
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            try {
+                $query = Category::query();
 
-            // Handle DataTables parameters
-            $start = $request->get('start', 0);
-            $length = $request->get('length', 25);
-            $searchValue = $request->get('search')['value'] ?? '';
-            
-            // Apply search if provided
-            if (!empty($searchValue)) {
-                $query->where(function($q) use ($searchValue) {
-                    $q->where('category_code', 'LIKE', "%{$searchValue}%")
-                      ->orWhere('category_en', 'LIKE', "%{$searchValue}%")
-                      ->orWhere('category_gu', 'LIKE', "%{$searchValue}%")
-                      ->orWhere('alias', 'LIKE', "%{$searchValue}%");
+                // Handle DataTables parameters
+                $start = $request->get('start', 0);
+                $length = $request->get('length', 25);
+                $searchValue = $request->get('search')['value'] ?? '';
+
+                // Apply search if provided
+                if (!empty($searchValue)) {
+                    $query->where(function ($q) use ($searchValue) {
+                        $q->where('category_code', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('category_en', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('category_gu', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('alias', 'LIKE', "%{$searchValue}%");
+                    });
+                }
+
+                // Handle ordering
+                $orderColumn = $request->get('order')[0]['column'] ?? 0;
+                $orderDir = $request->get('order')[0]['dir'] ?? 'asc';
+                $columns = ['category_code', 'category_en', 'category_gu', 'action'];
+
+                if (isset($columns[$orderColumn]) && $columns[$orderColumn] !== 'action') {
+                    $query->orderBy($columns[$orderColumn], $orderDir);
+                } else {
+                    $query->orderBy('category_code', 'asc');
+                }
+
+                // Get total records
+                $totalRecords = Category::count();
+                $filteredRecords = $query->count();
+
+                // Get paginated results
+                $categories = $query->skip($start)->take($length)->get();
+
+                // Transform data for DataTables
+                $data = $categories->map(function ($category) {
+                    return [
+                        'category_code' => $category->category_code,
+                        'category_en' => $category->category_en,
+                        'category_gu' => $category->category_gu,
+                        'alias' => $category->alias,
+                        'action' => $category // Pass the whole object for action rendering
+                    ];
                 });
+
+                return response()->json([
+                    'draw' => intval($request->get('draw')),
+                    'recordsTotal' => $totalRecords,
+                    'recordsFiltered' => $filteredRecords,
+                    'data' => $data,
+                    'success' => true
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'draw' => intval($request->get('draw', 0)),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'data' => [],
+                    'error' => config('app.debug') ? $e->getMessage() : 'Error loading categories',
+                    'success' => false
+                ], 500);
             }
-
-            // Handle ordering
-            $orderColumn = $request->get('order')[0]['column'] ?? 0;
-            $orderDir = $request->get('order')[0]['dir'] ?? 'asc';
-            $columns = ['category_code', 'category_en', 'category_gu', 'action'];
-            
-            if (isset($columns[$orderColumn]) && $columns[$orderColumn] !== 'action') {
-                $query->orderBy($columns[$orderColumn], $orderDir);
-            } else {
-                $query->orderBy('category_code', 'asc');
-            }
-
-            // Get total records
-            $totalRecords = Category::count();
-            $filteredRecords = $query->count();
-
-            // Get paginated results
-            $categories = $query->skip($start)->take($length)->get();
-
-            // Transform data for DataTables
-            $data = $categories->map(function ($category) {
-                return [
-                    'category_code' => $category->category_code,
-                    'category_en' => $category->category_en,
-                    'category_gu' => $category->category_gu,
-                    'alias' => $category->alias,
-                    'action' => $category // Pass the whole object for action rendering
-                ];
-            });
-
-            return response()->json([
-                'draw' => intval($request->get('draw')),
-                'recordsTotal' => $totalRecords,
-                'recordsFiltered' => $filteredRecords,
-                'data' => $data,
-                'success' => true
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'draw' => intval($request->get('draw', 0)),
-                'recordsTotal' => 0,
-                'recordsFiltered' => 0,
-                'data' => [],
-                'error' => config('app.debug') ? $e->getMessage() : 'Error loading categories',
-                'success' => false
-            ], 500);
         }
+
+        $config = Configuration::where('key', 'category_delete')->first();
+        $deleteBtn = $config->value ?? 0;
+
+        $config = Configuration::where('key', 'category_create')->first();
+        $createBtnShow = $config->value ?? 0;
+
+        return view('admin.category.index', compact('deleteBtn', 'createBtnShow'));
     }
-
-    $config = Configuration::where('key', 'category_delete')->first();
-    $deleteBtn = $config->value ?? 0;
-    
-    $config = Configuration::where('key', 'category_create')->first();
-    $createBtnShow = $config->value ?? 0;
-
-    return view('admin.category.index', compact('deleteBtn', 'createBtnShow'));
-}
 
 
     /**
@@ -151,21 +151,105 @@ class CategoriesController extends Controller
      */
     public function show(Request $request, string $category_code)
     {
-        // $category = Category::findOrFail($category_code);
-        $category = Category::where('category_code', $category_code)->firstOrFail();
+        try {
+            $category = Category::where('category_code', $category_code)->firstOrFail();
 
-        if ($request->ajax()) {
-            $data = SongCateRel::where('category_code', $category_code)
-                ->join('songs', 'songs.song_code', '=', 'song_cate_rels.song_code')
-                ->select('songs.song_code', 'songs.title_en') // Adjust fields as needed
-                ->get();
-            
-            return DataTables::of($data)
-                ->make(true);
+            if ($request->ajax() || $request->wantsJson()) {
+                try {
+                    // Build the query
+                    $query = SongCateRel::where('song_cate_rels.category_code', $category_code)
+                        ->join('songs', 'songs.song_code', '=', 'song_cate_rels.song_code')
+                        ->select([
+                            'songs.song_code',
+                            'songs.title_en',
+                            'songs.title_gu',
+                            'songs.lyrics_en',
+                            'songs.lyrics_gu',
+                            'songs.created_at'
+                        ]);
+
+                    // Handle DataTables parameters
+                    $start = $request->get('start', 0);
+                    $length = $request->get('length', 25);
+                    $searchValue = $request->get('search')['value'] ?? '';
+
+                    // Apply search if provided
+                    if (!empty($searchValue)) {
+                        $query->where(function ($q) use ($searchValue) {
+                            $q->where('songs.song_code', 'LIKE', "%{$searchValue}%")
+                                ->orWhere('songs.title_en', 'LIKE', "%{$searchValue}%")
+                                ->orWhere('songs.title_gu', 'LIKE', "%{$searchValue}%")
+                                ->orWhere('songs.lyrics_en', 'LIKE', "%{$searchValue}%")
+                                ->orWhere('songs.lyrics_gu', 'LIKE', "%{$searchValue}%");
+                        });
+                    }
+
+                    // Handle ordering
+                    $orderColumn = $request->get('order')[0]['column'] ?? 0;
+                    $orderDir = $request->get('order')[0]['dir'] ?? 'asc';
+                    $columns = ['song_code', 'title_en', 'action'];
+
+                    if (isset($columns[$orderColumn]) && $columns[$orderColumn] !== 'action') {
+                        $orderField = $columns[$orderColumn] === 'song_code' ? 'songs.song_code' : 'songs.title_en';
+                        $query->orderBy($orderField, $orderDir);
+                    } else {
+                        $query->orderBy('songs.song_code', 'asc');
+                    }
+
+                    // Get total records for this category
+                    $totalRecords = SongCateRel::where('category_code', $category_code)
+                        ->join('songs', 'songs.song_code', '=', 'song_cate_rels.song_code')
+                        ->count();
+                    $filteredRecords = $query->count();
+
+                    // Get paginated results
+                    $songs = $query->skip($start)->take($length)->get();
+
+                    // Transform data for DataTables
+                    $data = $songs->map(function ($song) {
+                        return [
+                            'song_code' => $song->song_code,
+                            'title_en' => $song->title_en,
+                            'title_gu' => $song->title_gu,
+                            'lyrics_en' => $song->lyrics_en,
+                            'lyrics_gu' => $song->lyrics_gu,
+                            'created_at' => $song->created_at,
+                            'action' => $song // Pass the whole object for action rendering
+                        ];
+                    });
+
+                    return response()->json([
+                        'draw' => intval($request->get('draw')),
+                        'recordsTotal' => $totalRecords,
+                        'recordsFiltered' => $filteredRecords,
+                        'data' => $data,
+                        'success' => true,
+                        'category' => [
+                            'code' => $category->category_code,
+                            'name_en' => $category->category_en,
+                            'name_gu' => $category->category_gu
+                        ]
+                    ]);
+                } catch (Exception $e) {
+                    return response()->json([
+                        'draw' => intval($request->get('draw', 0)),
+                        'recordsTotal' => 0,
+                        'recordsFiltered' => 0,
+                        'data' => [],
+                        'error' => config('app.debug') ? $e->getMessage() : 'Error loading category songs',
+                        'success' => false
+                    ], 500);
+                }
+            }
+
+            return view('admin.category.show', compact('category'));
+        } catch (ModelNotFoundException $e) {
+            abort(404, 'Category not found');
+        } catch (\Exception $e) {
+            abort(500, 'Error loading category');
         }
-        
-        return view('admin.category.show', compact('category'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -183,7 +267,7 @@ class CategoriesController extends Controller
         $data = SongCategoryRel::where('category_code', $category_code)
             ->join('songs', 'songs.song_code', '=', 'song_category_rels.song_code')
             ->select('songs.song_code', 'songs.title_en');
-        
+
         return DataTables::of($data)->make(true);
     }
 
@@ -219,7 +303,7 @@ class CategoriesController extends Controller
         $relationship = SongCategoryRel::where('song_code', $song_code)
             ->where('category_code', $request->category_code)
             ->first();
-        
+
         if ($relationship) {
             $relationship->delete();
             return redirect()->back()->with('success', 'Song removed from category successfully');
@@ -254,7 +338,7 @@ class CategoriesController extends Controller
     public function destroy(string $category_code)
     {
         $category = Category::where('category_code', $category_code)->firstOrFail();
-        
+
         $subCategories = CateSubCateRel::where('category_code', $category_code)->pluck('sub_category_code');
 
         if ($subCategories->isNotEmpty()) {
