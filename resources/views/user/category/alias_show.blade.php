@@ -404,13 +404,20 @@
 
             handleSuccess(response) {
                 try {
+                    console.log('Response received:', response); // Debug log
+
                     // Validate response structure
                     if (!response || typeof response !== 'object') {
-                        throw new Error('Invalid response format');
+                        throw new Error('Invalid response format: Response is not an object');
                     }
 
-                    if (!response.songs || !Array.isArray(response.songs)) {
-                        throw new Error('Songs data is missing or invalid');
+                    // Check if songs exist and is an array
+                    if (!response.hasOwnProperty('songs')) {
+                        throw new Error('Invalid response format: Missing songs property');
+                    }
+
+                    if (!Array.isArray(response.songs)) {
+                        throw new Error('Invalid response format: Songs is not an array');
                     }
 
                     // Handle empty results for first page
@@ -426,15 +433,16 @@
                     }
 
                     // Update pagination state
-                    if (response.pagination) {
-                        AppState.hasMorePages = response.pagination.has_more_pages || false;
+                    if (response.pagination && typeof response.pagination === 'object') {
+                        AppState.hasMorePages = Boolean(response.pagination.has_more_pages);
                     } else {
                         AppState.hasMorePages = response.songs.length >= 30; // fallback
                     }
 
                 } catch (error) {
                     console.error('Error processing response:', error);
-                    Utils.showError('{{ __('Error processing server response') }}');
+                    console.error('Raw response:', response); // Additional debug info
+                    Utils.showError('Error processing server response: ' + error.message);
                 }
             },
 
