@@ -11,6 +11,7 @@ use App\Observers\PlaylistObserver;
 use App\Observers\SongObserver;
 use App\Observers\SubCategoryObserver;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
         Song::observe(SongObserver::class);
         Playlist::observe(PlaylistObserver::class);
         Category::observe(CategoryObserver::class);
