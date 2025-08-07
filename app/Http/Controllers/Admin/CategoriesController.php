@@ -230,7 +230,7 @@ class CategoriesController extends Controller
                             'name_gu' => $category->category_gu
                         ]
                     ]);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     return response()->json([
                         'draw' => intval($request->get('draw', 0)),
                         'recordsTotal' => 0,
