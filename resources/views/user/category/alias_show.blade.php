@@ -239,87 +239,186 @@
 
 @section('script')
     <script>
-        let page = 1;
-        let isLoading = false;
-        let searchQuery = '';
-
-        function loadSongs() {
-            if (isLoading) return;
-            isLoading = true;
-            $('#loading').show();
-
-            $.ajax({
-                url: '{{ route('user.categories.aliasShow', $category->alias) }}',
-                data: {
-                    page: page,
-                    search: searchQuery
-                },
-                success: function(response) {
-                    // If this is the first page and no results, show "no results" message
-                    if (page === 1 && response.songs.length === 0) {
-                        $('#songsList').html(
-                            `<li class="no-results"><div>{{ __('No results found') }}</div></li>`);
-                    } else if (response.songs.length > 0) {
-                        response.songs.forEach(song => {
-                            // Check for pad_number and total_pads fields
-                            let currentPad = song.current_pad || 0;
-                            let totalPads = song.total_pads || 0;
-
-                            // Only show pad count if total pads is greater than 0
-                            let padInfo = '';
-                            if (totalPads > 0) {
-                                padInfo = `<span class="pad-count">${currentPad} / ${totalPads}</span>`;
-                            }
-
-                            // FIXED: Use category-based URL structure instead of kirtans
-                            $('#songsList').append(
-                                `<li>
-                                <a href="{{ route('user.categories.aliasShow', $category->alias) }}/${song.song_code}">
-                                    ${song.title || song.title_en}
-                                    ${totalPads > 0 ? `<span class="pad-count">${currentPad} / ${totalPads}</span>` : ''}
-                                </a>
-                            </li>`
-                            );
-                        });
-                        page++;
-                    }
-                    isLoading = false;
-                    $('#loading').hide();
-                }
-            });
-        }
-
         $(document).ready(function() {
-            loadSongs(); // Load initial songs
+            let page = 1;
+            let isLoading = false;
+            let searchQuery = '';
+            let hasMorePages = true;
+            let searchTimeout;
+
+            // Configuration
+            const config = {
+                ajaxUrl: '{{ route('user.categories.aliasShow', $category->alias) }}',
+                categoryAlias: '{{ $category->alias }}',
+                searchDelay: 300,
+                loadThreshold: 100
+            };
+
+            function showLoading() {
+                $('#loading').show();
+                isLoading = true;
+            }
+
+            function hideLoading() {
+                $('#loading').hide();
+                isLoading = false;
+            }
+
+            function showNoResults() {
+                $('#songsList').html(
+                    '<li class="no-results"><div>{{ __('No results found') }}</div></li>'
+                );
+            }
+
+            function buildSongUrl(songCode) {
+                return `{{ route('user.categories.aliasShow', $category->alias) }}/${songCode}`;
+            }
+
+            function renderSong(song) {
+                let currentPad = song.current_pad || 0;
+                let totalPads = song.total_pads || 0;
+                let padInfo = '';
+
+                if (totalPads > 0) {
+                    padInfo = `<span class="pad-count">${currentPad} / ${totalPads}</span>`;
+                }
+
+                return `
+            <li>
+                <a href="${buildSongUrl(song.song_code)}">
+                    ${song.title || song.title_en || 'Untitled'}
+                    ${padInfo}
+                </a>
+            </li>
+        `;
+            }
+
+            function loadSongs(reset = false) {
+                if (isLoading || (!hasMorePages && !reset)) {
+                    return;
+                }
+
+                if (reset) {
+                    page = 1;
+                    hasMorePages = true;
+                    $('#songsList').empty();
+                }
+
+                showLoading();
+
+                // Prepare AJAX data
+                const ajaxData = {
+                    page: page,
+                    search: searchQuery.trim(),
+                    _token: $('meta[name="csrf-token"]').attr('content') || '{{ csrf_token() }}'
+                };
+
+                $.ajax({
+                    url: config.ajaxUrl,
+                    type: 'GET',
+                    data: ajaxData,
+                    dataType: 'json',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    timeout: 30000,
+                    success: function(response) {
+                        hideLoading();
+
+                        if (!response.success) {
+                            console.error('Server returned error:', response.message);
+                            if (page === 1) {
+                                showNoResults();
+                            }
+                            return;
+                        }
+
+                        // Handle empty results on first page
+                        if (page === 1 && (!response.songs || response.songs.length === 0)) {
+                            showNoResults();
+                            hasMorePages = false;
+                            return;
+                        }
+
+                        // Render songs
+                        if (response.songs && response.songs.length > 0) {
+                            response.songs.forEach(song => {
+                                $('#songsList').append(renderSong(song));
+                            });
+
+                            // Update pagination info
+                            hasMorePages = response.pagination.has_more_pages;
+                            page++;
+                        } else {
+                            hasMorePages = false;
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        hideLoading();
+                        console.error('AJAX Error:', {
+                            status: status,
+                            error: error,
+                            responseText: xhr.responseText
+                        });
+
+                        if (page === 1) {
+                            $('#songsList').html(
+                                '<li class="no-results"><div>{{ __('Error loading songs. Please try again.') }}</div></li>'
+                            );
+                        }
+                    }
+                });
+            }
+
+            function performSearch() {
+                const newQuery = $('#search').val().trim();
+                if (newQuery !== searchQuery) {
+                    searchQuery = newQuery;
+                    $('#searchQueryHolder').val(searchQuery);
+                    loadSongs(true); // Reset and load
+                }
+            }
+
+            // Initialize
+            loadSongs();
+
+            // Search with debouncing
+            $('#search').on('input keyup', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(performSearch, config.searchDelay);
+            });
 
             // Infinite scroll
             $('#songsList').on('scroll', function() {
-                if ($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 50) {
+                const scrollTop = $(this).scrollTop();
+                const scrollHeight = this.scrollHeight;
+                const clientHeight = $(this).innerHeight();
+
+                if (scrollTop + clientHeight >= scrollHeight - config.loadThreshold) {
                     loadSongs();
                 }
             });
 
-            // Search functionality
-            $('#search').on('keyup', function() {
-                searchQuery = $(this).val();
-                // Store the query in the hidden field
-                $('#searchQueryHolder').val(searchQuery);
-                page = 1;
-                $('#songsList').html('');
-                loadSongs();
+            // Language change handler
+            $(document).on('languageChanged', function() {
+                searchQuery = $('#searchQueryHolder').val() || '';
+                $('#search').val(searchQuery);
+                loadSongs(true);
             });
 
-            // Reload songs when language changes
-            $(document).on('languageChanged', function() {
-                // Get the query from the hidden field
-                searchQuery = $('#searchQueryHolder').val();
-                // Set the search input value
-                $('#search').val(searchQuery);
-                page = 1;
-                $('#songsList').html('');
-                loadSongs();
+            // Handle browser back/forward
+            $(window).on('popstate', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchParam = urlParams.get('search') || '';
+
+                if (searchParam !== searchQuery) {
+                    searchQuery = searchParam;
+                    $('#search').val(searchQuery);
+                    $('#searchQueryHolder').val(searchQuery);
+                    loadSongs(true);
+                }
             });
         });
     </script>
-
 @endsection
