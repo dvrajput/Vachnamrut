@@ -108,17 +108,15 @@ class CategoriesController extends Controller
                 ->select('songs.*')
                 ->paginate(30);
 
-            // Fix: Transform the collection items, not the paginator
-            $songsTransformed = $songs->getCollection()->map(function ($song) use ($locale) {
+            // Simple transformation
+            $transformedSongs = [];
+            foreach ($songs as $song) {
                 $song->title = $song->{'title_' . $locale};
-                return $song;
-            });
-
-            // Update the paginator with transformed items
-            $songs->setCollection($songsTransformed);
+                $transformedSongs[] = $song;
+            }
 
             return response()->json([
-                'songs' => $songs->items(), // Get the actual items array
+                'songs' => $transformedSongs,
                 'locale' => $locale,
                 'pagination' => [
                     'current_page' => $songs->currentPage(),
