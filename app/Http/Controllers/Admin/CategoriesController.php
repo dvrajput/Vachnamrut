@@ -77,7 +77,7 @@ class CategoriesController extends Controller
                 'success' => true
             ]);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'draw' => intval($request->get('draw', 0)),
                 'recordsTotal' => 0,
