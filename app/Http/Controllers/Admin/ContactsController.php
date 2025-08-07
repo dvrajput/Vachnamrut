@@ -7,6 +7,7 @@ use App\Models\Configuration;
 use App\Models\Contact;
 use App\Models\Song;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 class ContactsController extends Controller
@@ -213,7 +214,7 @@ class ContactsController extends Controller
     public function deleteAll(Request $request)
     {
         // Check if user is owner
-        if (auth()->user()->role != 'admin') {
+        if (Auth::user()->role != 'admin') {
             return response()->json([
                 'success' => false,
                 'message' => 'You do not have permission to perform this action.'
