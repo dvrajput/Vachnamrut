@@ -11,13 +11,75 @@ class ConfigController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Configuration::orderBy('id', 'asc'); // Customize your query as needed
+        if ($request->ajax() || $request->wantsJson()) {
+            try {
+                $query = Configuration::query();
 
-            return DataTables::of($data)
+                // Handle DataTables parameters
+                $start = $request->get('start', 0);
+                $length = $request->get('length', 25);
+                $searchValue = $request->get('search')['value'] ?? '';
 
-                ->make(true);
+                // Apply search if provided
+                if (!empty($searchValue)) {
+                    $query->where(function ($q) use ($searchValue) {
+                        $q->where('key', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('value', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('message', 'LIKE', "%{$searchValue}%")
+                            ->orWhere('id', 'LIKE', "%{$searchValue}%");
+                    });
+                }
+
+                // Handle ordering
+                $orderColumn = $request->get('order')[0]['column'] ?? 0;
+                $orderDir = $request->get('order')[0]['dir'] ?? 'asc';
+                $columns = ['id', 'key', 'value', 'message', 'action'];
+
+                if (isset($columns[$orderColumn]) && $columns[$orderColumn] !== 'action') {
+                    $query->orderBy($columns[$orderColumn], $orderDir);
+                } else {
+                    $query->orderBy('id', 'asc');
+                }
+
+                // Get total records
+                $totalRecords = Configuration::count();
+                $filteredRecords = $query->count();
+
+                // Get paginated results
+                $configurations = $query->skip($start)->take($length)->get();
+
+                // Transform data for DataTables
+                $data = $configurations->map(function ($config) {
+                    return [
+                        'id' => $config->id,
+                        'key' => $config->key,
+                        'value' => $config->value,
+                        'message' => $config->message,
+                        'created_at' => $config->created_at,
+                        'updated_at' => $config->updated_at,
+                        'action' => $config // Pass the whole object for action rendering
+                    ];
+                });
+
+                return response()->json([
+                    'draw' => intval($request->get('draw')),
+                    'recordsTotal' => $totalRecords,
+                    'recordsFiltered' => $filteredRecords,
+                    'data' => $data,
+                    'success' => true
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'draw' => intval($request->get('draw', 0)),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'data' => [],
+                    'error' => config('app.debug') ? $e->getMessage() : 'Error loading configurations',
+                    'success' => false
+                ], 500);
+            }
         }
+
         return view('admin.config.index');
     }
 
