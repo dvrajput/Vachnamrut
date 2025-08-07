@@ -20,22 +20,84 @@ class CategoriesController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = Category::query(); // Customize your query as needed
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        try {
+            $query = Category::query();
 
-            return DataTables::of($data)
-                ->make(true);
+            // Handle DataTables parameters
+            $start = $request->get('start', 0);
+            $length = $request->get('length', 25);
+            $searchValue = $request->get('search')['value'] ?? '';
+            
+            // Apply search if provided
+            if (!empty($searchValue)) {
+                $query->where(function($q) use ($searchValue) {
+                    $q->where('category_code', 'LIKE', "%{$searchValue}%")
+                      ->orWhere('category_en', 'LIKE', "%{$searchValue}%")
+                      ->orWhere('category_gu', 'LIKE', "%{$searchValue}%")
+                      ->orWhere('alias', 'LIKE', "%{$searchValue}%");
+                });
+            }
+
+            // Handle ordering
+            $orderColumn = $request->get('order')[0]['column'] ?? 0;
+            $orderDir = $request->get('order')[0]['dir'] ?? 'asc';
+            $columns = ['category_code', 'category_en', 'category_gu', 'action'];
+            
+            if (isset($columns[$orderColumn]) && $columns[$orderColumn] !== 'action') {
+                $query->orderBy($columns[$orderColumn], $orderDir);
+            } else {
+                $query->orderBy('category_code', 'asc');
+            }
+
+            // Get total records
+            $totalRecords = Category::count();
+            $filteredRecords = $query->count();
+
+            // Get paginated results
+            $categories = $query->skip($start)->take($length)->get();
+
+            // Transform data for DataTables
+            $data = $categories->map(function ($category) {
+                return [
+                    'category_code' => $category->category_code,
+                    'category_en' => $category->category_en,
+                    'category_gu' => $category->category_gu,
+                    'alias' => $category->alias,
+                    'action' => $category // Pass the whole object for action rendering
+                ];
+            });
+
+            return response()->json([
+                'draw' => intval($request->get('draw')),
+                'recordsTotal' => $totalRecords,
+                'recordsFiltered' => $filteredRecords,
+                'data' => $data,
+                'success' => true
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'draw' => intval($request->get('draw', 0)),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => [],
+                'error' => config('app.debug') ? $e->getMessage() : 'Error loading categories',
+                'success' => false
+            ], 500);
         }
-
-        $config = Configuration::where('key', 'category_delete')->first();
-        $deleteBtn = $config->value ?? 0;
-        
-        $config = Configuration::where('key', 'category_create')->first();
-        $createBtnShow = $config->value ?? 0;
-
-        return view('admin.category.index', compact('deleteBtn', 'createBtnShow'));
     }
+
+    $config = Configuration::where('key', 'category_delete')->first();
+    $deleteBtn = $config->value ?? 0;
+    
+    $config = Configuration::where('key', 'category_create')->first();
+    $createBtnShow = $config->value ?? 0;
+
+    return view('admin.category.index', compact('deleteBtn', 'createBtnShow'));
+}
+
 
     /**
      * Show the form for creating a new resource.
