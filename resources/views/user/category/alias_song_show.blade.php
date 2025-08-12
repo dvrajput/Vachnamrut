@@ -8,7 +8,7 @@
             --secondary-color: #f4a83a;
             --text-color: #333;
             --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
+            --card-bg: #fcfaf1;
             --border-color: #ddd;
             --abbr-color: #d7861b;
             --abbr-hover-color: #f4a83a;
@@ -71,6 +71,7 @@
         }
 
         .nav-center {
+            display: none;
             text-align: center;
             color: var(--text-color);
             font-weight: 600;
@@ -173,7 +174,7 @@
 
         /* Navigation Tabs */
         .vachanamrut-nav {
-            display: flex;
+            display: none;
             justify-content: center;
             margin: 1.5rem 0;
             gap: 0.8rem;
@@ -237,7 +238,7 @@
 
         /* FIXED TEXT STYLING - NO EXCESSIVE SPACING */
         .vachanamrut-text {
-            font-size: 1.2rem;
+            font-size: 24px;
             line-height: 1.6;
             color: var(--text-color);
             text-align: justify;
@@ -279,7 +280,7 @@
         .vachanamrut-text span[style*="Sanskrit"] {
             font-family: 'Sanskrit';
         }
-        
+
         .abbr-modal-body .font-english,
         .abbr-modal-body span[style*="Arial"] {
             font-family: 'Arial', 'Helvetica', sans-serif !important;
@@ -337,6 +338,7 @@
                 transform: translateY(-30px);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -490,7 +492,7 @@
             }
 
             .vachanamrut-text {
-                font-size: 1rem;
+                font-size: 24px;
                 line-height: 1.4;
                 text-align: justify;
                 font-style: normal;
@@ -538,6 +540,7 @@
 
         /* Print Styles */
         @media print {
+
             .vachanamrut-actions,
             .nav-tab-btn {
                 display: none !important;
@@ -582,6 +585,43 @@
             font-display: swap;
         }
     </style>
+    <style>
+        /* Fullscreen loader overlay */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color, #fff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
+
+        /* Loader animation */
+        .loader-spinner {
+            border: 6px solid rgba(0, 0, 0, 0.1);
+            border-top: 6px solid var(--primary-color, #d7861b);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Hide the body until ready */
+        body.hidden-until-ready {
+            visibility: hidden;
+        }
+    </style>
+    
 @endsection
 
 @section('content')
@@ -601,7 +641,8 @@
         <!-- Main Content -->
         <div class="vachanamrut-content">
             <!-- UPDATED: Added ssgd3 to default font-family -->
-            <div class="vachanamrut-text" id="vachanamrutText" style="font-family: 'ssgd3', 'Gopika', 'Sanskrit'; font-size: 14px;">
+            <div class="vachanamrut-text" id="vachanamrutText"
+                style="font-family: 'ssgd3', 'Gopika', 'Sanskrit'; font-size: 14px;">
                 {!! $song->{'lyrics_' . app()->getLocale()} !!}
             </div>
         </div>
@@ -680,7 +721,7 @@
                 <span class="abbr-close">&times;</span>
             </div>
             <div class="abbr-modal-body">
-                <p><span class="abbr-short-form" id="modalShortForm"></span> {{ __('means') }}:</p>
+                <p><span class="abbr-short-form" id="modalShortForm"></span> {{ __('means') }} :</p>
                 <p id="modalFullForm"></p>
             </div>
         </div>
@@ -693,8 +734,8 @@
             const vachanamrutText = document.querySelector('.vachanamrut-text');
 
             // Font Size Controls
-            let currentFontSize = parseInt(localStorage.getItem('vachanamrutFontSize')) || 20;
-            const minFontSize = 26;
+            let currentFontSize = parseInt(localStorage.getItem('vachanamrutFontSize')) || 24;
+            const minFontSize = 24;
             const maxFontSize = 36;
             const stepSize = 2;
 
@@ -757,7 +798,7 @@
             };
 
             window.resetFontSize = function() {
-                currentFontSize = 20;
+                currentFontSize = 24;
                 applyFontSize();
                 updateModalFontSize();
                 saveFontSize();
@@ -774,7 +815,7 @@
                 document.querySelectorAll('.vachanamrut-text abbr').forEach(abbr => {
                     // Get the original HTML content of the abbreviation (with formatting)
                     const originalHTML = abbr.innerHTML;
-                    
+
                     // Store both the original formatted content and explanation
                     const explanation = abbr.getAttribute('title');
                     abbr.removeAttribute('title'); // Remove title to prevent browser tooltip
@@ -790,7 +831,7 @@
                             // Set the formatted content (preserving fonts, bold, etc.)
                             modalShortForm.innerHTML = formattedShortForm;
                             modalFullForm.textContent = fullForm;
-                            
+
                             updateModalFontSize(); // Update modal font size before showing
                             abbrModal.style.display = 'block';
                             document.body.style.overflow = 'hidden';
@@ -837,4 +878,108 @@
             }
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Which selectors to protect
+            const selectors = ['.vachanamrut-text', '#modalFullForm'];
+
+            // tokens that contain an ellipsis (unicode or ASCII .. / ...)
+            const tokenRe = /[^\s]*(?:\u2026|\.{2,})[^\s]*/g;
+
+            // fonts we care about (only process text rendered in these fonts)
+            const FONT_TEST_RE = /Gopika|ssgd3|Sanskrit/i;
+
+            function shouldSkipNode(textNode) {
+                if (!textNode || !textNode.nodeValue) return true;
+                if (!textNode.nodeValue.trim()) return true;
+                const parent = textNode.parentElement;
+                if (!parent) return true;
+                // skip if inside any of these tags or already wrapped
+                if (parent.closest('abbr, code, pre, script, style, .nowrap-ellipsis')) return true;
+                // only run where computed font-family looks like our Gujarati fonts (avoids touching english)
+                const family = window.getComputedStyle(parent).fontFamily || '';
+                if (!FONT_TEST_RE.test(family)) return true;
+                return false;
+            }
+
+            function wrapEllipsisInRoot(root) {
+                if (!root) return;
+
+                // Tree-walk text nodes
+                const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+                const textNodes = [];
+                while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+                textNodes.forEach(textNode => {
+                    if (shouldSkipNode(textNode)) return;
+                    // quick test for presence of ellipsis-like content
+                    tokenRe.lastIndex = 0;
+                    if (!tokenRe.test(textNode.nodeValue)) return;
+
+                    // rebuild node with wrapped tokens
+                    tokenRe.lastIndex = 0;
+                    const frag = document.createDocumentFragment();
+                    let lastIndex = 0;
+                    let m;
+                    while ((m = tokenRe.exec(textNode.nodeValue)) !== null) {
+                        const start = m.index;
+                        const end = tokenRe.lastIndex;
+                        if (start > lastIndex) {
+                            frag.appendChild(document.createTextNode(textNode.nodeValue.slice(lastIndex,
+                                start)));
+                        }
+                        const span = document.createElement('span');
+                        span.className = 'nowrap-ellipsis';
+                        span.textContent = m[0];
+                        frag.appendChild(span);
+                        lastIndex = end;
+                    }
+                    if (lastIndex < textNode.nodeValue.length) {
+                        frag.appendChild(document.createTextNode(textNode.nodeValue.slice(lastIndex)));
+                    }
+
+                    // replace only if we created something
+                    if (frag.childNodes.length) {
+                        textNode.parentNode.replaceChild(frag, textNode);
+                    }
+                });
+            }
+
+            // simple debounce helper
+            function debounce(fn, wait) {
+                let t;
+                return function() {
+                    clearTimeout(t);
+                    t = setTimeout(() => fn.apply(this, arguments), wait);
+                };
+            }
+
+            // set up processing + mutation observer for each selector
+            selectors.forEach(sel => {
+                const root = document.querySelector(sel);
+                if (!root) return;
+
+                // first pass
+                wrapEllipsisInRoot(root);
+
+                // observe dynamic changes inside the element (modal text often injected later)
+                const observer = new MutationObserver(debounce(mutations => {
+                    // small optimization: re-run on the whole root (safe and simple)
+                    wrapEllipsisInRoot(root);
+                }, 50));
+
+                observer.observe(root, {
+                    childList: true,
+                    subtree: true,
+                    characterData: true
+                });
+            });
+
+            // Optional: If you ever programmatically replace large chunks of HTML, you can call:
+            // wrapEllipsisInRoot(document.querySelector('#modalFullForm'));
+        });
+    </script>
+
 @endsection
