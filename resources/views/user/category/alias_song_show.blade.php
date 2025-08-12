@@ -621,7 +621,16 @@
             visibility: hidden;
         }
     </style>
-    
+    <style>
+        /* small helper — keeps the whole token together */
+        .nowrap-ellipsis {
+            white-space: nowrap;
+            /* inline element, no layout shift */
+            display: inline;
+            vertical-align: baseline;
+        }
+    </style>
+
 @endsection
 
 @section('content')
