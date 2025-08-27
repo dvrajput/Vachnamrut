@@ -122,6 +122,7 @@ class SongsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'song_code'=>'required|unique:songs,song_code',
             'written_date' => 'nullable|string|max:50', // Added validation for written_date
             'title_en' => 'nullable|string|max:255',
             'lyrics_en' => 'nullable|string',
