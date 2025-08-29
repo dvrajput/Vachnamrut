@@ -11,6 +11,7 @@ class Song extends Model
 
     protected $fillable = [
         'song_code',
+        'vachnamrut_code',  // Added this line for the vachnamrut code
         'written_date',  // Added this line for the date field
         'title_en',
         'lyrics_en',

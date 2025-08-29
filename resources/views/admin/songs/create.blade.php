@@ -22,13 +22,31 @@
                     <div class="section-header">
                         <h4><i class="fas fa-code"></i> {{ __('Vachanamrut Code') }}</h4>
                     </div>
-                    <div class="form-group">
-                        <label for="song_code" class="form-label required">{{ __('Code') }}</label>
-                        <input type="text" class="form-control" id="song_code" name="song_code"
-                            placeholder="{{ __('e.g., 1, 2, 3, etc.') }}" required>
-                        <small class="form-text text-muted">{{ __('Enter unique identifier') }}</small>
+
+                    <div class="row">
+                        <!-- Song Code -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="song_code" class="form-label required">{{ __('Code') }}</label>
+                                <input type="text" class="form-control" id="song_code" name="song_code"
+                                    placeholder="{{ __('e.g., 1, 2, 3, etc.') }}" required>
+                                <small class="form-text text-muted">{{ __('Enter unique identifier') }}</small>
+                            </div>
+                        </div>
+
+                        <!-- Vachanamrut Code -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vachnamrut_code"
+                                    class="form-label required">{{ __('Vachanamrut Code') }}</label>
+                                <input type="text" class="form-control" id="vachnamrut_code" name="vachnamrut_code"
+                                    placeholder="{{ __('e.g., G-1, G-2, etc.') }}" required>
+                                <small class="form-text text-muted">{{ __('Enter Vachanamrut code') }}</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
 
                 <!-- Written Date Section -->
                 <div class="form-section">
@@ -39,7 +57,8 @@
                         <label for="written_date" class="form-label">{{ __('Date Written') }}</label>
                         <input type="text" class="form-control" id="written_date" name="written_date"
                             placeholder="e.g., 17/09/1825, Saturday" value="{{ old('written_date') }}">
-                        <small class="form-text text-muted">{{ __('Enter date in format: DD/MM/YYYY, Day (e.g., 17/09/1825, Saturday)') }}</small>
+                        <small
+                            class="form-text text-muted">{{ __('Enter date in format: DD/MM/YYYY, Day (e.g., 17/09/1825, Saturday)') }}</small>
                         @error('written_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -73,7 +92,7 @@
 
                             <div class="form-group">
                                 <label for="lyrics_gu" class="form-label required">{{ __('Gujarati Content') }}</label>
-                                
+
                                 <!-- Custom Toolbar -->
                                 <div class="custom-toolbar" data-target="lyrics_gu">
                                     <div class="toolbar-group">
@@ -85,55 +104,57 @@
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Align:</span>
-                                        <button type="button" class="toolbar-btn" data-action="alignLeft" title="Align Left">
+                                        <button type="button" class="toolbar-btn" data-action="alignLeft"
+                                            title="Align Left">
                                             <i class="fas fa-align-left"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignCenter" title="Align Center">
+                                        <button type="button" class="toolbar-btn" data-action="alignCenter"
+                                            title="Align Center">
                                             <i class="fas fa-align-center"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignRight" title="Align Right">
+                                        <button type="button" class="toolbar-btn" data-action="alignRight"
+                                            title="Align Right">
                                             <i class="fas fa-align-right"></i>
                                         </button>
                                     </div>
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Font:</span>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Noto Sans Gujarati" title="Default Gujarati">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Noto Sans Gujarati" title="Default Gujarati">
                                             <i class="fas fa-font"></i> Default
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Gopika" title="Gopika Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Gopika" title="Gopika Font">
                                             <i class="fas fa-font"></i> Gopika
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="ssgd3" title="Sanskardham Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="ssgd3" title="Sanskardham Font">
                                             <i class="fas fa-font"></i> Sanskardham
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Sanskrit" title="Sanskrit Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Sanskrit" title="Sanskrit Font">
                                             <i class="fas fa-font"></i> Sanskrit
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Single Rich Text Editor with Live Preview -->
                                 <div class="single-editor-container">
                                     <div class="section-title">
                                         {{ __('Editor') }} <span class="live-indicator">● LIVE</span>
                                     </div>
-                                    
-                                    <div class="rich-text-editor gujarati-text" 
-                                         id="rich_editor_lyrics_gu" 
-                                         contenteditable="true" 
-                                         data-target="lyrics_gu"
-                                         data-placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}">
+
+                                    <div class="rich-text-editor gujarati-text" id="rich_editor_lyrics_gu"
+                                        contenteditable="true" data-target="lyrics_gu"
+                                        data-placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}">
                                     </div>
-                                    
+
                                     <!-- Hidden textarea to maintain form functionality -->
-                                    <textarea class="form-control gujarati-text content-textarea custom-editor hidden-textarea" 
-                                              id="lyrics_gu" 
-                                              name="lyrics_gu" 
-                                              required 
-                                              style="display: none;"></textarea>
+                                    <textarea class="form-control gujarati-text content-textarea custom-editor hidden-textarea" id="lyrics_gu"
+                                        name="lyrics_gu" required style="display: none;"></textarea>
                                 </div>
-                                
+
                                 <small class="form-text text-muted">
                                     <i class="fas fa-info-circle"></i>
                                     {{ __('Use the toolbar buttons to format your text. Select text first, then click formatting buttons. Live preview shows as you type.') }}
@@ -151,7 +172,7 @@
 
                             <div class="form-group">
                                 <label for="lyrics_en" class="form-label">{{ __('English Content') }}</label>
-                                
+
                                 <!-- Custom Toolbar -->
                                 <div class="custom-toolbar" data-target="lyrics_en">
                                     <div class="toolbar-group">
@@ -159,61 +180,65 @@
                                         <button type="button" class="toolbar-btn" data-action="bold" title="Bold">
                                             <i class="fas fa-bold"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="abbr" title="Abbreviation">
+                                        <button type="button" class="toolbar-btn" data-action="abbr"
+                                            title="Abbreviation">
                                             <i class="fas fa-text-width"></i>
                                         </button>
                                     </div>
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Align:</span>
-                                        <button type="button" class="toolbar-btn" data-action="alignLeft" title="Align Left">
+                                        <button type="button" class="toolbar-btn" data-action="alignLeft"
+                                            title="Align Left">
                                             <i class="fas fa-align-left"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignCenter" title="Align Center">
+                                        <button type="button" class="toolbar-btn" data-action="alignCenter"
+                                            title="Align Center">
                                             <i class="fas fa-align-center"></i>
                                         </button>
-                                        <button type="button" class="toolbar-btn" data-action="alignRight" title="Align Right">
+                                        <button type="button" class="toolbar-btn" data-action="alignRight"
+                                            title="Align Right">
                                             <i class="fas fa-align-right"></i>
                                         </button>
                                     </div>
                                     <div class="toolbar-separator"></div>
                                     <div class="toolbar-group">
                                         <span class="toolbar-label">Font:</span>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Arial" title="Default English">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Arial" title="Default English">
                                             <i class="fas fa-font"></i> Default
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Gopika" title="Gopika Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Gopika" title="Gopika Font">
                                             <i class="fas fa-font"></i> Gopika
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="ssgd3" title="Sanskardham Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="ssgd3" title="Sanskardham Font">
                                             <i class="fas fa-font"></i> Sanskardham
                                         </button>
-                                        <button type="button" class="toolbar-btn font-btn" data-action="font" data-font="Sanskrit" title="Sanskrit Font">
+                                        <button type="button" class="toolbar-btn font-btn" data-action="font"
+                                            data-font="Sanskrit" title="Sanskrit Font">
                                             <i class="fas fa-font"></i> Sanskrit
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Single Rich Text Editor with Live Preview -->
                                 <div class="single-editor-container">
                                     <div class="section-title">
                                         {{ __('Editor') }} <span class="live-indicator">● LIVE</span>
                                     </div>
-                                    
-                                    <div class="rich-text-editor" 
-                                         id="rich_editor_lyrics_en" 
-                                         contenteditable="true" 
-                                         data-target="lyrics_en"
-                                         data-placeholder="{{ __('English translation (optional)') }}">
+
+                                    <div class="rich-text-editor" id="rich_editor_lyrics_en" contenteditable="true"
+                                        data-target="lyrics_en"
+                                        data-placeholder="{{ __('English translation (optional)') }}">
                                     </div>
-                                    
+
                                     <!-- Hidden textarea to maintain form functionality -->
-                                    <textarea class="form-control content-textarea custom-editor hidden-textarea" 
-                                              id="lyrics_en"
-                                              name="lyrics_en" 
-                                              style="display: none;"></textarea>
+                                    <textarea class="form-control content-textarea custom-editor hidden-textarea" id="lyrics_en" name="lyrics_en"
+                                        style="display: none;"></textarea>
                                 </div>
-                                
+
                                 @error('lyrics_en')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -228,9 +253,10 @@
                         <h4><i class="fas fa-tags"></i> {{ __('Categories') }}</h4>
                     </div>
                     <div class="form-group">
-                        <label for="category_code" class="form-label">{{ __('Categories') }}</label>
-                        <select class="form-control select2" id="category_code" name="category_code[]" multiple="multiple"
+                        <label for="category_code" class="form-label required">{{ __('Categories') }}</label>
+                        <select class="form-control select2" id="category_code" name="category_code"
                             data-placeholder="{{ __('Select categories') }}">
+                            <option value="">{{ __('Select categories') }}</option>
                             @foreach ($categories as $scategory)
                                 <option value="{{ $scategory->category_code }}">
                                     {{ $scategory->category_en }} ({{ $scategory->category_gu }})
@@ -271,7 +297,7 @@
         /* Define font faces for local fonts */
         @font-face {
             font-family: 'Gopika';
-            src: url('{{ asset("fonts/Gopika.ttf") }}') format('truetype');
+            src: url('{{ asset('fonts/Gopika.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -279,7 +305,7 @@
 
         @font-face {
             font-family: 'ssgd3';
-            src: url('{{ asset("fonts/ssgd3.ttf") }}') format('truetype');
+            src: url('{{ asset('fonts/ssgd3.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -287,7 +313,7 @@
 
         @font-face {
             font-family: 'Sanskrit';
-            src: url('{{ asset("fonts/Sanskrit.ttf") }}') format('truetype');
+            src: url('{{ asset('fonts/Sanskrit.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -1028,33 +1054,33 @@
             function initializeRichEditor(editorId) {
                 const richEditor = $('#rich_editor_' + editorId);
                 const hiddenTextarea = $('#' + editorId);
-                
+
                 // Set initial content from textarea to rich editor
                 const initialContent = hiddenTextarea.val();
                 if (initialContent) {
                     richEditor.html(initialContent);
                 }
-                
+
                 // Update hidden textarea when rich editor content changes
                 richEditor.on('input paste keyup', function() {
                     const htmlContent = richEditor.html();
                     hiddenTextarea.val(htmlContent);
-                    
+
                     // Trigger validation check
                     if (hiddenTextarea.attr('required') && htmlContent.trim()) {
                         hiddenTextarea.removeClass('is-invalid');
                     }
                 });
-                
+
                 // Handle paste to preserve formatting but clean up unwanted styles
                 richEditor.on('paste', function(e) {
                     e.preventDefault();
                     const clipboardData = e.originalEvent.clipboardData || window.clipboardData;
                     const text = clipboardData.getData('text/plain');
-                    
+
                     // Insert plain text to avoid unwanted formatting
                     document.execCommand('insertText', false, text);
-                    
+
                     // Update textarea
                     setTimeout(() => {
                         hiddenTextarea.val(richEditor.html());
@@ -1070,7 +1096,7 @@
                         hiddenTextarea.val(richEditor.html());
                         return false;
                     }
-                    
+
                     // Ctrl+I for italic (if needed)
                     if (e.ctrlKey && e.which === 73) {
                         e.preventDefault();
@@ -1088,20 +1114,20 @@
             function showCustomTooltip(element, content) {
                 // Clear any existing tooltip timeout
                 clearTimeout(tooltipTimeout);
-                
+
                 // Set tooltip content (preserving HTML and fonts)
                 customTooltip.html(content);
-                
+
                 // Position tooltip
                 const elementOffset = $(element).offset();
                 const elementWidth = $(element).outerWidth();
                 const elementHeight = $(element).outerHeight();
                 const tooltipWidth = customTooltip.outerWidth();
-                
+
                 // Calculate position (above the element, centered)
                 const left = elementOffset.left + (elementWidth / 2) - (tooltipWidth / 2);
                 const top = elementOffset.top - customTooltip.outerHeight() - 10;
-                
+
                 customTooltip.css({
                     left: Math.max(10, left) + 'px',
                     top: top + 'px',
@@ -1118,25 +1144,25 @@
             // Enhanced toolbar functionality for rich editor
             $('.toolbar-btn').on('click', function(e) {
                 e.preventDefault();
-                
+
                 const action = $(this).data('action');
                 const target = $(this).closest('.custom-toolbar').data('target');
                 const richEditor = $('#rich_editor_' + target)[0];
                 const $richEditor = $('#rich_editor_' + target);
-                
+
                 // Focus the rich editor
                 richEditor.focus();
-                
+
                 if (action === 'font') {
                     const fontFamily = $(this).data('font');
                     const selection = window.getSelection();
-                    
+
                     if (selection.rangeCount > 0 && !selection.isCollapsed) {
                         const range = selection.getRangeAt(0);
                         const span = document.createElement('span');
                         span.style.fontFamily = fontFamily;
                         span.className = 'font-' + fontFamily.toLowerCase().replace(/\s+/g, '');
-                        
+
                         try {
                             range.surroundContents(span);
                             selection.removeAllRanges();
@@ -1147,30 +1173,30 @@
                             range.insertNode(span);
                             selection.removeAllRanges();
                         }
-                        
+
                         // Update textarea
                         $('#' + target).val($richEditor.html());
-                        
+
                         // Setup custom tooltips for new abbreviations with fonts
                         setupCustomTooltips();
                     } else {
                         // Show user-friendly message
-                        showTooltip($(this), '{{ __("Please select text first to change font") }}');
+                        showTooltip($(this), '{{ __('Please select text first to change font') }}');
                         return;
                     }
-                    
+
                 } else if (['alignLeft', 'alignCenter', 'alignRight'].includes(action)) {
                     const selection = window.getSelection();
-                    
+
                     if (selection.rangeCount > 0 && !selection.isCollapsed) {
                         let alignValue = 'left';
                         if (action === 'alignCenter') alignValue = 'center';
                         else if (action === 'alignRight') alignValue = 'right';
-                        
+
                         const range = selection.getRangeAt(0);
                         const div = document.createElement('div');
                         div.style.textAlign = alignValue;
-                        
+
                         try {
                             range.surroundContents(div);
                             selection.removeAllRanges();
@@ -1180,44 +1206,44 @@
                             range.insertNode(div);
                             selection.removeAllRanges();
                         }
-                        
+
                         // Update textarea
                         $('#' + target).val($richEditor.html());
                     } else {
-                        showTooltip($(this), '{{ __("Please select text first to align") }}');
+                        showTooltip($(this), '{{ __('Please select text first to align') }}');
                         return;
                     }
-                    
+
                 } else if (action === 'bold') {
                     const selection = window.getSelection();
-                    
+
                     if (selection.rangeCount > 0 && !selection.isCollapsed) {
                         document.execCommand('bold', false, null);
                         $('#' + target).val($richEditor.html());
                     } else {
-                        showTooltip($(this), '{{ __("Please select text first to make bold") }}');
+                        showTooltip($(this), '{{ __('Please select text first to make bold') }}');
                         return;
                     }
-                    
+
                 } else if (action === 'abbr') {
                     const selection = window.getSelection();
-                    
+
                     if (selection.rangeCount > 0 && !selection.isCollapsed) {
                         const selectedRange = selection.getRangeAt(0);
                         const selectedContent = selectedRange.cloneContents();
-                        
+
                         // Get the HTML content of selected text (preserving formatting)
                         const tempDiv = document.createElement('div');
                         tempDiv.appendChild(selectedContent);
                         const selectedHTML = tempDiv.innerHTML;
-                        
-                        const title = prompt('{{ __("Enter abbreviation meaning:") }}');
+
+                        const title = prompt('{{ __('Enter abbreviation meaning:') }}');
                         if (title) {
                             const range = selection.getRangeAt(0);
                             const abbr = document.createElement('abbr');
                             abbr.setAttribute('title', selectedHTML); // Store formatted content for tooltip
                             abbr.title = ''; // Remove default title to prevent double tooltips
-                            
+
                             try {
                                 range.surroundContents(abbr);
                                 selection.removeAllRanges();
@@ -1227,21 +1253,21 @@
                                 range.insertNode(abbr);
                                 selection.removeAllRanges();
                             }
-                            
+
                             // Store the meaning as data attribute
                             abbr.setAttribute('title', title);
-                            
+
                             $('#' + target).val($richEditor.html());
-                            
+
                             // Setup custom tooltips for new abbreviations
                             setupCustomTooltips();
                         }
                     } else {
-                        showTooltip($(this), '{{ __("Please select text first") }}');
+                        showTooltip($(this), '{{ __('Please select text first') }}');
                         return;
                     }
                 }
-                
+
                 // Visual feedback
                 $(this).addClass('active');
                 setTimeout(() => {
@@ -1253,19 +1279,20 @@
             function setupCustomTooltips() {
                 // Remove existing event handlers to prevent multiple bindings
                 $('.rich-text-editor abbr').off('mouseenter mouseleave');
-                
+
                 // Setup new event handlers
                 $('.rich-text-editor abbr').on('mouseenter', function(e) {
                     const meaning = $(this).attr('data-meaning');
                     const tooltipContent = $(this).attr('data-tooltip');
-                    
+
                     if (meaning) {
                         // Create tooltip content with formatted text and meaning
-                        const formattedTooltip = '<div><strong>Text:</strong> ' + tooltipContent + '</div><div><strong>Meaning:</strong> ' + meaning + '</div>';
+                        const formattedTooltip = '<div><strong>Text:</strong> ' + tooltipContent +
+                            '</div><div><strong>Meaning:</strong> ' + meaning + '</div>';
                         showCustomTooltip(this, formattedTooltip);
                     }
                 });
-                
+
                 $('.rich-text-editor abbr').on('mouseleave', function(e) {
                     hideCustomTooltip();
                 });
@@ -1275,13 +1302,13 @@
             function showTooltip(element, message) {
                 const tooltip = $('<div class="toolbar-tooltip">' + message + '</div>');
                 $('body').append(tooltip);
-                
+
                 const offset = element.offset();
                 tooltip.css({
                     top: offset.top - 35,
                     left: offset.left + (element.outerWidth() / 2) - (tooltip.outerWidth() / 2)
                 });
-                
+
                 setTimeout(() => {
                     tooltip.fadeOut(300, function() {
                         $(this).remove();
@@ -1292,7 +1319,7 @@
             // Initialize rich editors
             initializeRichEditor('lyrics_gu');
             initializeRichEditor('lyrics_en');
-            
+
             // Setup initial custom tooltips
             setTimeout(() => {
                 setupCustomTooltips();
@@ -1303,9 +1330,10 @@
                 if (!validateForm()) {
                     e.preventDefault();
                     if (typeof toastr !== 'undefined') {
-                        toastr.error('{{ __("Please fill in all required fields.") }}', 'Validation Error');
+                        toastr.error('{{ __('Please fill in all required fields.') }}',
+                        'Validation Error');
                     } else {
-                        alert('{{ __("Please fill in all required fields.") }}');
+                        alert('{{ __('Please fill in all required fields.') }}');
                     }
                     return false;
                 }
@@ -1332,7 +1360,7 @@
 
             // Focus on Gujarati title by default
             setTimeout(function() {
-                $('#title_gu').focus();
+                $('#song_code').focus();
             }, 100);
         });
 

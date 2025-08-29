@@ -44,7 +44,7 @@ class CategoriesController extends Controller
         $song = DB::table('song_cate_rels')
             ->join('songs', 'song_cate_rels.song_code', '=', 'songs.song_code')
             ->where('song_cate_rels.category_code', $category->category_code)
-            ->where('songs.song_code', $id)
+            ->where('songs.vachnamrut_code', $id)
             ->first();
 
         if (!$song) {

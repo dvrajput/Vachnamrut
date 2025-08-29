@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class SongsController extends Controller
 {
@@ -122,14 +123,28 @@ class SongsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'song_code'=>'required|unique:songs,song_code',
-            'written_date' => 'nullable|string|max:50', // Added validation for written_date
+            'song_code' => 'required|unique:songs,song_code',
+            'vachnamrut_code' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->filled('category_code')) {
+                        $exists = DB::table('songs')
+                            ->join('song_cate_rels', 'songs.song_code', '=', 'song_cate_rels.song_code')
+                            ->where('song_cate_rels.category_code', $request->category_code)
+                            ->where('songs.vachnamrut_code', $value)
+                            ->exists();
+
+                        if ($exists) {
+                            $fail("The {$attribute} '{$value}' already exists in this category.");
+                        }
+                    }
+                },
+            ],
+            'written_date' => 'nullable|string|max:50',
             'title_en' => 'nullable|string|max:255',
             'lyrics_en' => 'nullable|string',
             'title_gu' => 'nullable|string|max:255',
             'lyrics_gu' => 'nullable|string',
-            'sub_category_code' => 'nullable|array',
-            'sub_category_code.*' => 'exists:sub_categories,sub_category_code',
         ]);
 
         // Get song prefix from the configuration table
@@ -142,32 +157,29 @@ class SongsController extends Controller
 
         // Determine the new song code
         if ($lastSong) {
-            // Extract the numeric part and increment it
             $lastNumber = intval(substr($lastSong->song_code, strlen($config)));
             $newSongCode = $config . ($lastNumber + 1);
         } else {
-            // No song exists with this prefix; start with the prefix followed by 1
             $newSongCode = $config . '1';
         }
 
-        // Create the new song record
+        // Create the new song record (✅ vachnamrut_code saved in songs)
         $song = Song::create([
             'song_code' => $request->song_code,
-            'written_date' => $request->written_date, // Added written_date field
+            'vachnamrut_code' => $request->vachnamrut_code,
+            'written_date' => $request->written_date,
             'title_en' => $request->title_en ?? '',
             'lyrics_en' => $request->lyrics_en ?? '',
             'title_gu' => $request->title_gu,
             'lyrics_gu' => $request->lyrics_gu,
         ]);
 
-        // Handle subcategories if provided
+        // Save category relation
         if ($request->filled('category_code')) {
-            foreach ($request->category_code as $categoryCode) {
-                SongCateRel::create([
-                    'song_code' => $song->song_code,
-                    'category_code' => $categoryCode,
-                ]);
-            }
+            SongCateRel::create([
+                'song_code' => $song->song_code,
+                'category_code' => $request->category_code,
+            ]);
         }
 
         return redirect()->route('admin.songs.index')->with('success', 'Vachnamrut added successfully!');

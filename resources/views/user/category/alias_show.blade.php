@@ -285,7 +285,7 @@
 
                 return `
             <li>
-                <a href="${buildSongUrl(song.song_code)}">
+                <a href="${buildSongUrl(song.vachnamrut_code)}">
                     ${song.title || song.title_en || 'Untitled'}
                     ${padInfo}
                 </a>
