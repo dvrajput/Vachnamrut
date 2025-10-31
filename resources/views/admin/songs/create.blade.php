@@ -28,9 +28,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="song_code" class="form-label required">{{ __('Code') }}</label>
-                                <input type="text" class="form-control" id="song_code" name="song_code"
+                                <input type="text" class="form-control @error('song_code') is-invalid @enderror"
+                                    id="song_code" name="song_code" value="{{ old('song_code') }}"
                                     placeholder="{{ __('e.g., 1, 2, 3, etc.') }}" required>
                                 <small class="form-text text-muted">{{ __('Enter unique identifier') }}</small>
+                                @error('song_code')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -39,14 +43,17 @@
                             <div class="form-group">
                                 <label for="vachnamrut_code"
                                     class="form-label required">{{ __('Vachanamrut Code') }}</label>
-                                <input type="text" class="form-control" id="vachnamrut_code" name="vachnamrut_code"
+                                <input type="text" class="form-control @error('vachnamrut_code') is-invalid @enderror"
+                                    id="vachnamrut_code" name="vachnamrut_code" value="{{ old('vachnamrut_code') }}"
                                     placeholder="{{ __('e.g., G-1, G-2, etc.') }}" required>
                                 <small class="form-text text-muted">{{ __('Enter Vachanamrut code') }}</small>
+                                @error('vachnamrut_code')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 <!-- Written Date Section -->
                 <div class="form-section">
@@ -55,12 +62,13 @@
                     </div>
                     <div class="form-group">
                         <label for="written_date" class="form-label">{{ __('Date Written') }}</label>
-                        <input type="text" class="form-control" id="written_date" name="written_date"
-                            placeholder="e.g., 17/09/1825, Saturday" value="{{ old('written_date') }}">
+                        <input type="text" class="form-control @error('written_date') is-invalid @enderror"
+                            id="written_date" name="written_date" value="{{ old('written_date') }}"
+                            placeholder="e.g., 17/09/1825, Saturday">
                         <small
                             class="form-text text-muted">{{ __('Enter date in format: DD/MM/YYYY, Day (e.g., 17/09/1825, Saturday)') }}</small>
                         @error('written_date')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -86,8 +94,13 @@
                         <div class="tab-content active" id="gujarati-tab">
                             <div class="form-group">
                                 <label for="title_gu" class="form-label required">{{ __('Gujarati Title') }}</label>
-                                <input type="text" class="form-control gujarati-text" id="title_gu" name="title_gu"
+                                <input type="text"
+                                    class="form-control gujarati-text @error('title_gu') is-invalid @enderror"
+                                    id="title_gu" name="title_gu" value="{{ old('title_gu') }}"
                                     placeholder="{{ __('વચનામૃતનું શીર્ષક લખો') }}" required>
+                                @error('title_gu')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
@@ -145,15 +158,20 @@
                                         {{ __('Editor') }} <span class="live-indicator">● LIVE</span>
                                     </div>
 
-                                    <div class="rich-text-editor gujarati-text" id="rich_editor_lyrics_gu"
-                                        contenteditable="true" data-target="lyrics_gu"
-                                        data-placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}">
+                                    <div class="rich-text-editor gujarati-text @error('lyrics_gu') is-invalid-editor @enderror"
+                                        id="rich_editor_lyrics_gu" contenteditable="true" data-target="lyrics_gu"
+                                        data-placeholder="{{ __('વચનામૃતનું મૂળ લખાણ લખો...') }}">{{ old('lyrics_gu') }}
                                     </div>
 
                                     <!-- Hidden textarea to maintain form functionality -->
-                                    <textarea class="form-control gujarati-text content-textarea custom-editor hidden-textarea" id="lyrics_gu"
-                                        name="lyrics_gu" required style="display: none;"></textarea>
+                                    <textarea
+                                        class="form-control gujarati-text content-textarea custom-editor hidden-textarea @error('lyrics_gu') is-invalid @enderror"
+                                        id="lyrics_gu" name="lyrics_gu" required style="display: none;">{{ old('lyrics_gu') }}</textarea>
                                 </div>
+
+                                @error('lyrics_gu')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
 
                                 <small class="form-text text-muted">
                                     <i class="fas fa-info-circle"></i>
@@ -166,8 +184,12 @@
                         <div class="tab-content" id="english-tab">
                             <div class="form-group">
                                 <label for="title_en" class="form-label">{{ __('English Title') }}</label>
-                                <input type="text" class="form-control" id="title_en" name="title_en"
+                                <input type="text" class="form-control @error('title_en') is-invalid @enderror"
+                                    id="title_en" name="title_en" value="{{ old('title_en') }}"
                                     placeholder="{{ __('English title (optional)') }}">
+                                @error('title_en')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
@@ -229,18 +251,18 @@
                                         {{ __('Editor') }} <span class="live-indicator">● LIVE</span>
                                     </div>
 
-                                    <div class="rich-text-editor" id="rich_editor_lyrics_en" contenteditable="true"
-                                        data-target="lyrics_en"
+                                    <div class="rich-text-editor @error('lyrics_en') is-invalid-editor @enderror"
+                                        id="rich_editor_lyrics_en" contenteditable="true" data-target="lyrics_en"
                                         data-placeholder="{{ __('English translation (optional)') }}">
-                                    </div>
+                                        {{ old('lyrics_en') }}</div>
 
                                     <!-- Hidden textarea to maintain form functionality -->
-                                    <textarea class="form-control content-textarea custom-editor hidden-textarea" id="lyrics_en" name="lyrics_en"
-                                        style="display: none;"></textarea>
+                                    <textarea class="form-control content-textarea custom-editor hidden-textarea @error('lyrics_en') is-invalid @enderror"
+                                        id="lyrics_en" name="lyrics_en" style="display: none;">{{ old('lyrics_en') }}</textarea>
                                 </div>
 
                                 @error('lyrics_en')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -254,17 +276,18 @@
                     </div>
                     <div class="form-group">
                         <label for="category_code" class="form-label required">{{ __('Categories') }}</label>
-                        <select class="form-control select2" id="category_code" name="category_code"
-                            data-placeholder="{{ __('Select categories') }}">
+                        <select class="form-control select2 @error('category_code') is-invalid @enderror"
+                            id="category_code" name="category_code" data-placeholder="{{ __('Select categories') }}">
                             <option value="">{{ __('Select categories') }}</option>
                             @foreach ($categories as $scategory)
-                                <option value="{{ $scategory->category_code }}">
+                                <option value="{{ $scategory->category_code }}"
+                                    {{ old('category_code') == $scategory->category_code ? 'selected' : '' }}>
                                     {{ $scategory->category_en }} ({{ $scategory->category_gu }})
                                 </option>
                             @endforeach
                         </select>
                         @error('category_code')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -994,13 +1017,53 @@
                 padding: 15px;
             }
         }
+
+        .invalid-feedback.d-block {
+            display: block !important;
+            color: var(--admin-error, #dc3545);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Invalid editor border */
+        .rich-text-editor.is-invalid-editor {
+            border: 2px solid var(--admin-error, #dc3545) !important;
+        }
+
+        /* All other existing styles from the original file */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        @font-face {
+            font-family: 'Gopika';
+            src: url('{{ asset('fonts/Gopika.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'ssgd3';
+            src: url('{{ asset('fonts/ssgd3.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Sanskrit';
+            src: url('{{ asset('fonts/Sanskrit.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
     </style>
 @endsection
 
 @section('script')
     <script>
         $(document).ready(function() {
-            // Initialize Select2
+            // Initialize Select2 with old value preservation
             function initializeSelect2() {
                 if ($('.select2').hasClass('select2-hidden-accessible')) {
                     $('.select2').select2('destroy');
@@ -1022,7 +1085,6 @@
                 });
             }
 
-            // Initialize Select2
             initializeSelect2();
 
             // Reinitialize on theme change
@@ -1055,7 +1117,7 @@
                 const richEditor = $('#rich_editor_' + editorId);
                 const hiddenTextarea = $('#' + editorId);
 
-                // Set initial content from textarea to rich editor
+                // Set initial content from textarea to rich editor (preserving old values)
                 const initialContent = hiddenTextarea.val();
                 if (initialContent) {
                     richEditor.html(initialContent);
@@ -1067,8 +1129,11 @@
                     hiddenTextarea.val(htmlContent);
 
                     // Trigger validation check
-                    if (hiddenTextarea.attr('required') && htmlContent.trim()) {
-                        hiddenTextarea.removeClass('is-invalid');
+                    if (hiddenTextarea.attr('required')) {
+                        if (htmlContent.trim() && htmlContent !== '<br>') {
+                            hiddenTextarea.removeClass('is-invalid');
+                            richEditor.removeClass('is-invalid-editor');
+                        }
                     }
                 });
 
@@ -1107,24 +1172,19 @@
                 });
             }
 
-            // Enhanced Custom Tooltip System
+            // Custom Tooltip System
             let customTooltip = $('#custom-tooltip');
             let tooltipTimeout;
 
             function showCustomTooltip(element, content) {
-                // Clear any existing tooltip timeout
                 clearTimeout(tooltipTimeout);
-
-                // Set tooltip content (preserving HTML and fonts)
                 customTooltip.html(content);
 
-                // Position tooltip
                 const elementOffset = $(element).offset();
                 const elementWidth = $(element).outerWidth();
                 const elementHeight = $(element).outerHeight();
                 const tooltipWidth = customTooltip.outerWidth();
 
-                // Calculate position (above the element, centered)
                 const left = elementOffset.left + (elementWidth / 2) - (tooltipWidth / 2);
                 const top = elementOffset.top - customTooltip.outerHeight() - 10;
 
@@ -1138,10 +1198,10 @@
             function hideCustomTooltip() {
                 tooltipTimeout = setTimeout(() => {
                     customTooltip.hide();
-                }, 300); // Slight delay to prevent flickering
+                }, 300);
             }
 
-            // Enhanced toolbar functionality for rich editor
+            // Enhanced toolbar functionality
             $('.toolbar-btn').on('click', function(e) {
                 e.preventDefault();
 
@@ -1150,7 +1210,6 @@
                 const richEditor = $('#rich_editor_' + target)[0];
                 const $richEditor = $('#rich_editor_' + target);
 
-                // Focus the rich editor
                 richEditor.focus();
 
                 if (action === 'font') {
@@ -1167,20 +1226,15 @@
                             range.surroundContents(span);
                             selection.removeAllRanges();
                         } catch (e) {
-                            // If surroundContents fails, extract and wrap content
                             const contents = range.extractContents();
                             span.appendChild(contents);
                             range.insertNode(span);
                             selection.removeAllRanges();
                         }
 
-                        // Update textarea
                         $('#' + target).val($richEditor.html());
-
-                        // Setup custom tooltips for new abbreviations with fonts
                         setupCustomTooltips();
                     } else {
-                        // Show user-friendly message
                         showTooltip($(this), '{{ __('Please select text first to change font') }}');
                         return;
                     }
@@ -1207,7 +1261,6 @@
                             selection.removeAllRanges();
                         }
 
-                        // Update textarea
                         $('#' + target).val($richEditor.html());
                     } else {
                         showTooltip($(this), '{{ __('Please select text first to align') }}');
@@ -1232,7 +1285,6 @@
                         const selectedRange = selection.getRangeAt(0);
                         const selectedContent = selectedRange.cloneContents();
 
-                        // Get the HTML content of selected text (preserving formatting)
                         const tempDiv = document.createElement('div');
                         tempDiv.appendChild(selectedContent);
                         const selectedHTML = tempDiv.innerHTML;
@@ -1241,8 +1293,9 @@
                         if (title) {
                             const range = selection.getRangeAt(0);
                             const abbr = document.createElement('abbr');
-                            abbr.setAttribute('title', selectedHTML); // Store formatted content for tooltip
-                            abbr.title = ''; // Remove default title to prevent double tooltips
+                            abbr.setAttribute('data-meaning', title);
+                            abbr.setAttribute('data-tooltip', selectedHTML);
+                            abbr.title = '';
 
                             try {
                                 range.surroundContents(abbr);
@@ -1254,12 +1307,7 @@
                                 selection.removeAllRanges();
                             }
 
-                            // Store the meaning as data attribute
-                            abbr.setAttribute('title', title);
-
                             $('#' + target).val($richEditor.html());
-
-                            // Setup custom tooltips for new abbreviations
                             setupCustomTooltips();
                         }
                     } else {
@@ -1268,25 +1316,21 @@
                     }
                 }
 
-                // Visual feedback
                 $(this).addClass('active');
                 setTimeout(() => {
                     $(this).removeClass('active');
                 }, 300);
             });
 
-            // Setup custom tooltips for abbreviations
+            // Setup custom tooltips
             function setupCustomTooltips() {
-                // Remove existing event handlers to prevent multiple bindings
                 $('.rich-text-editor abbr').off('mouseenter mouseleave');
 
-                // Setup new event handlers
                 $('.rich-text-editor abbr').on('mouseenter', function(e) {
                     const meaning = $(this).attr('data-meaning');
                     const tooltipContent = $(this).attr('data-tooltip');
 
                     if (meaning) {
-                        // Create tooltip content with formatted text and meaning
                         const formattedTooltip = '<div><strong>Text:</strong> ' + tooltipContent +
                             '</div><div><strong>Meaning:</strong> ' + meaning + '</div>';
                         showCustomTooltip(this, formattedTooltip);
@@ -1298,7 +1342,7 @@
                 });
             }
 
-            // Tooltip function for user guidance (simple tooltips for toolbar)
+            // Tooltip function
             function showTooltip(element, message) {
                 const tooltip = $('<div class="toolbar-tooltip">' + message + '</div>');
                 $('body').append(tooltip);
@@ -1320,7 +1364,6 @@
             initializeRichEditor('lyrics_gu');
             initializeRichEditor('lyrics_en');
 
-            // Setup initial custom tooltips
             setTimeout(() => {
                 setupCustomTooltips();
             }, 500);
@@ -1329,6 +1372,15 @@
             $('.vachanamrut-form').on('submit', function(e) {
                 if (!validateForm()) {
                     e.preventDefault();
+
+                    // Scroll to first error
+                    const firstError = $('.is-invalid, .is-invalid-editor').first();
+                    if (firstError.length) {
+                        $('html, body').animate({
+                            scrollTop: firstError.offset().top - 100
+                        }, 500);
+                    }
+
                     if (typeof toastr !== 'undefined') {
                         toastr.error('{{ __('Please fill in all required fields.') }}',
                         'Validation Error');
@@ -1339,41 +1391,64 @@
                 }
             });
 
-            // Real-time validation for required fields
+            // Real-time validation
             $('.form-control[required], .rich-text-editor').on('input blur', function() {
                 if ($(this).hasClass('rich-text-editor')) {
                     const target = $(this).data('target');
                     const hiddenField = $('#' + target);
-                    if ($(this).html().trim()) {
+                    const content = $(this).html().trim();
+
+                    if (content && content !== '<br>') {
                         hiddenField.removeClass('is-invalid');
-                    } else {
+                        $(this).removeClass('is-invalid-editor');
+                    } else if (hiddenField.attr('required')) {
                         hiddenField.addClass('is-invalid');
+                        $(this).addClass('is-invalid-editor');
                     }
                 } else {
                     if ($(this).val().trim()) {
                         $(this).removeClass('is-invalid');
-                    } else {
+                    } else if ($(this).attr('required')) {
                         $(this).addClass('is-invalid');
                     }
                 }
             });
 
-            // Focus on Gujarati title by default
+            // Focus on song code by default
             setTimeout(function() {
                 $('#song_code').focus();
             }, 100);
         });
 
-        // Enhanced form validation function
+        // Form validation function
         function validateForm() {
             let isValid = true;
 
+            // Validate text inputs
             $('.form-control[required]').each(function() {
                 if (!$(this).val().trim()) {
                     $(this).addClass('is-invalid');
                     isValid = false;
                 } else {
                     $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Validate rich text editors
+            $('.rich-text-editor').each(function() {
+                const target = $(this).data('target');
+                const hiddenField = $('#' + target);
+
+                if (hiddenField.attr('required')) {
+                    const content = $(this).html().trim();
+                    if (!content || content === '<br>') {
+                        hiddenField.addClass('is-invalid');
+                        $(this).addClass('is-invalid-editor');
+                        isValid = false;
+                    } else {
+                        hiddenField.removeClass('is-invalid');
+                        $(this).removeClass('is-invalid-editor');
+                    }
                 }
             });
 
