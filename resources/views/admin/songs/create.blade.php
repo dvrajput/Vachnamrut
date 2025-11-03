@@ -1071,6 +1071,130 @@
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+
+        /* Keyboard Shortcut Notification */
+        .shortcut-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.3s ease;
+        }
+
+        .shortcut-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Keyboard Shortcuts Help Modal */
+        .shortcuts-help-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .shortcuts-help-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .shortcuts-help-content h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .shortcut-section h4 {
+            color: #2196F3;
+            margin: 0 0 12px 0;
+            font-size: 16px;
+        }
+
+        .shortcut-section div {
+            padding: 8px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .shortcuts-help-content kbd {
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: monospace;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .shortcuts-footer {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .shortcuts-footer p {
+            margin: 0 0 15px 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .close-shortcuts-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .close-shortcuts-btn:hover {
+            background: #1976D2;
+        }
+
+        /* Preserve spaces in rich text editor */
+        .rich-text-editor {
+            white-space: pre-wrap !important;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* For displaying saved content on the view page */
+        .vachanamrut-content,
+        .lyrics-display {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
     </style>
 @endsection
 
@@ -1126,7 +1250,47 @@
                 }, 100);
             });
 
-            // Rich Text Editor functionality with SPACE PRESERVATION
+            // GLOBAL KEYBOARD SHORTCUTS FOR LANGUAGE SWITCHING
+            $(document).on('keydown', function(e) {
+                // Ctrl + Alt + G for Gujarati tab
+                if (e.ctrlKey && e.altKey && e.which === 71) { // G key
+                    e.preventDefault();
+                    $('.tab-btn[data-tab="lyrics_gu"]').click();
+                    setTimeout(() => {
+                        $('#rich_editor_lyrics_gu').focus();
+                    }, 100);
+                    showShortcutNotification('Switched to Gujarati');
+                    return false;
+                }
+
+                // Ctrl + Alt + E for English tab
+                if (e.ctrlKey && e.altKey && e.which === 69) { // E key
+                    e.preventDefault();
+                    $('.tab-btn[data-tab="lyrics_en"]').click();
+                    setTimeout(() => {
+                        $('#rich_editor_lyrics_en').focus();
+                    }, 100);
+                    showShortcutNotification('Switched to English');
+                    return false;
+                }
+            });
+
+            // Function to show shortcut notification
+            function showShortcutNotification(message) {
+                const notification = $('<div class="shortcut-notification">' + message + '</div>');
+                $('body').append(notification);
+
+                setTimeout(() => {
+                    notification.addClass('show');
+                }, 10);
+
+                setTimeout(() => {
+                    notification.removeClass('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 1500);
+            }
+
+            // Rich Text Editor functionality with SPACE PRESERVATION + KEYBOARD SHORTCUTS
             function initializeRichEditor(editorId) {
                 const richEditor = $('#rich_editor_' + editorId);
                 const hiddenTextarea = $('#' + editorId);
@@ -1281,13 +1445,76 @@
                     return html;
                 }
 
-                // Handle keyboard shortcuts
+                // Function to apply alignment
+                function applyAlignment(alignValue) {
+                    const selection = window.getSelection();
+
+                    if (selection.rangeCount === 0) {
+                        // If no selection, apply to current line/paragraph
+                        const range = document.createRange();
+                        range.selectNodeContents(richEditor[0]);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+
+                    if (selection.rangeCount > 0) {
+                        const range = selection.getRangeAt(0);
+                        const div = document.createElement('div');
+                        div.style.textAlign = alignValue;
+                        div.style.whiteSpace = 'pre-wrap';
+
+                        try {
+                            range.surroundContents(div);
+                        } catch (e) {
+                            const contents = range.extractContents();
+                            div.appendChild(contents);
+                            range.insertNode(div);
+                        }
+
+                        selection.removeAllRanges();
+                        richEditor.focus();
+
+                        setTimeout(() => syncContent(), 10);
+                    }
+                }
+
+                // Function to apply font
+                function applyFont(fontFamily) {
+                    const selection = window.getSelection();
+
+                    if (selection.rangeCount === 0 || selection.isCollapsed) {
+                        showShortcutNotification('Please select text first');
+                        return;
+                    }
+
+                    const range = selection.getRangeAt(0);
+                    const span = document.createElement('span');
+                    span.style.fontFamily = fontFamily;
+                    span.style.whiteSpace = 'pre-wrap';
+                    span.className = 'font-' + fontFamily.toLowerCase().replace(/\s+/g, '');
+
+                    try {
+                        range.surroundContents(span);
+                    } catch (e) {
+                        const contents = range.extractContents();
+                        span.appendChild(contents);
+                        range.insertNode(span);
+                    }
+
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+
+                    setTimeout(() => syncContent(), 10);
+                }
+
+                // ENHANCED KEYBOARD SHORTCUTS
                 richEditor.on('keydown', function(e) {
                     // Ctrl+B for bold
                     if (e.ctrlKey && e.which === 66) {
                         e.preventDefault();
                         document.execCommand('bold', false, null);
                         setTimeout(() => syncContent(), 10);
+                        showShortcutNotification('Bold applied');
                         return false;
                     }
 
@@ -1296,6 +1523,113 @@
                         e.preventDefault();
                         document.execCommand('italic', false, null);
                         setTimeout(() => syncContent(), 10);
+                        showShortcutNotification('Italic applied');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+L for Left Align
+                    if (e.ctrlKey && e.shiftKey && e.which === 76) {
+                        e.preventDefault();
+                        applyAlignment('left');
+                        showShortcutNotification('Aligned Left');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+E for Center Align
+                    if (e.ctrlKey && e.shiftKey && e.which === 69) {
+                        e.preventDefault();
+                        applyAlignment('center');
+                        showShortcutNotification('Aligned Center');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+R for Right Align
+                    if (e.ctrlKey && e.shiftKey && e.which === 82) {
+                        e.preventDefault();
+                        applyAlignment('right');
+                        showShortcutNotification('Aligned Right');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+J for Justify (optional)
+                    if (e.ctrlKey && e.shiftKey && e.which === 74) {
+                        e.preventDefault();
+                        applyAlignment('justify');
+                        showShortcutNotification('Justified');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+1 for Noto Serif Gujarati font
+                    if (e.ctrlKey && e.shiftKey && e.which === 49) { // 1 key
+                        e.preventDefault();
+                        applyFont('Noto Serif Gujarati');
+                        showShortcutNotification('Font: Noto Serif Gujarati');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+2 for Mukta Vaani font
+                    if (e.ctrlKey && e.shiftKey && e.which === 50) { // 2 key
+                        e.preventDefault();
+                        applyFont('Mukta Vaani');
+                        showShortcutNotification('Font: Mukta Vaani');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+3 for Hind Vadodara font
+                    if (e.ctrlKey && e.shiftKey && e.which === 51) { // 3 key
+                        e.preventDefault();
+                        applyFont('Hind Vadodara');
+                        showShortcutNotification('Font: Hind Vadodara');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+4 for Baloo Bhaijaan 2 font
+                    if (e.ctrlKey && e.shiftKey && e.which === 52) { // 4 key
+                        e.preventDefault();
+                        applyFont('Baloo Bhaijaan 2');
+                        showShortcutNotification('Font: Baloo Bhaijaan 2');
+                        return false;
+                    }
+
+                    // Ctrl+Shift+A for Abbreviation
+                    if (e.ctrlKey && e.shiftKey && e.which === 65) {
+                        e.preventDefault();
+                        const selection = window.getSelection();
+
+                        if (selection.rangeCount === 0 || selection.isCollapsed) {
+                            showShortcutNotification('Please select text first');
+                            return false;
+                        }
+
+                        const selectedRange = selection.getRangeAt(0);
+                        const selectedContent = selectedRange.cloneContents();
+
+                        const tempDiv = document.createElement('div');
+                        tempDiv.appendChild(selectedContent);
+                        const selectedHTML = tempDiv.innerHTML;
+
+                        const title = prompt('{{ __('Enter abbreviation meaning:') }}');
+                        if (title) {
+                            const range = selection.getRangeAt(0);
+                            const abbr = document.createElement('abbr');
+                            abbr.setAttribute('data-meaning', title);
+                            abbr.setAttribute('data-tooltip', selectedHTML);
+                            abbr.title = '';
+                            abbr.style.whiteSpace = 'pre-wrap';
+
+                            try {
+                                range.surroundContents(abbr);
+                            } catch (e) {
+                                const contents = range.extractContents();
+                                abbr.appendChild(contents);
+                                range.insertNode(abbr);
+                            }
+
+                            selection.removeAllRanges();
+                            setupCustomTooltips();
+                            setTimeout(() => syncContent(), 10);
+                            showShortcutNotification('Abbreviation added');
+                        }
                         return false;
                     }
 
@@ -1387,7 +1721,8 @@
 
                 // Check if text is selected for actions that require it
                 const requiresSelection = ['font', 'alignLeft', 'alignCenter', 'alignRight', 'bold',
-                'abbr'];
+                    'abbr'
+                ];
                 if (requiresSelection.includes(action) && (selection.rangeCount === 0 || selection
                         .isCollapsed)) {
                     let message = '{{ __('Please select text first') }}';
@@ -1406,7 +1741,7 @@
                     const range = selection.getRangeAt(0);
                     const span = document.createElement('span');
                     span.style.fontFamily = fontFamily;
-                    span.style.whiteSpace = 'pre-wrap'; // Preserve spaces in formatted text
+                    span.style.whiteSpace = 'pre-wrap';
                     span.className = 'font-' + fontFamily.toLowerCase().replace(/\s+/g, '');
 
                     try {
@@ -1428,7 +1763,7 @@
                     const range = selection.getRangeAt(0);
                     const div = document.createElement('div');
                     div.style.textAlign = alignValue;
-                    div.style.whiteSpace = 'pre-wrap'; // Preserve spaces in aligned text
+                    div.style.whiteSpace = 'pre-wrap';
 
                     try {
                         range.surroundContents(div);
@@ -1458,7 +1793,7 @@
                         abbr.setAttribute('data-meaning', title);
                         abbr.setAttribute('data-tooltip', selectedHTML);
                         abbr.title = '';
-                        abbr.style.whiteSpace = 'pre-wrap'; // Preserve spaces in abbreviations
+                        abbr.style.whiteSpace = 'pre-wrap';
 
                         try {
                             range.surroundContents(abbr);
@@ -1552,7 +1887,7 @@
 
                     if (typeof toastr !== 'undefined') {
                         toastr.error('{{ __('Please fill in all required fields.') }}',
-                        'Validation Error');
+                            'Validation Error');
                     } else {
                         alert('{{ __('Please fill in all required fields.') }}');
                     }
@@ -1591,6 +1926,64 @@
             setTimeout(function() {
                 $('#song_code').focus();
             }, 100);
+
+            // Show keyboard shortcuts help on Ctrl+/
+            $(document).on('keydown', function(e) {
+                if (e.ctrlKey && e.which === 191) { // / key
+                    e.preventDefault();
+                    showKeyboardShortcutsHelp();
+                }
+            });
+
+            // Function to show keyboard shortcuts help
+            function showKeyboardShortcutsHelp() {
+                const helpContent = `
+                    <div class="shortcuts-help-modal">
+                        <div class="shortcuts-help-content">
+                            <h3>⌨️ Keyboard Shortcuts</h3>
+                            <div class="shortcuts-grid">
+                                <div class="shortcut-section">
+                                    <h4>Text Formatting</h4>
+                                    <div><kbd>Ctrl</kbd> + <kbd>B</kbd> - Bold</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>I</kbd> - Italic</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd> - Abbreviation</div>
+                                </div>
+                                <div class="shortcut-section">
+                                    <h4>Alignment</h4>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> - Left Align</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd> - Center Align</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> - Right Align</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> - Justify</div>
+                                </div>
+                                <div class="shortcut-section">
+                                    <h4>Fonts</h4>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> - Noto Serif Gujarati</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>2</kbd> - Mukta Vaani</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>3</kbd> - Hind Vadodara</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd> - Baloo Bhaijaan 2</div>
+                                </div>
+                                <div class="shortcut-section">
+                                    <h4>Language Switching</h4>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>G</kbd> - Switch to Gujarati</div>
+                                    <div><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>E</kbd> - Switch to English</div>
+                                </div>
+                            </div>
+                            <div class="shortcuts-footer">
+                                <p>Press <kbd>Ctrl</kbd> + <kbd>/</kbd> to show/hide this help</p>
+                                <button class="close-shortcuts-btn">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $('body').append(helpContent);
+
+                $('.close-shortcuts-btn, .shortcuts-help-modal').on('click', function(e) {
+                    if (e.target === this) {
+                        $('.shortcuts-help-modal').remove();
+                    }
+                });
+            }
         });
 
         // Form validation function - FIXED VERSION
