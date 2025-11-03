@@ -1057,6 +1057,20 @@
             font-style: normal;
             font-display: swap;
         }
+
+        /* Add this to preserve spaces in rich text editor */
+        .rich-text-editor {
+            white-space: pre-wrap !important;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* For displaying saved content on the view page */
+        .vachanamrut-content,
+        .lyrics-display {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
     </style>
 @endsection
 
@@ -1112,7 +1126,7 @@
                 }, 100);
             });
 
-            // Rich Text Editor functionality
+            // Rich Text Editor functionality with SPACE PRESERVATION
             function initializeRichEditor(editorId) {
                 const richEditor = $('#rich_editor_' + editorId);
                 const hiddenTextarea = $('#' + editorId);
@@ -1123,34 +1137,149 @@
                     richEditor.html(initialContent);
                 }
 
-                // Update hidden textarea when rich editor content changes
-                richEditor.on('input paste keyup', function() {
-                    const htmlContent = richEditor.html();
+                // FIXED: Improved content synchronization with space preservation
+                function syncContent() {
+                    let htmlContent = richEditor.html();
+
+                    // Don't treat empty content as valid
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = htmlContent;
+                    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+                    if (!textContent.trim() && htmlContent.trim() === '<br>') {
+                        htmlContent = '';
+                    }
+
                     hiddenTextarea.val(htmlContent);
 
                     // Trigger validation check
                     if (hiddenTextarea.attr('required')) {
-                        if (htmlContent.trim() && htmlContent !== '<br>') {
+                        if (textContent.trim()) {
                             hiddenTextarea.removeClass('is-invalid');
                             richEditor.removeClass('is-invalid-editor');
                         }
                     }
+                }
+
+                // Update hidden textarea when rich editor content changes
+                richEditor.on('input keyup', function() {
+                    syncContent();
                 });
 
-                // Handle paste to preserve formatting but clean up unwanted styles
+                // FIXED: Improved paste handler to preserve ALL formatting including spaces
                 richEditor.on('paste', function(e) {
                     e.preventDefault();
+
                     const clipboardData = e.originalEvent.clipboardData || window.clipboardData;
-                    const text = clipboardData.getData('text/plain');
+                    const htmlData = clipboardData.getData('text/html');
+                    const textData = clipboardData.getData('text/plain');
 
-                    // Insert plain text to avoid unwanted formatting
-                    document.execCommand('insertText', false, text);
+                    if (htmlData) {
+                        // Create a temporary div to process the pasted HTML
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = htmlData;
 
-                    // Update textarea
+                        // Clean but preserve spaces and line breaks
+                        const cleanHTML = cleanPastedHTML(tempDiv);
+
+                        // Insert the cleaned HTML
+                        const selection = window.getSelection();
+                        if (selection.rangeCount > 0) {
+                            const range = selection.getRangeAt(0);
+                            range.deleteContents();
+
+                            const fragment = range.createContextualFragment(cleanHTML);
+                            range.insertNode(fragment);
+
+                            // Move cursor to end of inserted content
+                            range.collapse(false);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                        }
+                    } else if (textData) {
+                        // For plain text, preserve spaces and line breaks
+                        const formattedText = preserveSpacesAndLineBreaks(textData);
+                        document.execCommand('insertHTML', false, formattedText);
+                    }
+
+                    // Sync content after paste
                     setTimeout(() => {
-                        hiddenTextarea.val(richEditor.html());
-                    }, 10);
+                        syncContent();
+                    }, 50);
                 });
+
+                // FIXED: Function to preserve spaces and line breaks in plain text
+                function preserveSpacesAndLineBreaks(text) {
+                    // Replace multiple spaces with non-breaking spaces
+                    // Keep the last space as regular space for proper word wrapping
+                    text = text.replace(/ {2,}/g, function(match) {
+                        return '&nbsp;'.repeat(match.length - 1) + ' ';
+                    });
+
+                    // Replace line breaks with <br> tags
+                    text = text.replace(/\n/g, '<br>');
+
+                    return text;
+                }
+
+                // FIXED: Function to clean pasted HTML while preserving spaces
+                function cleanPastedHTML(element) {
+                    // Remove script tags and other dangerous elements
+                    const scripts = element.querySelectorAll('script, iframe, object, embed, link, meta');
+                    scripts.forEach(script => script.remove());
+
+                    // Process all text nodes to preserve spaces
+                    const walker = document.createTreeWalker(
+                        element,
+                        NodeFilter.SHOW_TEXT,
+                        null,
+                        false
+                    );
+
+                    const textNodes = [];
+                    let node;
+                    while (node = walker.nextNode()) {
+                        textNodes.push(node);
+                    }
+
+                    // Replace multiple spaces in text nodes with &nbsp;
+                    textNodes.forEach(textNode => {
+                        let text = textNode.textContent;
+                        // Preserve multiple spaces by converting them to &nbsp;
+                        text = text.replace(/ {2,}/g, function(match) {
+                            return '&nbsp;'.repeat(match.length - 1) + ' ';
+                        });
+
+                        if (text !== textNode.textContent) {
+                            const span = document.createElement('span');
+                            span.innerHTML = text;
+                            textNode.parentNode.replaceChild(span, textNode);
+                        }
+                    });
+
+                    // Clean attributes but preserve formatting and inline styles
+                    const allElements = element.querySelectorAll('*');
+                    allElements.forEach(el => {
+                        // Keep safe attributes including white-space styles
+                        const allowedAttrs = ['style', 'class', 'data-meaning', 'data-tooltip', 'title'];
+                        const attrs = [...el.attributes];
+                        attrs.forEach(attr => {
+                            if (!allowedAttrs.includes(attr.name)) {
+                                el.removeAttribute(attr.name);
+                            }
+                        });
+
+                        // Preserve white-space style if present
+                        if (el.style && !el.style.whiteSpace) {
+                            el.style.whiteSpace = 'pre-wrap';
+                        }
+                    });
+
+                    // Convert regular line breaks to <br> tags
+                    let html = element.innerHTML;
+
+                    return html;
+                }
 
                 // Handle keyboard shortcuts
                 richEditor.on('keydown', function(e) {
@@ -1158,16 +1287,59 @@
                     if (e.ctrlKey && e.which === 66) {
                         e.preventDefault();
                         document.execCommand('bold', false, null);
-                        hiddenTextarea.val(richEditor.html());
+                        setTimeout(() => syncContent(), 10);
                         return false;
                     }
 
-                    // Ctrl+I for italic (if needed)
+                    // Ctrl+I for italic
                     if (e.ctrlKey && e.which === 73) {
                         e.preventDefault();
                         document.execCommand('italic', false, null);
-                        hiddenTextarea.val(richEditor.html());
+                        setTimeout(() => syncContent(), 10);
                         return false;
+                    }
+
+                    // Handle Tab key to insert spaces instead of losing focus
+                    if (e.which === 9) {
+                        e.preventDefault();
+                        // Insert 4 non-breaking spaces for tab
+                        document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                        setTimeout(() => syncContent(), 10);
+                        return false;
+                    }
+
+                    // Handle Enter key to ensure proper line breaks
+                    if (e.which === 13 && !e.shiftKey) {
+                        e.preventDefault();
+                        document.execCommand('insertHTML', false, '<br><br>');
+                        setTimeout(() => syncContent(), 10);
+                        return false;
+                    }
+                });
+
+                // FIXED: Sync on blur to ensure content is saved
+                richEditor.on('blur', function() {
+                    syncContent();
+                });
+
+                // Handle multiple spaces typed manually
+                richEditor.on('keypress', function(e) {
+                    // If space is pressed
+                    if (e.which === 32) {
+                        const selection = window.getSelection();
+                        if (selection.rangeCount > 0) {
+                            const range = selection.getRangeAt(0);
+                            const textBeforeCursor = range.startContainer.textContent.substring(0, range
+                                .startOffset);
+
+                            // If the previous character was a space, insert &nbsp; instead
+                            if (textBeforeCursor.endsWith(' ') || textBeforeCursor.endsWith('\u00A0')) {
+                                e.preventDefault();
+                                document.execCommand('insertHTML', false, '&nbsp;');
+                                setTimeout(() => syncContent(), 10);
+                                return false;
+                            }
+                        }
                     }
                 });
             }
@@ -1182,7 +1354,6 @@
 
                 const elementOffset = $(element).offset();
                 const elementWidth = $(element).outerWidth();
-                const elementHeight = $(element).outerHeight();
                 const tooltipWidth = customTooltip.outerWidth();
 
                 const left = elementOffset.left + (elementWidth / 2) - (tooltipWidth / 2);
@@ -1201,7 +1372,7 @@
                 }, 300);
             }
 
-            // Enhanced toolbar functionality
+            // Enhanced toolbar functionality - FIXED VERSION
             $('.toolbar-btn').on('click', function(e) {
                 e.preventDefault();
 
@@ -1212,109 +1383,100 @@
 
                 richEditor.focus();
 
+                const selection = window.getSelection();
+
+                // Check if text is selected for actions that require it
+                const requiresSelection = ['font', 'alignLeft', 'alignCenter', 'alignRight', 'bold',
+                'abbr'];
+                if (requiresSelection.includes(action) && (selection.rangeCount === 0 || selection
+                        .isCollapsed)) {
+                    let message = '{{ __('Please select text first') }}';
+                    if (action === 'font') message = '{{ __('Please select text first to change font') }}';
+                    else if (action.startsWith('align')) message =
+                        '{{ __('Please select text first to align') }}';
+                    else if (action === 'bold') message =
+                        '{{ __('Please select text first to make bold') }}';
+
+                    showTooltip($(this), message);
+                    return;
+                }
+
                 if (action === 'font') {
                     const fontFamily = $(this).data('font');
-                    const selection = window.getSelection();
+                    const range = selection.getRangeAt(0);
+                    const span = document.createElement('span');
+                    span.style.fontFamily = fontFamily;
+                    span.style.whiteSpace = 'pre-wrap'; // Preserve spaces in formatted text
+                    span.className = 'font-' + fontFamily.toLowerCase().replace(/\s+/g, '');
 
-                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
-                        const range = selection.getRangeAt(0);
-                        const span = document.createElement('span');
-                        span.style.fontFamily = fontFamily;
-                        span.className = 'font-' + fontFamily.toLowerCase().replace(/\s+/g, '');
-
-                        try {
-                            range.surroundContents(span);
-                            selection.removeAllRanges();
-                        } catch (e) {
-                            const contents = range.extractContents();
-                            span.appendChild(contents);
-                            range.insertNode(span);
-                            selection.removeAllRanges();
-                        }
-
-                        $('#' + target).val($richEditor.html());
-                        setupCustomTooltips();
-                    } else {
-                        showTooltip($(this), '{{ __('Please select text first to change font') }}');
-                        return;
+                    try {
+                        range.surroundContents(span);
+                    } catch (e) {
+                        const contents = range.extractContents();
+                        span.appendChild(contents);
+                        range.insertNode(span);
                     }
+
+                    selection.removeAllRanges();
+                    selection.addRange(range);
 
                 } else if (['alignLeft', 'alignCenter', 'alignRight'].includes(action)) {
-                    const selection = window.getSelection();
+                    let alignValue = 'left';
+                    if (action === 'alignCenter') alignValue = 'center';
+                    else if (action === 'alignRight') alignValue = 'right';
 
-                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
-                        let alignValue = 'left';
-                        if (action === 'alignCenter') alignValue = 'center';
-                        else if (action === 'alignRight') alignValue = 'right';
+                    const range = selection.getRangeAt(0);
+                    const div = document.createElement('div');
+                    div.style.textAlign = alignValue;
+                    div.style.whiteSpace = 'pre-wrap'; // Preserve spaces in aligned text
 
-                        const range = selection.getRangeAt(0);
-                        const div = document.createElement('div');
-                        div.style.textAlign = alignValue;
-
-                        try {
-                            range.surroundContents(div);
-                            selection.removeAllRanges();
-                        } catch (e) {
-                            const contents = range.extractContents();
-                            div.appendChild(contents);
-                            range.insertNode(div);
-                            selection.removeAllRanges();
-                        }
-
-                        $('#' + target).val($richEditor.html());
-                    } else {
-                        showTooltip($(this), '{{ __('Please select text first to align') }}');
-                        return;
+                    try {
+                        range.surroundContents(div);
+                    } catch (e) {
+                        const contents = range.extractContents();
+                        div.appendChild(contents);
+                        range.insertNode(div);
                     }
+
+                    selection.removeAllRanges();
 
                 } else if (action === 'bold') {
-                    const selection = window.getSelection();
-
-                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
-                        document.execCommand('bold', false, null);
-                        $('#' + target).val($richEditor.html());
-                    } else {
-                        showTooltip($(this), '{{ __('Please select text first to make bold') }}');
-                        return;
-                    }
+                    document.execCommand('bold', false, null);
 
                 } else if (action === 'abbr') {
-                    const selection = window.getSelection();
+                    const selectedRange = selection.getRangeAt(0);
+                    const selectedContent = selectedRange.cloneContents();
 
-                    if (selection.rangeCount > 0 && !selection.isCollapsed) {
-                        const selectedRange = selection.getRangeAt(0);
-                        const selectedContent = selectedRange.cloneContents();
+                    const tempDiv = document.createElement('div');
+                    tempDiv.appendChild(selectedContent);
+                    const selectedHTML = tempDiv.innerHTML;
 
-                        const tempDiv = document.createElement('div');
-                        tempDiv.appendChild(selectedContent);
-                        const selectedHTML = tempDiv.innerHTML;
+                    const title = prompt('{{ __('Enter abbreviation meaning:') }}');
+                    if (title) {
+                        const range = selection.getRangeAt(0);
+                        const abbr = document.createElement('abbr');
+                        abbr.setAttribute('data-meaning', title);
+                        abbr.setAttribute('data-tooltip', selectedHTML);
+                        abbr.title = '';
+                        abbr.style.whiteSpace = 'pre-wrap'; // Preserve spaces in abbreviations
 
-                        const title = prompt('{{ __('Enter abbreviation meaning:') }}');
-                        if (title) {
-                            const range = selection.getRangeAt(0);
-                            const abbr = document.createElement('abbr');
-                            abbr.setAttribute('data-meaning', title);
-                            abbr.setAttribute('data-tooltip', selectedHTML);
-                            abbr.title = '';
-
-                            try {
-                                range.surroundContents(abbr);
-                                selection.removeAllRanges();
-                            } catch (e) {
-                                const contents = range.extractContents();
-                                abbr.appendChild(contents);
-                                range.insertNode(abbr);
-                                selection.removeAllRanges();
-                            }
-
-                            $('#' + target).val($richEditor.html());
-                            setupCustomTooltips();
+                        try {
+                            range.surroundContents(abbr);
+                        } catch (e) {
+                            const contents = range.extractContents();
+                            abbr.appendChild(contents);
+                            range.insertNode(abbr);
                         }
-                    } else {
-                        showTooltip($(this), '{{ __('Please select text first') }}');
-                        return;
+
+                        selection.removeAllRanges();
+                        setupCustomTooltips();
                     }
                 }
+
+                // Sync content after toolbar action
+                setTimeout(() => {
+                    $('#' + target).val($richEditor.html());
+                }, 10);
 
                 $(this).addClass('active');
                 setTimeout(() => {
@@ -1368,8 +1530,15 @@
                 setupCustomTooltips();
             }, 500);
 
-            // Enhanced form validation
+            // FIXED: Enhanced form validation with proper sync
             $('.vachanamrut-form').on('submit', function(e) {
+                // Force sync all editors before validation
+                $('.rich-text-editor').each(function() {
+                    const target = $(this).data('target');
+                    const htmlContent = $(this).html();
+                    $('#' + target).val(htmlContent);
+                });
+
                 if (!validateForm()) {
                     e.preventDefault();
 
@@ -1396,9 +1565,13 @@
                 if ($(this).hasClass('rich-text-editor')) {
                     const target = $(this).data('target');
                     const hiddenField = $('#' + target);
-                    const content = $(this).html().trim();
 
-                    if (content && content !== '<br>') {
+                    // Check actual text content, not HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = $(this).html();
+                    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+                    if (textContent.trim()) {
                         hiddenField.removeClass('is-invalid');
                         $(this).removeClass('is-invalid-editor');
                     } else if (hiddenField.attr('required')) {
@@ -1420,7 +1593,7 @@
             }, 100);
         });
 
-        // Form validation function
+        // Form validation function - FIXED VERSION
         function validateForm() {
             let isValid = true;
 
@@ -1440,8 +1613,12 @@
                 const hiddenField = $('#' + target);
 
                 if (hiddenField.attr('required')) {
-                    const content = $(this).html().trim();
-                    if (!content || content === '<br>') {
+                    // Check actual text content
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = $(this).html();
+                    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+                    if (!textContent.trim()) {
                         hiddenField.addClass('is-invalid');
                         $(this).addClass('is-invalid-editor');
                         isValid = false;
